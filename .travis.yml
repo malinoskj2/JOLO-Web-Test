@@ -1,0 +1,16 @@
+matrix:
+  include: 
+    - language: node_js
+      node_js:
+        - 12
+      before_script: 
+        - cd client
+      script: 
+        - npm install 
+        - npm run build 
+    - language: java
+      before_script: 
+        - cd server
+      script:
+        - ./mvnw install -DskipTests
+        - ./mvnw compile
