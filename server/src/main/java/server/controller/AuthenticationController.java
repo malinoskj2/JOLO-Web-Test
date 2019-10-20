@@ -1,8 +1,10 @@
-package srproject.jolo.controllers;
+package server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import srproject.jolo.repository.ExaminerRepository;
+import server.model.Authentication;
+import server.model.Examiner;
+import server.repository.ExaminerRepository;
 
 @RestController
 @RequestMapping("/auth")

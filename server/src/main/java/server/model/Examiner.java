@@ -1,4 +1,4 @@
-package srproject.jolo.controllers;
+package server.model;
 
 import javax.persistence.*;
 import java.io.Serializable;

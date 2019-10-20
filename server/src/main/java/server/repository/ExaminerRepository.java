@@ -1,6 +1,6 @@
-package srproject.jolo.repository;
+package server.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import srproject.jolo.controllers.Examiner;
+import server.model.Examiner;
 
 public interface ExaminerRepository extends CrudRepository<Examiner, Long> { }
