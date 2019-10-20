@@ -5,7 +5,19 @@
 # to native line endings on checkout.
 *.java text
 *.properties text
+*.js text
+*.vue text
+*.svg text
+*.browserslistrc text
+*.editorconfig text
+*.html text
+*.css text
+*.md text
+*.cmd text
+*.xml text
 
 *.png binary
 *.jpg binary
+*.ico binary
+*.jar binary
 
