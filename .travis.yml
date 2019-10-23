@@ -12,5 +12,5 @@ matrix:
       before_script: 
         - cd server
       script:
-        - ./mvnw install -DskipTests
+        - ./mvnw install
         - ./mvnw compile
