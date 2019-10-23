@@ -24,13 +24,21 @@ All variables must be defined and valid for the server to function.
 Alternatively an *application-dev.properties* file can be created within the [resources](src/main/resources) directory.
 
 This file will be ignored by git so credentials can be placed within it directly. 
-Appending 
+Prepending
 ```console
--Dspring.profiles.active=dev
+SPRING_PROFILES_ACTIVE=dev
 ``` 
 to mvnw commands will use the properties defined in 'application-dev.properties' 
 
-### Project Setup
+### Using the in-memory database
+A profile to run the server with an H2 in-memory database is included.
+Prepending
+```console
+SPRING_PROFILES_ACTIVE=h2
+``` 
+to mvnw commands will use the properties defined in 'application-h2.properties' 
+
+## Project Setup
 ```console
 $ git clone https://github.com/malinoskj2/JOLO-Web-Test
 
@@ -43,7 +51,7 @@ $ ./mvnw install
 $ mvnw.cmd install
 ```
 
-### Run Development Server
+## Run Development Server
 ```console
 # linux, mac os x
 $ ./mvnw spring-boot:run
@@ -52,7 +60,7 @@ $ ./mvnw spring-boot:run
 $ mvnw.cmd spring-boot:run
 ```
 
-### Build
+## Build
 ```console
 # linux, mac os x
 $ ./mvnw compile
