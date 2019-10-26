@@ -11,14 +11,15 @@ A valid config is required for the project to function. This can be defined in 2
 The application server ships with an [application.properties](src/main/resources/application.properties) file which relies on the following environment variables.
 All variables must be defined and valid for the server to function.
 
-| Variable        | Function                                | 
-|-----------------|-----------------------------------------|
-| JLO_SERVER_PORT | port that the server will listen on.    |
-| JLO_DB_URL      | url or ip of the database               | 
-| JLO_DB_PORT     | port of the database                    |
-| JLO_DB_NAME     | name of the database                    |
-| JLO_DB_USER     | database username                       |
-| JLO_DB_PASS     | password corresponding with JLO_DB_USER |
+| Variable              | Function                                   | 
+|-----------------------|--------------------------------------------|
+| JLO_SERVER_PORT       | port that the server will listen on.       |
+| JLO_DB_URL            | url or ip of the database                  | 
+| JLO_DB_PORT           | port of the database                       |
+| JLO_DB_NAME           | name of the database                       |
+| JLO_DB_USER           | database username                          |
+| JLO_DB_PASS           | password corresponding with JLO_DB_USER    |
+| JLO_STORAGE_DIRECTORY | directory where audio files will be stored |
 
 ### Using a development properties file
 Alternatively an *application-dev.properties* file can be created within the [resources](src/main/resources) directory.
