@@ -21,19 +21,19 @@ import server.repository.remoteAPI;
 public class AudioController {
 
     private FileSystemResource fsr;
-    //AudioResult ar = new AudioResult();
+    private AudioResult ar = new AudioResult();
     private String output;
     private AudioRepository audioRepository = new AudioRepository();
 
-    @RequestMapping("/get_result")
-    public String voice_to_text(@RequestParam(value="content", defaultValue="") String content) {
+
+    private String voice_to_text(String content) {
         System.out.println("0");
 
         try {
             System.out.println("1");
             String api = remoteAPI.api;
-            audioRepository.add_test_file();
-            FileSystemResource fsr = audioRepository.getFsr_list().getLast();      //access audio database
+
+            FileSystemResource fsr = ar.get_latest_fsr();      //access audio database
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
@@ -55,11 +55,16 @@ public class AudioController {
         }
     }
 
-    public String get_result() {
-
+    @RequestMapping("/result")
+    public String get_result(@RequestParam(value="content", defaultValue="") String content) {
+        /**
+         Json out:{ Number:testId, Number:questionID, Number:GuessedAngle1, Number:GuessedAngle2,
+         Number:correctGuess, String: audioFile}
+         */
+        ar.setContent(voice_to_text(content));
         System.out.println("2");
 
-        //Json out:{ Number:testId, Number:questionID, Number:GuessedAngle1, Number:GuessedAngle2, Number:correctGuess, String: audioFile}
-        return voice_to_text("");
+
+        return ar.format();
     }
 }
