@@ -1,15 +1,25 @@
 package server.model;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import server.repository.AudioRepository;
+import server.repository.remoteAPI;
+import server.service.VoiceTranscriptionService;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.regex.Pattern;
+
 
 public class AudioResult {
 
     private FileSystemResource fsr;
-    //AudioResult ar = new AudioResult();
     private String content;
     private AudioRepository audioRepository;
     private int testID;
@@ -95,7 +105,10 @@ public class AudioResult {
     }
 
     public String format() {
-        //Json out:{ Number:testId, Number:questionID, Number:GuessedAngle1, Number:GuessedAngle2, Number:correctGuess, String: audioFile}
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        VoiceTranscriptionService vts = context.getBean(VoiceTranscriptionService.class);
+
+        setContent(vts.vts(audioRepository.getLast()));
 
         return "{Number:" +testID + ",Number:" + questionId + ",Number:" + getAngle(0) +
                 ",Number:" + getAngle(1) + ",Number:" + correctGuess +
