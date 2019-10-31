@@ -8,8 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import server.repository.AudioRepository;
-import server.repository.remoteAPI;
 import server.service.VoiceTranscriptionService;
 
 import java.io.File;
@@ -21,7 +19,7 @@ public class AudioResult {
 
     private FileSystemResource fsr;
     private String content;
-    private AudioRepository audioRepository;
+
     private int testID;
     private int questionId;
     private int GuessedAngle0;
@@ -31,10 +29,8 @@ public class AudioResult {
 
     public AudioResult() {
         content = "";
-        audioRepository = new AudioRepository();
         FileSystemResource fsr = new FileSystemResource(
                 new File(System.getProperty("user.dir") + "\\"+ "resources\\B64DJ1.wav"));
-        audioRepository.add(fsr);
         testID = 0;
         questionId = 0;
         GuessedAngle0 = getAngle(0);
@@ -45,10 +41,6 @@ public class AudioResult {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public FileSystemResource get_latest_fsr() {
-        return audioRepository.getLast();
     }
 
     private int getAngle(int index) {
@@ -103,8 +95,9 @@ public class AudioResult {
 
         return guessed_angle;
     }
-
-    public String format() {
+    /*
+    *
+    *     public String format() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         VoiceTranscriptionService vts = context.getBean(VoiceTranscriptionService.class);
 
@@ -114,4 +107,6 @@ public class AudioResult {
                 ",Number:" + getAngle(1) + ",Number:" + correctGuess +
                 ",String:" + audioRepository.getLast().getFilename() + "}";
     }
+    * */
+
 }

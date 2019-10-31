@@ -1,5 +1,6 @@
 package server.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -7,35 +8,31 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import server.repository.remoteAPI;
+import server.model.TranscriptionResult;
 
-import java.io.File;
 import java.util.Arrays;
 
 @Service
 public class VoiceTranscriptionService {
 
-    public String vts(FileSystemResource fsr) {
-        System.out.println("0");
+    private final RestTemplate restTemplate;
+    private final String api;
 
-        try {
-            System.out.println("1");
-            String api = remoteAPI.api;
+    public VoiceTranscriptionService(@Value("${transcription.api.url}") String api) {
+        this.restTemplate = new RestTemplate();
+        this.api = api;
+    }
 
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            HttpEntity<FileSystemResource> entity = new HttpEntity<>(fsr, headers);
+    public TranscriptionResult[] vts(FileSystemResource fsr) {
 
-            System.out.println(api + "\n" +
-                    entity);
-            ResponseEntity<String> r = restTemplate.postForEntity(api, entity, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        HttpEntity<FileSystemResource> entity = new HttpEntity<>(fsr, headers);
 
-            return r.getBody();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw (ex);
-        }
+        System.out.println(api + "\n" + entity);
+        ResponseEntity<TranscriptionResult[]> r = restTemplate.postForEntity(api, entity, TranscriptionResult[].class);
+
+        return r.getBody();
     }
 }
