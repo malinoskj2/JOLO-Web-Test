@@ -2,7 +2,7 @@ package server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import server.model.Authentication;
+import server.model.request.LoginRequest;
 import server.model.Examiner;
 import server.repository.ExaminerRepository;
 
@@ -16,7 +16,7 @@ public class AuthenticationController {
     @RequestMapping(value = "/login",
             method = RequestMethod.POST,
             produces = "text/plain")
-    public String login(@RequestBody Authentication credentials) {
+    public String login(@RequestBody LoginRequest credentials) {
         return String.format("Received %nLogin:%s %nPassword:%s",
                 credentials.getUsername(),
                 credentials.getPassword());
