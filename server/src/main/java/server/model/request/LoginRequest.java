@@ -1,12 +1,12 @@
-package server.model;
+package server.model.request;
 
 import java.io.Serializable;
 
-public class Authentication implements Serializable {
+public class LoginRequest implements Serializable {
     private final String username;
     private final String password;
 
-    public Authentication(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }
