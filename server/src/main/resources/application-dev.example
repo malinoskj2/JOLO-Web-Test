@@ -13,6 +13,10 @@ storage.directory=your_storage_directory
 # Transcription API
 transcription.api.url=your_ts_api_url
 
+# Auth
+jwt.ttl.seconds=your_jwt_ttl
+jwt.secret=your_jwt_secret
+
 # Misc
 spring.jackson.time-zone=America/New_York
 spring.main.banner-mode=off

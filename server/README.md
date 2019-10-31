@@ -20,7 +20,9 @@ All variables must be defined and valid for the server to function.
 | JLO_DB_USER           | database username                          |
 | JLO_DB_PASS           | password corresponding with JLO_DB_USER    |
 | JLO_STORAGE_DIRECTORY | directory where audio files will be stored |
-| JLO_TS_API     |  voice transcription api url |
+| JLO_TS_API            | voice transcription api url                |
+| JLO_JWT_TTL           | time to live for tokens                    |
+| JLO_JWT_SECRET        | secret for signing tokens                  | 
 
 ### Using a development properties file
 Alternatively an *application-dev.properties* file can be created within the [resources](src/main/resources) directory.
