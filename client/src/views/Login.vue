@@ -26,20 +26,6 @@
              </v-flex>
           <v-card-text>
           <v-form>
-              <v-text-field
-                v-model="fName"
-                label="First Name"
-                name="firstName"
-                type="text"
-                required
-                />
-                 <v-text-field
-                v-model="lName"
-                label="Last Name"
-                name="lastName"
-                type="text"
-                required
-                />
                  <v-text-field
                 v-model="Email"
                 label="Email"
@@ -51,13 +37,6 @@
                  v-model="Password"
                 label="Password"
                 name="password"
-                type="password"
-                required
-                />
-                <v-text-field
-                v-model="retypePassword"
-                label="Retype Password"
-                name="retypePassword"
                 type="password"
                 required
                 />
@@ -81,36 +60,28 @@
 const axios = require('axios').default;
 
 export default {
-  name: 'SignUp',
+  name: 'Login',
   data: () => ({
-    reponseData: {},
-    userData: {
-      fName: '',
-      lName: '',
+    loginCred: {
       Email: '',
       Password: '',
-      retypePassword: '',
     },
   }),
   methods: {
-    postUserData() {
+    submit() {
+      console.log(`${this.Email}\n${
+        this.Password}`);
+    },
+    getUserAuth() {
       axios.post('', {
-        body: this.userData,
+        body: this.loginCred,
       })
         .then((response) => {
-          this.reponseData = reponse.data;
+          console.log(this.reponse.data);
         })
         .catch((e) => {
           this.errors.push(e);
         });
-    },
-    submit() {
-      console.log(`${this.fName}\n${
-        this.lName}\n${
-        this.Email}\n${
-        this.Password}\n${
-        this.retypePassword}`);
-      this.postUserData();
     },
   },
 };
