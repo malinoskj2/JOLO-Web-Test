@@ -1,12 +1,9 @@
 package server.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.config.auth.TokenProvider;
 import server.model.request.AuthenticationRequest;
 import server.model.request.SignupRequest;
@@ -25,6 +22,7 @@ public class AuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @CrossOrigin(origins = "${origins}")
     @RequestMapping(value = "/authenticate",
             method = RequestMethod.POST,
             produces = "application/json")
@@ -32,6 +30,7 @@ public class AuthenticationController {
         return null;
     }
 
+    @CrossOrigin(origins = "${origins}")
     @RequestMapping(value = "/register",
             method = RequestMethod.POST,
             produces = "application/json")

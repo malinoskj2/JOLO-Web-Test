@@ -23,6 +23,7 @@ All variables must be defined and valid for the server to function.
 | JLO_TS_API            | voice transcription api url                |
 | JLO_JWT_TTL           | time to live for tokens                    |
 | JLO_JWT_SECRET        | secret for signing tokens                  | 
+| JLO_SERVER_ORIGINS    | allowed request origins                    | 
 
 ### Using a development properties file
 Alternatively an *application-dev.properties* file can be created within the [resources](src/main/resources) directory.

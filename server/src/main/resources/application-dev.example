@@ -1,5 +1,6 @@
 # Server
 server.port=your_server_port
+origins=your_origins
 
 # Database
 spring.jpa.hibernate.ddl-auto=update
