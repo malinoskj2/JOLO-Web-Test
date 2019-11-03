@@ -29,28 +29,28 @@
               <v-text-field
                 v-model="fName"
                 label="First Name"
-                name="firstName"
+                name="fName"
                 type="text"
                 required
                 />
                  <v-text-field
                 v-model="lName"
                 label="Last Name"
-                name="lastName"
+                name="lNamee"
                 type="text"
                 required
                 />
                  <v-text-field
                 v-model="Email"
                 label="Email"
-                name="email"
+                name="Email"
                 type="email"
                 required
                 />
                  <v-text-field
                  v-model="Password"
                 label="Password"
-                name="password"
+                name="Password"
                 type="password"
                 required
                 />
@@ -89,16 +89,15 @@ export default {
       lName: '',
       Email: '',
       Password: '',
-      retypePassword: '',
     },
   }),
   methods: {
     postUserData() {
-      axios.post('', {
+      axios.post('localhost:8081/auth/register', {
         body: this.userData,
       })
         .then((response) => {
-          this.reponseData = reponse.data;
+          console.log(response);
         })
         .catch((e) => {
           this.errors.push(e);
