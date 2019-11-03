@@ -22,7 +22,6 @@ public class AuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
-    @CrossOrigin(origins = "${origins}")
     @RequestMapping(value = "/authenticate",
             method = RequestMethod.POST,
             produces = "application/json")
@@ -30,7 +29,6 @@ public class AuthenticationController {
         return null;
     }
 
-    @CrossOrigin(origins = "${origins}")
     @RequestMapping(value = "/register",
             method = RequestMethod.POST,
             produces = "application/json")
