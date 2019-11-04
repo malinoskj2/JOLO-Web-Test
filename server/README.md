@@ -5,7 +5,17 @@
 - JDK 8
 
 ## Config
-A valid config is required for the project to function. This can be defined in 2 ways.
+Configuration settings are contained in *.properties* files within the [resources](src/main/resources) directory.
+A specific properties file can be selected by setting the *SPRING_PROFILES_ACTIVE* environment variable.
+
+```console
+
+# linux, mac os x
+$ export SPRING_PROFILES_ACTIVE=dev
+
+# windows
+$ set SPRING_PROFILES_ACTIVE=dev
+```
 
 ### Using Environment Variables
 The application server ships with an [application.properties](src/main/resources/application.properties) file which relies on the following environment variables.
@@ -14,6 +24,7 @@ All variables must be defined and valid for the server to function.
 | Variable              | Function                                   | 
 |-----------------------|--------------------------------------------|
 | JLO_SERVER_PORT       | port that the server will listen on.       |
+| JLO_SERVER_CORS       | if equal to 'YES' CORS is allowed          | 
 | JLO_DB_URL            | url or ip of the database                  | 
 | JLO_DB_PORT           | port of the database                       |
 | JLO_DB_NAME           | name of the database                       |
@@ -23,25 +34,14 @@ All variables must be defined and valid for the server to function.
 | JLO_TS_API            | voice transcription api url                |
 | JLO_JWT_TTL           | time to live for tokens                    |
 | JLO_JWT_SECRET        | secret for signing tokens                  | 
-| JLO_SERVER_ORIGINS    | allowed request origins                    | 
 
 ### Using a development properties file
 Alternatively an *application-dev.properties* file can be created within the [resources](src/main/resources) directory.
-
 This file will be ignored by git so credentials can be placed within it directly. 
-Prepending
-```console
-SPRING_PROFILES_ACTIVE=dev
-``` 
-to mvnw commands will use the properties defined in 'application-dev.properties' 
 
 ### Using the in-memory database
-A profile to run the server with an H2 in-memory database is included.
-Prepending
-```console
-SPRING_PROFILES_ACTIVE=h2
-``` 
-to mvnw commands will use the properties defined in 'application-h2.properties' 
+A profile ([application-h2.properties](src/main/resources/application-h2.properties)) to run the server with an H2 in-memory database is included. 
+
 
 ## Project Setup
 ```console
