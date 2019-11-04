@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -17,8 +18,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class CsvService {
@@ -30,7 +29,7 @@ public class CsvService {
     @Value("${spring.datasource.password}")
     private String databasePass;
 
-    public String convertToCSV(int patientID) {
+    public FileSystemResource convertToCSV(int patientID) {
         String data = "";
 
         Workbook wb = new HSSFWorkbook();
@@ -47,35 +46,31 @@ public class CsvService {
         try {
 
             //Scalar function
+
             Query query = entitymanager.
-                    createQuery("SELECT "+ patientID +" FROM Patient");
+                    createQuery("SELECT * FROM Table WHERE patientID=" +patientID);
             List<String> list = query.getResultList();
 
             Sheet sheet = wb.createSheet("Patient:"+patientID);
             Row row = sheet.createRow(0);
             Cell cell = row.createCell(0);
+            cell.setCellValue(patientID);
+            int i = 1;
+            for(String item: list) {
+                row.createCell(i).setCellValue(item);
+            }
             cell.setCellValue(1);
-
 
 
         } finally {
             emfactory.close();
         }
 
-
-
-
-        for(String e:list) {
-            System.out.println("e :"+e);
-        }
-
         try  (OutputStream fileOut = new FileOutputStream("server/workbook.xls"))
         { wb.write(fileOut); }
         catch (Exception e) {}
 
-        return Stream.of(data)
-                .map(this::escapeSpecialCharacters)
-                .collect(Collectors.joining(","));
+        return new FileSystemResource( "server/workbook.xls");
     }
 
     public String escapeSpecialCharacters(String data) {
