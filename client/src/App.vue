@@ -1,27 +1,15 @@
 <template>
-<<<<<<< HEAD
-  <v-app>
-    <v-content>
-      <SignUp/>
-    </v-content>
-=======
   <v-app id="app">
     <Nav :textA="this.navConfig.textA"
          :textB="this.navConfig.textB"
          :items="this.navConfig.navLinks"
          :authLinks="this.navConfig.authLinks"/>
     <router-view></router-view>
->>>>>>> nav_new
   </v-app>
 </template>
 
 <script>
-<<<<<<< HEAD
-// import SignUp from './views/SignUp.vue';
-import SignUp from './views/SignUp.vue';
-=======
 import Nav from '@/components/Nav.vue';
->>>>>>> nav_new
 
 export default {
   name: 'App',
@@ -49,13 +37,7 @@ export default {
     };
   },
   components: {
-<<<<<<< HEAD
-    // DrawTest,
-    SignUp,
-
-=======
     Nav,
->>>>>>> nav_new
   },
 
 };

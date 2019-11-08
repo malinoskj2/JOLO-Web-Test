@@ -1,14 +1,5 @@
 <template>
-<div id="signup">
-    <v-app-bar dense>
-            <v-toolbar-title color="">Angle-Matching Web Test</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn> Home </v-btn>
-                <v-btn> About </v-btn>
-                <v-btn> Login </v-btn>
-            </v-toolbar-items>
-      </v-app-bar>
+<div id="login">
   <v-content>
       <v-container>
          <v-row
@@ -22,7 +13,7 @@
           >
          <v-card>
              <v-flex>
-             <v-card-title class="justify-center">Sign Up</v-card-title>
+             <v-card-title class="justify-center">Login</v-card-title>
              </v-flex>
           <v-card-text>
           <v-form>
@@ -57,10 +48,10 @@
 </template>
 
 <script>
-const axios = require('axios').default;
+// const axios = require('axios').default;
 
 export default {
-  name: 'Login',
+  name: 'login',
   data: () => ({
     loginCred: {
       Email: '',
@@ -73,15 +64,15 @@ export default {
         this.Password}`);
     },
     getUserAuth() {
-      axios.post('', {
-        body: this.loginCred,
-      })
-        .then((response) => {
-          console.log(this.reponse.data);
-        })
-        .catch((e) => {
-          this.errors.push(e);
-        });
+      // axios.post('', {
+      //   body: this.loginCred,
+      // })
+      //   .then((response) => {
+      //     console.log(reponse.data);
+      //   })
+      //   .catch((e) => {
+      //     this.errors.push(e);
+      //   });
     },
   },
 };

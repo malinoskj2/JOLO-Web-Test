@@ -1,14 +1,5 @@
 <template>
 <div id="signup">
-    <v-app-bar dense>
-            <v-toolbar-title color="">Angle-Matching Web Test</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn> Home </v-btn>
-                <v-btn> About </v-btn>
-                <v-btn> Login </v-btn>
-            </v-toolbar-items>
-      </v-app-bar>
   <v-content>
       <v-container>
          <v-row
@@ -81,7 +72,7 @@
 const axios = require('axios').default;
 
 export default {
-  name: 'SignUp',
+  name: 'signup',
   data: () => ({
     reponseData: {},
     userData: {
