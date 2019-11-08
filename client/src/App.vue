@@ -1,24 +1,69 @@
 <template>
+<<<<<<< HEAD
   <v-app>
     <v-content>
       <SignUp/>
     </v-content>
+=======
+  <v-app id="app">
+    <Nav :textA="this.navConfig.textA"
+         :textB="this.navConfig.textB"
+         :items="this.navConfig.navLinks"
+         :authLinks="this.navConfig.authLinks"/>
+    <router-view></router-view>
+>>>>>>> nav_new
   </v-app>
 </template>
 
 <script>
+<<<<<<< HEAD
 // import SignUp from './views/SignUp.vue';
 import SignUp from './views/SignUp.vue';
+=======
+import Nav from '@/components/Nav.vue';
+>>>>>>> nav_new
 
 export default {
   name: 'App',
+  data() {
+    return {
+      navConfig: {
+        textA: 'Angle',
+        textB: 'Test',
+        navLinks: [
+          { icon: 'home', text: 'Home', route: '/' },
+          { divider: true },
+          { icon: 'lightbulb_outline', text: 'Start Exam', route: 'exam' },
+          { icon: 'archive', text: 'Results', route: 'results' },
+          { divider: true },
+          { icon: 'mdi-account-plus', text: 'Sign Up', route: 'signup' },
+          { icon: 'mdi-login-variant', text: 'Log In', route: 'login' },
+          { divider: true },
+          { icon: 'settings', text: 'Settings', route: 'settings' },
+          { icon: 'help', text: 'Help', route: 'help' },
+        ],
+        authLinks: [
+          { text: 'Account', icon: 'mdi-account-card-details', route: 'account' },
+        ],
+      },
+    };
+  },
   components: {
+<<<<<<< HEAD
     // DrawTest,
     SignUp,
 
+=======
+    Nav,
+>>>>>>> nav_new
   },
-  data: () => ({
-    //
-  }),
+
 };
 </script>
+<style>
+  .router-link {
+    color: inherit;
+    text-decoration: inherit;
+    outline: none;
+  }
+</style>
