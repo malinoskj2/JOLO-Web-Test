@@ -69,7 +69,6 @@
 </template>
 
 <script>
-const axios = require('axios').default;
 
 export default {
   name: 'signup',
@@ -84,15 +83,29 @@ export default {
   }),
   methods: {
     postUserData() {
-      axios.post('localhost:8081/auth/register', {
-        body: this.userData,
+      console.log('Did fetch');
+      fetch('http://localhost:8081/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fName: this.fName,
+          lName: this.lName,
+          password: this.Password,
+          email: this.Email,
+        }),
       })
         .then((response) => {
+          console.log('got response');
           console.log(response);
+          console.log(response.status);
+          if (response.status === 200) {
+            console.log(response.status);
+            this.$router.push('/login');
+          }
         })
-        .catch((e) => {
-          this.errors.push(e);
-        });
+        .catch(error => console.log(error));
     },
     submit() {
       console.log(`${this.fName}\n${
