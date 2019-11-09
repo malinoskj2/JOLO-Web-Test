@@ -59,20 +59,25 @@ export default {
     },
   }),
   methods: {
-    submit() {
-      console.log(`${this.Email}\n${
-        this.Password}`);
-    },
     getUserAuth() {
-      // axios.post('', {
-      //   body: this.loginCred,
-      // })
-      //   .then((response) => {
-      //     console.log(reponse.data);
-      //   })
-      //   .catch((e) => {
-      //     this.errors.push(e);
-      //   });
+      fetch('http://localhost:8081/auth/authenticate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: this.Email,
+          password: this.Password,
+        }),
+      })
+        .then(response => response.json())
+        .then((token) => {
+          console.log(token.token);
+        })
+        .catch(error => console.log(error));
+    },
+    submit() {
+      this.getUserAuth();
     },
   },
 };
