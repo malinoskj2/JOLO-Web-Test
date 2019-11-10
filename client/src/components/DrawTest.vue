@@ -1,7 +1,9 @@
 <template>
 <div id="test">
    <v-btn @click="getTestCoordinates()">Start</v-btn>
-    <v-btn @click="next()">Next</v-btn>
+   <v-divider
+      vertical></v-divider>
+      <v-btn @click="next()">Next</v-btn>
     <v-spacer></v-spacer>
     <canvas id="canvas" style="border:2px solid #000000"></canvas>
 </div>
@@ -15,7 +17,9 @@ export default {
   data() {
     return {
       i: 0,
-      coords: {}
+      coords: [
+        [0, 0],
+      ]
       ,
     };
   },
@@ -24,8 +28,8 @@ export default {
       const canvas = document.getElementById('canvas');
       if (canvas.getContext) {
         const ctx = canvas.getContext('2d');
-        ctx.canvas.width = window.innerWidth * 0.95;
-        ctx.canvas.height = window.innerHeight / 2;
+        ctx.canvas.width = 200;
+        ctx.canvas.height = 200;
         ctx.beginPath();
         ctx.strokeStyle = 'black';
         ctx.moveTo(ctx.canvas.width / 2, ctx.canvas.height / 2);
