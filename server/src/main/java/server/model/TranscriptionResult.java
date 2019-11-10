@@ -37,4 +37,9 @@ public class TranscriptionResult implements Serializable {
     public void setTimeB(Double timeB) {
         this.timeB = timeB;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s,%f,%f", text, timeA, timeB);
+    }
 }

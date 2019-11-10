@@ -1,5 +1,7 @@
 package server.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import server.repository.AnswerAttemptRepository;
 import server.repository.ExaminerRepository;
 import server.repository.QuestionRepository;
 import server.repository.TestSubmissionRepository;
+import server.repository.PatientRepository;
 import server.service.FileStorageService;
 import server.service.VoiceTranscriptionService;
 
@@ -41,6 +44,9 @@ public class TestController {
     private AnswerAttemptRepository answerAttemptRepository;
 
     @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
     private QuestionRepository questionRepository;
 
     @Autowired
@@ -49,13 +55,16 @@ public class TestController {
     @Autowired
     private VoiceTranscriptionService voiceTranscriptionService;
 
+    Logger logger = LoggerFactory.getLogger(TestController.class);
+
     @RequestMapping(value = "/result",
             method = RequestMethod.POST,
             produces = "application/json")
     public String result(@RequestParam("file") MultipartFile file,
-                         @RequestParam("TestSubmissionID") Integer testSubmissionID,
-                         @RequestParam("questionID") Integer questionID,
+                         @RequestParam("testSubmissionID") int testSubmissionID,
+                         @RequestParam("questionID") int questionID,
                          Authentication authentication) throws IOException {
+        logger.info("Received Answer attempt");
 
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         final Examiner examiner = this.examinerRepository.findByEmail(userDetails.getUsername()).get();
@@ -73,15 +82,22 @@ public class TestController {
                     file
             );
 
-            final List<TranscriptionResult> results = getTranscriptionResults(fsr);
+            logger.info("Audio Received Size: " +  fsr.getFile().length());
+
+            TranscriptionResult[] results = this.voiceTranscriptionService.vts(fsr);
+
+            logger.info("Audio Transcribed Successfully");
+            logger.info("Transcription Result Count: " + results.length);
+            Arrays.stream(results).forEach(result ->  logger.info(result.toString()));
+
 
             AnswerAttempt answer = new AnswerAttempt();
             answer.setTestSubmissionID(testSubmissionID);
             answer.setQuestionID(questionID);
-            answer.setGuessedAngle1(Integer.parseInt(results.get(0).getText()));
-            answer.setTime1(results.get(0).getTimeA());
-            answer.setGuessedAngle2(Integer.parseInt(results.get(1).getText()));
-            answer.setTime2(results.get(1).getTimeA());
+            answer.setGuessedAngle1(Integer.parseInt(results[0].getText()));
+            answer.setTime1(results[0].getTimeA());
+            answer.setGuessedAngle2(Integer.parseInt(results[0].getText()));
+            answer.setTime2(results[1].getTimeA());
             answer.setAudioFilePath(fsr.getPath());
 
             this.answerAttemptRepository.save(answer);
@@ -105,12 +121,18 @@ public class TestController {
     }
 
     @RequestMapping(value = "start",
-            method = RequestMethod.GET,
+            method = RequestMethod.POST,
             produces = "application/json")
-    public ResponseEntity<?> start(@RequestBody StartTestRequest request,
+    public StartTestResponse start(@RequestBody StartTestRequest request,
                                    Authentication authentication) {
+        System.out.println("Starting Test");
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         final Examiner examiner = this.examinerRepository.findByEmail(userDetails.getUsername()).get();
+
+        final Patient patient = new Patient();
+        patient.setPatientID(request.getPatientID());
+        patient.setExamID(examiner.getExamID());
+        this.patientRepository.save(patient);
 
         final TestSubmission submission = this.createTestSubmission(
                 request.getTestID(),
@@ -121,7 +143,7 @@ public class TestController {
         List<Question> questions = new ArrayList<Question>();
         this.questionRepository.findAll().forEach(questions::add);
 
-        return ResponseEntity.ok(new StartTestResponse(submission.getTestSubmissionID(), questions));
+        return new StartTestResponse(submission.getTestSubmissionID(), questions);
     }
 
     public TestSubmission createTestSubmission(final Integer testID,

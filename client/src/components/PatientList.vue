@@ -28,17 +28,24 @@ export default {
           value: 'download',
         },
       ],
-      patientData: [
-        { ID: '100' },
-        { ID: '200' },
-        { ID: '300' },
-        { ID: '400' },
-        { ID: '500' },
-        { ID: '600' },
-      ],
+      patientData: [],
     };
   },
   methods: {
+    async fetchPatients() {
+      console.log(`Token: ${this.$store.state.token}`);
+      const response = await fetch('http://localhost:8081/patient/all', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${this.$store.state.token}`,
+        },
+      });
+      const json = await response.json();
+      this.patientData = json.patients.map(patientID => ({ ID: patientID }));
+    },
+  },
+  mounted() {
+    this.fetchPatients().then(() => console.log('patients were fetched'));
   },
 };
 </script>

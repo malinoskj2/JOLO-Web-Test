@@ -99,4 +99,20 @@ public class Question implements Serializable {
     public void setLine2EndY(Integer line2EndY) {
         this.line2EndY = line2EndY;
     }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 }

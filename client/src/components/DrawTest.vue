@@ -1,6 +1,8 @@
 <template>
 <div id="test">
-   <v-btn @click="getTestCoordinates()">Start</v-btn>
+   <v-btn @click="this.startRecord">Start</v-btn>
+  <v-btn @click="this.stopRecord">Stop</v-btn>
+  <v-btn @click="this.submitRecord">Submit</v-btn>
    <v-divider
       vertical></v-divider>
       <v-btn @click="next()">Next</v-btn>
@@ -10,72 +12,71 @@
 </template>
 
 <script>
-const axios = require('axios').default;
+import polyfill from 'audio-recorder-polyfill';
 
 export default {
   name: 'DrawTest',
+  props: {
+    questions: {
+      type: Array,
+      required: true,
+    },
+    testSubmissionID: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       i: 0,
+      recorder: {},
+      recordings: [],
+      lastRecording: {},
       testExample: {
         testSubmissionID: 0,
-        questions: [
-          {
-            xStart1: 170,
-            yStart1: 200,
-            xEnd1: 80,
-            yEnd1: 200,
-            xStart2: 194,
-            yStart2: 178,
-            xEnd2: 194,
-            yEnd2: 90,
-          },
-          {
-            xStart1: 176,
-            yStart1: 186,
-            xEnd1: 96,
-            yEnd1: 138,
-            xStart2: 180,
-            yStart2: 182,
-            xEnd2: 116,
-            yEnd2: 114,
-          },
-          {
-            xStart1: 176,
-            yStart1: 186,
-            xEnd1: 96,
-            yEnd1: 138,
-            xStart2: 216,
-            yStart2: 200,
-            xEnd2: 310,
-            yEnd2: 200,
-          },
-          {
-            xStart1: 200,
-            yStart1: 178,
-            xEnd1: 232,
-            yEnd1: 98,
-            xStart2: 214,
-            yStart2: 192,
-            xEnd2: 300,
-            yEnd2: 170,
-          },
-          {
-            xStart1: 180,
-            yStart1: 182,
-            xEnd1: 116,
-            yEnd1: 114,
-            xStart2: 208,
-            yStart2: 182,
-            xEnd2: 266,
-            yEnd2: 114,
-          },
-        ],
-      }
-      ,
+      },
     };
   },
+  created() {
+    this.initRecorder();
+  },
   methods: {
+    initRecorder() {
+      window.MediaRecorder = polyfill;
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        this.recorder = new MediaRecorder(stream);
+        this.recorder.addEventListener('dataavailable', (e) => {
+          this.lastRecording = e.data;
+        });
+      });
+    },
+    startRecord() {
+      this.recorder.start();
+    },
+    stopRecord() {
+      this.recorder.stop();
+    },
+    printRecord() {
+      console.log(this.lastRecording);
+    },
+    submitRecord() {
+      const formData = new FormData();
+      console.log('Submitting Answer');
+      console.log(this.lastRecording);
+      formData.append('file', this.lastRecording);
+      formData.append('testSubmissionID', this.testSubmissionID);
+      formData.append('questionID', this.questions[0].questionID);
+
+      fetch('http://localhost:8081/test/result', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${this.$store.state.token}`,
+        },
+      })
+        .then(() => console.log('submitted answer'))
+        .catch(() => console.log('failed to submit answer'));
+    },
     draw(xStart1, yStart1, xEnd1, yEnd1, xStart2, yStart2, xEnd2, yEnd2) {
       const canvas = document.getElementById('canvas');
       if (canvas.getContext) {
@@ -92,24 +93,21 @@ export default {
       }
     },
     next() {
-      if (this.i < this.testExample.questions.length) {
-        console.log(this.testExample.questions[this.i]);
-        this.draw(this.testExample.questions[this.i].xStart1,
-          this.testExample.questions[this.i].yStart1,
-          this.testExample.questions[this.i].xEnd1,
-          this.testExample.questions[this.i].yEnd1,
-          this.testExample.questions[this.i].xStart2,
-          this.testExample.questions[this.i].yStart2,
-          this.testExample.questions[this.i].xEnd2,
-          this.testExample.questions[this.i].yEnd2);
+      if (this.i < this.questions.length) {
+        console.log(this.questions[this.i]);
+        this.draw(this.questions[this.i].line1StartX,
+          this.questions[this.i].line1StartY,
+          this.questions[this.i].line1EndX,
+          this.questions[this.i].line1EndY,
+          this.questions[this.i].line2StartX,
+          this.questions[this.i].line2StartY,
+          this.questions[this.i].line2EndX,
+          this.questions[this.i].line2EndY);
         this.i = this.i + 1;
+      } else {
+        console.log('Test Complete');
+        this.$router.push('/results');
       }
-    },
-    getTestCoordinates() {
-      axios.get()
-        .then((response) => {
-          this.coords = response.data;
-        });
     },
   },
 

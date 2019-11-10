@@ -5,7 +5,6 @@ export default class Recorder {
     window.MediaRecorder = polyfill;
     this.recorder = null;
     this.recordings = [];
-
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
         console.log('Obtained audio stream');

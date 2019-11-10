@@ -15,4 +15,20 @@ public class StartTestResponse implements Serializable {
         this.testSubmissionID = testSubmissionID;
         this.questions = questions;
     }
+
+    public Integer getTestSubmissionID() {
+        return testSubmissionID;
+    }
+
+    public void setTestSubmissionID(Integer testSubmissionID) {
+        this.testSubmissionID = testSubmissionID;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
 }

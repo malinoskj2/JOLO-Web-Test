@@ -1,9 +1,10 @@
 <template>
-<div class="my-auto mx-auto" >
-  <DrawTest />
-  <v-spacer></v-spacer>
-  <canvas id="canvas2" style="border:2px solid #000000"></canvas>
-</div>
+  <div class="my-auto mx-auto">
+    <DrawTest :questions="test.questions"
+              :testSubmissionID="test.testSubmissionID"/>
+    <v-spacer></v-spacer>
+    <canvas id="canvas2" style="border:2px solid #000000"></canvas>
+  </div>
 </template>
 
 <script>
@@ -14,7 +15,29 @@ export default {
   components: {
     DrawTest,
   },
+  data() {
+    return {
+      test: {},
+    };
+  },
   methods: {
+    async fetchTest() {
+      console.log(`Token: ${this.$store.state.token}`);
+      const response = await fetch('http://localhost:8081/test/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.$store.state.token}`,
+        },
+        body: JSON.stringify({
+          patientID: Math.floor(Math.random() * Math.floor(10)),
+          testID: 1,
+        }),
+      });
+      const json = await response.json();
+      console.log(json);
+      this.test = json;
+    },
     draw() {
       const canvas = document.getElementById('canvas2');
       if (canvas.getContext) {
@@ -61,6 +84,7 @@ export default {
     },
   },
   mounted() {
+    this.fetchTest();
     this.draw();
   },
 };
