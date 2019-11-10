@@ -1,5 +1,6 @@
 package server.config.auth;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jdk.nashorn.internal.parser.Token;
@@ -33,39 +34,35 @@ public class RequestFilter extends OncePerRequestFilter {
     private TokenProvider tokenProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest,
-                                    HttpServletResponse httpServletResponse,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
 
-        Optional<String> token = Optional.ofNullable(httpServletRequest.getHeader(AUTHORIZATION_HEADER))
-                .flatMap(this::resolveToken);
+        final Optional<String> requestTokenHeader = Optional.ofNullable(request.getHeader(AUTHORIZATION_HEADER));
 
-        Optional<UserDetails> userDetails = token.map(this.tokenProvider::getUsername)
-                .map(this.jwtUserDetailsService::loadUserByUsername);
+        Optional<String> username = Optional.empty();
+        Optional<String> jwtToken = Optional.empty();
 
-        if (Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication()).isPresent()
-                && token.isPresent()
-                && userDetails.isPresent()
-                && this.tokenProvider.validate(token.get(), userDetails.get())) {
-
-            UsernamePasswordAuthenticationToken userPassAuthToken =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails.get(),
-                            null,
-                            userDetails.get().getAuthorities()
-                    );
-
-            userPassAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-            SecurityContextHolder.getContext().setAuthentication(userPassAuthToken);
+        if (requestTokenHeader.isPresent() && requestTokenHeader.get().startsWith("Bearer ")) {
+            jwtToken = Optional.of(requestTokenHeader.get().substring(7));
+            try {
+                username = Optional.of(tokenProvider.getUsername(jwtToken.get()));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Unable to get JWT Token");
+            } catch (ExpiredJwtException e) {
+                System.out.println("JWT Token has expired");
+            }
         }
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
-    }
 
-    private Optional<String> resolveToken(String tokenStr) {
-        if (StringUtils.hasText(tokenStr) && tokenStr.startsWith("Bearer ")) {
-            return Optional.of(tokenStr.substring(7));
-        } else {
-            return Optional.empty();
+        if (username.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username.get());
+            if (tokenProvider.validate(jwtToken.get(), userDetails)) {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
         }
+        chain.doFilter(request, response);
     }
 }
