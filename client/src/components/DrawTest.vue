@@ -56,7 +56,7 @@ export default {
         ctx.strokeStyle = 'black';
         ctx.moveTo(xStart1, yStart1);
         ctx.lineTo(xEnd1, yEnd1);
-        ctx.moveTo(xStart2, yEnd2);
+        ctx.moveTo(xStart2, yStart2);
         ctx.lineTo(xEnd2, yEnd2);
         ctx.stroke();
       }
