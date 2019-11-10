@@ -4,12 +4,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name="patient")
-public class Patient {
+public class Patient implements Serializable {
     @Id
-    @GeneratedValue
     private Integer patientID;
     private Integer examID;
 
