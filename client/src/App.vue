@@ -3,7 +3,9 @@
     <Nav :textA="this.navConfig.textA"
          :textB="this.navConfig.textB"
          :items="this.navConfig.navLinks"
-         :authLinks="this.navConfig.authLinks"/>
+         :authLinks="this.navConfig.authLinks"
+         :token="this.$store.state.token"
+         :username="this.$store.state.email"/>
     <router-view></router-view>
   </v-app>
 </template>
