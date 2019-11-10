@@ -28,8 +28,8 @@ export default {
       const canvas = document.getElementById('canvas');
       if (canvas.getContext) {
         const ctx = canvas.getContext('2d');
-        ctx.canvas.width = 200;
-        ctx.canvas.height = 200;
+        ctx.canvas.width = 400;
+        ctx.canvas.height = 400;
         ctx.beginPath();
         ctx.strokeStyle = 'black';
         ctx.moveTo(ctx.canvas.width / 2, ctx.canvas.height / 2);

@@ -19,43 +19,43 @@ export default {
       const canvas = document.getElementById('canvas2');
       if (canvas.getContext) {
         const ctx = canvas.getContext('2d');
-        ctx.canvas.width = 200;
-        ctx.canvas.height = 200;
+        ctx.canvas.width = 400;
+        ctx.canvas.height = 400;
         ctx.beginPath();
         ctx.strokeStyle = 'black';
         // Line 1
-        ctx.moveTo(85, 100);
-        ctx.lineTo(40, 100);
+        ctx.moveTo(170, 200);
+        ctx.lineTo(80, 200);
         // // Line 2
-        ctx.moveTo(86, 96);
-        ctx.lineTo(41, 85);
+        ctx.moveTo(172, 192);
+        ctx.lineTo(82, 170);
         // // Line 3
-        ctx.moveTo(88, 93);
-        ctx.lineTo(48, 69);
+        ctx.moveTo(176, 186);
+        ctx.lineTo(96, 138);
         // // Line 4
-        ctx.moveTo(90, 91);
-        ctx.lineTo(58, 57);
+        ctx.moveTo(180, 182);
+        ctx.lineTo(116, 114);
         // // Line 5
-        ctx.moveTo(93, 89);
-        ctx.lineTo(76, 49);
+        ctx.moveTo(186, 178);
+        ctx.lineTo(152, 98);
         // // Line 6
-        ctx.moveTo(97, 89);
-        ctx.lineTo(97, 45);
+        ctx.moveTo(194, 178);
+        ctx.lineTo(193, 90);
         // // Line 7
-        ctx.moveTo(100, 89);
-        ctx.lineTo(116, 49);
+        ctx.moveTo(200, 178);
+        ctx.lineTo(232, 98);
         // // Line 8
-        ctx.moveTo(104, 91);
-        ctx.lineTo(133, 57);
+        ctx.moveTo(208, 182);
+        ctx.lineTo(266, 114);
         // // Line 9
-        ctx.moveTo(106, 93);
-        ctx.lineTo(143, 69);
+        ctx.moveTo(212, 186);
+        ctx.lineTo(286, 138);
         // // Line 10
-        ctx.moveTo(107, 96);
-        ctx.lineTo(150, 85);
+        ctx.moveTo(214, 192);
+        ctx.lineTo(300, 170);
         // Line 11
-        ctx.moveTo(108, 100);
-        ctx.lineTo(155, 100);
+        ctx.moveTo(216, 200);
+        ctx.lineTo(310, 200);
         ctx.stroke();
       }
     },
