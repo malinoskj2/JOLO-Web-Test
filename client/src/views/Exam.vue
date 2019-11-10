@@ -40,7 +40,7 @@ export default {
         ctx.lineTo(152, 98);
         // // Line 6
         ctx.moveTo(194, 178);
-        ctx.lineTo(193, 90);
+        ctx.lineTo(194, 90);
         // // Line 7
         ctx.moveTo(200, 178);
         ctx.lineTo(232, 98);
