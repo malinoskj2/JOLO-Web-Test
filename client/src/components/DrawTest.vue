@@ -17,14 +17,36 @@ export default {
   data() {
     return {
       i: 0,
-      coords: [
-        [0, 0],
-      ]
+      testExample: {
+        testSubmissionID: 0,
+        questions: [
+          {
+            xStart1: 170,
+            yStart1: 200,
+            xEnd1: 80,
+            yEnd1: 200,
+            xStart2: 194,
+            yStart2: 178,
+            xEnd2: 193,
+            yEnd2: 90,
+          },
+          {
+            xStart1: 176,
+            yStart1: 186,
+            xEnd1: 96,
+            yEnd1: 138,
+            xStart2: 180,
+            yStart2: 182,
+            xEnd2: 116,
+            yEnd2: 114,
+          },
+        ],
+      }
       ,
     };
   },
   methods: {
-    draw(x, y) {
+    draw(xStart1, yStart1, xEnd1, yEnd1, xStart2, yStart2, xEnd2, yEnd2) {
       const canvas = document.getElementById('canvas');
       if (canvas.getContext) {
         const ctx = canvas.getContext('2d');
@@ -32,16 +54,26 @@ export default {
         ctx.canvas.height = 400;
         ctx.beginPath();
         ctx.strokeStyle = 'black';
-        ctx.moveTo(ctx.canvas.width / 2, ctx.canvas.height / 2);
-        ctx.lineTo(x, y);
-        ctx.moveTo(ctx.canvas.width / 2, ctx.canvas.height / 2);
-        ctx.lineTo(x + 50, y + 50);
+        ctx.moveTo(xStart1, yStart1);
+        ctx.lineTo(xEnd1, yEnd1);
+        ctx.moveTo(xStart2, yEnd2);
+        ctx.lineTo(xEnd2, yEnd2);
         ctx.stroke();
       }
     },
     next() {
-      this.draw(this.coords[this.i][0], this.coords[this.i][1]);
-      this.i = this.i + 1;
+      if (this.i < this.testExample.questions.length) {
+        console.log(this.testExample.questions[this.i]);
+        this.draw(this.testExample.questions[this.i].xStart1,
+          this.testExample.questions[this.i].yStart1,
+          this.testExample.questions[this.i].xEnd1,
+          this.testExample.questions[this.i].yEnd1,
+          this.testExample.questions[this.i].xStart2,
+          this.testExample.questions[this.i].yStart2,
+          this.testExample.questions[this.i].xEnd2,
+          this.testExample.questions[this.i].yEnd2);
+        this.i = this.i + 1;
+      }
     },
     getTestCoordinates() {
       axios.get()
