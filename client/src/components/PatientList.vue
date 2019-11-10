@@ -21,11 +21,21 @@ export default {
           sortable: false,
           value: 'ID',
         },
+        {
+          text: 'Download',
+          align: 'right',
+          sortable: false,
+          value: 'download',
+        },
       ],
-      patientID: [
-        { ID: 3 },
+      patientData: [
+        { ID: '100' },
+        { ID: '200' },
+        { ID: '300' },
+        { ID: '400' },
+        { ID: '500' },
+        { ID: '600' },
       ],
-      patientData: [{ ID: '1232313123' }, '4324234124', '3424123412', '341123421'],
     };
   },
   methods: {
