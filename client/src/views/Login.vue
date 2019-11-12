@@ -18,14 +18,14 @@
           <v-card-text>
           <v-form>
                  <v-text-field
-                v-model="Email"
+                v-model="loginCred.email"
                 label="Email"
                 name="email"
                 type="email"
                 required
                 />
                  <v-text-field
-                 v-model="Password"
+                 v-model="loginCred.password"
                 label="Password"
                 name="password"
                 type="password"
@@ -54,8 +54,8 @@ export default {
   name: 'login',
   data: () => ({
     loginCred: {
-      Email: '',
-      Password: '',
+      email: '',
+      password: '',
     },
   }),
   methods: {
@@ -66,13 +66,13 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: this.Email,
-          password: this.Password,
+          email: this.email,
+          password: this.password,
         }),
       })
         .then(response => response.json())
         .then((token) => {
-          this.$store.commit('saveEmail', this.Email);
+          this.$store.commit('saveEmail', this.email);
           this.$store.commit('saveToken', token.token);
         })
         // eslint-disable-next-line no-unused-vars
