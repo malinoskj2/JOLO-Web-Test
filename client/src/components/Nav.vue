@@ -18,7 +18,7 @@
                     prepend-inner-icon="search"/>
 
       <v-spacer/>
-      <div v-if="this.token">
+      <div v-if="this.isAuthenticated">
         <profile-menu :auth-links="authLinks"
                       :first-name="firstName"
                       :last-name="lastName"
@@ -130,8 +130,8 @@ export default {
       type: Array,
       required: true,
     },
-    token: {
-      type: String,
+    isAuthenticated: {
+      type: Boolean,
       required: false,
     },
     username: {

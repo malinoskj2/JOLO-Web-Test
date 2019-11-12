@@ -4,7 +4,7 @@
          :textB="this.navConfig.textB"
          :items="this.navConfig.navLinks"
          :authLinks="this.navConfig.authLinks"
-         :token="this.$store.state.token"
+         :isAuthenticated="this.$store.getters.isAuthenticated"
          :username="this.$store.state.email"/>
     <router-view></router-view>
   </v-app>
