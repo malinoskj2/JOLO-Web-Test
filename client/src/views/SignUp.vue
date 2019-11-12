@@ -18,35 +18,35 @@
           <v-card-text>
           <v-form>
               <v-text-field
-                v-model="fName"
+                v-model="userData.fName"
                 label="First Name"
                 name="fName"
                 type="text"
                 required
                 />
                  <v-text-field
-                v-model="lName"
+                v-model="userData.lName"
                 label="Last Name"
                 name="lNamee"
                 type="text"
                 required
                 />
                  <v-text-field
-                v-model="Email"
+                v-model="userData.email"
                 label="Email"
                 name="Email"
                 type="email"
                 required
                 />
                  <v-text-field
-                 v-model="Password"
+                 v-model="userData.password"
                 label="Password"
                 name="Password"
                 type="password"
                 required
                 />
                 <v-text-field
-                v-model="retypePassword"
+                v-model="userData.retypedPassword"
                 label="Retype Password"
                 name="retypePassword"
                 type="password"
@@ -73,12 +73,12 @@
 export default {
   name: 'signup',
   data: () => ({
-    reponseData: {},
     userData: {
       fName: '',
       lName: '',
-      Email: '',
-      Password: '',
+      email: '',
+      password: '',
+      retypedPassword: '',
     },
   }),
   methods: {
@@ -89,10 +89,10 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fName: this.fName,
-          lName: this.lName,
-          password: this.Password,
-          email: this.Email,
+          fName: this.userData.fName,
+          lName: this.userData.lName,
+          password: this.userData.password,
+          email: this.userData.email,
         }),
       })
         .then((response) => {
