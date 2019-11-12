@@ -22,7 +22,6 @@ export default {
   },
   methods: {
     async fetchTest() {
-      console.log(`Token: ${this.$store.state.token}`);
       const response = await fetch('http://localhost:8081/test/start', {
         method: 'POST',
         headers: {
@@ -34,9 +33,7 @@ export default {
           testID: 1,
         }),
       });
-      const json = await response.json();
-      console.log(json);
-      this.test = json;
+      this.test = await response.json();
     },
     draw() {
       const canvas = document.getElementById('canvas2');

@@ -7,24 +7,21 @@ export default class Recorder {
     this.recordings = [];
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
-        console.log('Obtained audio stream');
         this.recorder = new MediaRecorder(stream);
         this.recorder.addEventListener('dataavailable', (e) => {
           this.recordings.push(e.data);
         });
       },
-      error => console.log(`Failed to obtain audio stream: ${error}`));
+      // eslint-disable-next-line no-unused-vars
+      (error) => {});
   }
 
   start() {
-    console.log('Recording Audio.');
     this.recorder.start();
   }
 
   stop() {
-    console.log('Stopped Recording.');
     this.recorder.stop();
-    console.log(this.recordings);
   }
 
   lastRecording() {

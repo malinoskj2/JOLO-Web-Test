@@ -83,7 +83,6 @@ export default {
   }),
   methods: {
     postUserData() {
-      console.log('Did fetch');
       fetch('http://localhost:8081/auth/register', {
         method: 'POST',
         headers: {
@@ -97,22 +96,12 @@ export default {
         }),
       })
         .then((response) => {
-          console.log('got response');
-          console.log(response);
-          console.log(response.status);
           if (response.status === 200) {
-            console.log(response.status);
             this.$router.push('/login');
           }
-        })
-        .catch(error => console.log(error));
+        });
     },
     submit() {
-      console.log(`${this.fName}\n${
-        this.lName}\n${
-        this.Email}\n${
-        this.Password}\n${
-        this.retypePassword}`);
       this.postUserData();
     },
   },

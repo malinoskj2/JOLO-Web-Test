@@ -72,11 +72,11 @@ export default {
       })
         .then(response => response.json())
         .then((token) => {
-          console.log(token.token);
           this.$store.commit('saveEmail', this.Email);
           this.$store.commit('saveToken', token.token);
         })
-        .catch(error => console.log(error));
+        // eslint-disable-next-line no-unused-vars
+        .catch((error) => {});
     },
     submit() {
       this.getUserAuth();

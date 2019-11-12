@@ -56,13 +56,8 @@ export default {
     stopRecord() {
       this.recorder.stop();
     },
-    printRecord() {
-      console.log(this.lastRecording);
-    },
     submitRecord() {
       const formData = new FormData();
-      console.log('Submitting Answer');
-      console.log(this.lastRecording);
       formData.append('file', this.lastRecording);
       formData.append('testSubmissionID', this.testSubmissionID);
       formData.append('questionID', this.questions[0].questionID);
@@ -74,8 +69,8 @@ export default {
           Authorization: `Bearer ${this.$store.state.token}`,
         },
       })
-        .then(() => console.log('submitted answer'))
-        .catch(() => console.log('failed to submit answer'));
+        .then(() => {})
+        .catch(() => {});
     },
     draw(xStart1, yStart1, xEnd1, yEnd1, xStart2, yStart2, xEnd2, yEnd2) {
       const canvas = document.getElementById('canvas');
@@ -94,7 +89,6 @@ export default {
     },
     next() {
       if (this.i < this.questions.length) {
-        console.log(this.questions[this.i]);
         this.draw(this.questions[this.i].line1StartX,
           this.questions[this.i].line1StartY,
           this.questions[this.i].line1EndX,
@@ -105,7 +99,6 @@ export default {
           this.questions[this.i].line2EndY);
         this.i = this.i + 1;
       } else {
-        console.log('Test Complete');
         this.$router.push('/results');
       }
     },

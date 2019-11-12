@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     async fetchPatients() {
-      console.log(`Token: ${this.$store.state.token}`);
       const response = await fetch('http://localhost:8081/patient/all', {
         method: 'GET',
         headers: {
@@ -45,7 +44,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchPatients().then(() => console.log('patients were fetched'));
+    this.fetchPatients();
   },
 };
 </script>
