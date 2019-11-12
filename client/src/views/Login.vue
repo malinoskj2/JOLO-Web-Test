@@ -66,13 +66,13 @@ export default {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: this.email,
-          password: this.password,
+          email: this.loginCred.email,
+          password: this.loginCred.password,
         }),
       })
         .then(response => response.json())
         .then((token) => {
-          this.$store.commit('saveEmail', this.email);
+          this.$store.commit('saveEmail', this.loginCred.email);
           this.$store.commit('saveToken', token.token);
         })
         // eslint-disable-next-line no-unused-vars
