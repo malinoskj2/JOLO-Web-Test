@@ -1,7 +1,7 @@
 <template>
 <div id="test">
-   <v-btn @click="this.startRecord">Start</v-btn>
-  <v-btn @click="this.stopRecord">Stop</v-btn>
+   <v-btn @click="recorder.start()">Start</v-btn>
+  <v-btn @click="recorder.stop()">Stop</v-btn>
   <v-btn @click="this.submitRecord">Submit</v-btn>
    <v-divider
       vertical></v-divider>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import polyfill from 'audio-recorder-polyfill';
+import Recorder from '../services/recorder';
 
 export default {
   name: 'DrawTest',
@@ -29,38 +29,15 @@ export default {
   data() {
     return {
       i: 0,
-      recorder: {},
-      recordings: [],
-      lastRecording: {},
-      testExample: {
-        testSubmissionID: 0,
-      },
+      recorder: new Recorder(),
     };
   },
-  created() {
-    this.initRecorder();
-  },
   methods: {
-    initRecorder() {
-      window.MediaRecorder = polyfill;
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        this.recorder = new MediaRecorder(stream);
-        this.recorder.addEventListener('dataavailable', (e) => {
-          this.lastRecording = e.data;
-        });
-      });
-    },
-    startRecord() {
-      this.recorder.start();
-    },
-    stopRecord() {
-      this.recorder.stop();
-    },
     submitRecord() {
       const formData = new FormData();
-      formData.append('file', this.lastRecording);
+      formData.append('file', this.recorder.getLastRecording());
       formData.append('testSubmissionID', this.testSubmissionID);
-      formData.append('questionID', this.questions[0].questionID);
+      formData.append('questionID', this.questions[this.i - 1].questionID);
 
       fetch('http://localhost:8081/test/result', {
         method: 'POST',
