@@ -19,10 +19,8 @@
 
       <v-spacer/>
       <div v-if="this.isAuthenticated">
-        <profile-menu :auth-links="authLinks"
-                      :first-name="firstName"
-                      :last-name="lastName"
-                      :username="username"/>
+
+        <slot name="profile-menu"></slot>
       </div>
       <div v-else>
         <router-link to="/login">
@@ -90,7 +88,6 @@
 </template>
 
 <script>
-import ProfileMenu from './ProfileMenu.vue';
 
 export default {
   name: 'Nav',
@@ -110,9 +107,6 @@ export default {
       await this.$nextTick();
     },
   },
-  components: {
-    ProfileMenu,
-  },
   props: {
     textA: {
       type: String,
@@ -126,27 +120,10 @@ export default {
       type: Array,
       required: true,
     },
-    authLinks: {
-      type: Array,
-      required: true,
-    },
     isAuthenticated: {
       type: Boolean,
       required: false,
     },
-    username: {
-      type: String,
-      required: false,
-    },
-    firstName: {
-      type: String,
-      required: false,
-    },
-    lastName: {
-      type: String,
-      required: false,
-    },
-
   },
 
 };

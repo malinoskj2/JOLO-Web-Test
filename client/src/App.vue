@@ -1,17 +1,24 @@
 <template>
   <v-app id="app">
-    <Nav :textA="this.navConfig.textA"
-         :textB="this.navConfig.textB"
-         :items="this.navConfig.navLinks"
-         :authLinks="this.navConfig.authLinks"
-         :isAuthenticated="this.$store.getters.isAuthenticated"
-         :username="this.$store.state.email"/>
+    <Nav :textA="navConfig.textA"
+         :textB="navConfig.textB"
+         :items="navConfig.navLinks"
+         :isAuthenticated="isAuthenticated">
+
+      <template v-slot:profile-menu>
+        <profile-menu :auth-links="navConfig.authLinks"
+                      :username="email"/>
+      </template>
+    </Nav>
     <router-view></router-view>
   </v-app>
 </template>
 
 <script>
+
+import { mapGetters } from 'vuex';
 import Nav from '@/components/Nav.vue';
+import ProfileMenu from './components/ProfileMenu.vue';
 
 export default {
   name: 'App',
@@ -38,8 +45,15 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapGetters([
+      'email',
+      'isAuthenticated',
+    ]),
+  },
   components: {
     Nav,
+    ProfileMenu,
   },
 
 };
