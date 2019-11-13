@@ -1,6 +1,10 @@
 package server.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import server.model.Examiner;
+import server.model.db.Examiner;
 
-public interface ExaminerRepository extends CrudRepository<Examiner, Long> { }
+import java.util.Optional;
+
+public interface ExaminerRepository extends CrudRepository<Examiner, Long> {
+    public Optional<Examiner> findByEmail(final String Email);
+}

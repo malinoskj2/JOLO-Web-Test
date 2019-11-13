@@ -1,4 +1,4 @@
-package server.model;
+package server.model.db;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,9 +12,10 @@ public class Examiner implements Serializable {
 
     private String fName;
     private String lName;
-    private String uName;
     private String password;
     private String email;
+
+    public Examiner() {};
 
     public Integer getExamID() {
         return examID;
@@ -24,38 +25,37 @@ public class Examiner implements Serializable {
         this.examID = examID;
     }
 
-    public Examiner() {};
+    public String getfName() {
+        return fName;
+    }
 
-    public Examiner(String fName,
-                    String lName,
-                    String uName,
-                    String password,
-                    String email) {
+    public void setfName(String fName) {
         this.fName = fName;
-        this.lName = lName;
-        this.uName = uName;
-        this.password = password;
-        this.email = email;
     }
 
     public String getlName() {
         return lName;
     }
 
-    public String getuName() {
-        return uName;
+    public void setlName(String lName) {
+        this.lName = lName;
     }
 
     public String getPassword() {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
 
-    public String getfName() {
-        return fName;
+    public void setEmail(String email) {
+        this.email = email;
     }
+
 }
 

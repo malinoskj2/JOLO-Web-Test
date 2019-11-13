@@ -5,8 +5,21 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    token: null,
+    email: null,
   },
   mutations: {
+    saveToken(state, token) {
+      state.token = token;
+    },
+    saveEmail(state, email) {
+      state.email = email;
+    },
+  },
+  getters: {
+    token: state => state.token,
+    email: state => state.email,
+    isAuthenticated: state => Boolean(state.token),
   },
   actions: {
   },

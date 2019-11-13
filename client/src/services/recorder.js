@@ -1,34 +1,28 @@
 import polyfill from 'audio-recorder-polyfill';
 
 export default class Recorder {
-    constructor() {
-        window.MediaRecorder = polyfill
-        this.recorder = null
-        this.recordings = []
+  constructor() {
+    window.MediaRecorder = polyfill;
+    this.recorder = {};
+    this.recording = {};
 
-        navigator.mediaDevices.getUserMedia({audio: true})
-            .then(stream => {
-                    console.log('Obtained audio stream')
-                    this.recorder = new MediaRecorder(stream)
-                    this.recorder.addEventListener('dataavailable', e => {
-                        this.recordings.push(e.data);
-                    })
-                },
-                error => console.log(`Failed to obtain audio stream: ${error}`))
-    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      this.recorder = new MediaRecorder(stream);
+      this.recorder.addEventListener('dataavailable', (e) => {
+        this.recording = e.data;
+      });
+    });
+  }
 
-    start() {
-        console.log('Recording Audio.')
-        this.recorder.start()
-    }
+  start() {
+    this.recorder.start();
+  }
 
-    stop() {
-        console.log('Stopped Recording.')
-        this.recorder.stop()
-        console.log(this.recordings)
-    }
+  stop() {
+    this.recorder.stop();
+  }
 
-    lastRecording() {
-        return this.recordings.pop()
-    }
+  getLastRecording() {
+    return this.recording;
+  }
 }
