@@ -66,15 +66,13 @@
                        :key="i"
                        :to="item.route"
                        class="router-link"
-                       exact-active-class="red--text">
-            <v-list-item :key="i" link
-            active-class="red--text"
-            exact-active-class="red--text">
+                       exact-active-class="route-active">
+            <v-list-item :key="i" link>
               <v-list-item-action>
-                <v-icon>{{ item.icon }}</v-icon>
+                <v-icon class="route-icon">{{ item.icon }}</v-icon>
               </v-list-item-action>
               <v-list-item-content>
-                <v-list-item-title class="grey--text">
+                <v-list-item-title class="grey--text route-title">
                   {{ item.text }}
                 </v-list-item-title>
               </v-list-item-content>
@@ -130,4 +128,10 @@ export default {
 </script>
 
 <style scoped>
+  .route-active .route-title{
+    color: #9575CD !important;
+  }
+  .route-active .route-icon{
+    color: #9575CD;
+  }
 </style>
