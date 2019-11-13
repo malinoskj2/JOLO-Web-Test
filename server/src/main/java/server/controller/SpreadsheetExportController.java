@@ -20,7 +20,10 @@ public class SpreadsheetExportController {
         SpreadsheetService ss = new SpreadsheetService(env.getProperty("spring.datasource.url"),
                                                        env.getProperty("spring.datasource.username"),
                                                        env.getProperty("spring.datasource.password"));
-        return ss.convertToSpreadsheet(patientID).getFilename();
+        try {
+            return ss.convertToSpreadsheet(patientID).getFilename();
+        }catch( Exception e ) { System.out.println(e.getStackTrace()); return e.toString();}
+
     }
 
 }
