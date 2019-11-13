@@ -48,10 +48,15 @@ public class TokenProvider implements Serializable {
     }
 
     public String generate(final UserDetails userDetails) {
+        final AppUser appUser = (AppUser) userDetails;
+
         Map<String, Object> claims = new HashMap<>();
 
         return Jwts.builder()
                 .setClaims(claims)
+                .claim("userID", appUser.getId())
+                .claim("firstName", appUser.getFirstName())
+                .claim("lastName", appUser.getLastName())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ttl * 1000))
