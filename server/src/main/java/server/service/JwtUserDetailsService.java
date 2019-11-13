@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import server.config.auth.AppUser;
 import server.exception.UserAlreadyExistAuthenticationException;
 import server.model.db.Examiner;
 import server.model.request.SignupRequest;
@@ -26,7 +27,11 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return this.examinerRepo.findByEmail(email)
-                .map(user -> new User(user.getEmail(), user.getPassword(), new ArrayList<>()))
+                .map(user ->{
+                    return new AppUser(user.getEmail(), user.getPassword(),
+                                true, true, true, true, new ArrayList<>(),
+                                user.getExamID(), user.getfName(), user.getlName());
+                })
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
 
