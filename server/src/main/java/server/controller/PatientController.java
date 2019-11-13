@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import server.config.auth.AppUser;
 import server.model.db.Examiner;
 import server.model.db.Patient;
 import server.model.response.PatientList;
@@ -32,12 +33,10 @@ public class PatientController {
             method = RequestMethod.GET,
             produces = "application/json")
     public PatientList all(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        AppUser userDetails = (AppUser) authentication.getPrincipal();
 
-        final Optional<List<Patient>> patients = this.examinerRepository.findByEmail(userDetails.getUsername())
-                .flatMap(examiner -> this.patientRepository.findAllByExamID(examiner.getExamID()));
+        final Optional<List<Patient>> patients = this.patientRepository.findAllByExamID(userDetails.getId());
 
         return new PatientList(patients.orElseGet(() -> new ArrayList<>()));
-
     }
 }
