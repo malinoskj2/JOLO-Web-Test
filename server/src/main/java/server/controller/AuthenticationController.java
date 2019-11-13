@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+import server.config.auth.AppUser;
 import server.config.auth.TokenProvider;
 import server.model.request.AuthenticationRequest;
 import server.model.request.SignupRequest;
@@ -35,16 +36,21 @@ public class AuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
-
-
+    
     @RequestMapping(value = "/authenticate",
     		method = RequestMethod.POST,
             produces = "application/json")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
     		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+            final AppUser userDetails = (AppUser) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
             final String token = tokenProvider.generate(userDetails);
-            return ResponseEntity.ok(new JwtResponse(token));
+
+            JwtResponse response = new JwtResponse(token);
+            response.setEmail(userDetails.getUsername());
+            response.setFirstName(userDetails.getFirstName());
+            response.setLastName(userDetails.getLastName());
+
+            return ResponseEntity.ok(response);
     	}
 
     @RequestMapping(value = "/register",
@@ -53,7 +59,7 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@RequestBody SignupRequest request) {
             return ResponseEntity.ok(this.userDetailsService.save(request));
     }
-    
+
     private void authenticate(String email, String password) throws Exception {
 
         try {

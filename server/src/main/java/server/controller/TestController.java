@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
+import server.config.auth.AppUser;
 import server.model.AudioResult;
 import server.model.TranscriptionResult;
 import server.model.db.*;
@@ -66,17 +67,16 @@ public class TestController {
                          Authentication authentication) throws IOException {
         logger.info("Received Answer attempt");
 
-        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        final Examiner examiner = this.examinerRepository.findByEmail(userDetails.getUsername()).get();
+        final AppUser userDetails = (AppUser) authentication.getPrincipal();
 
         final Optional<TestSubmission> submission = this.testSubmissionRepository.findByExamIDAndAndTestSubmissionID(
-                examiner.getExamID(),
+                userDetails.getId(),
                 testSubmissionID
         );
 
         if (submission.isPresent()) {
             final FileSystemResource fsr = this.fileStorageService.storeFile(
-                    examiner.getExamID(),
+                    userDetails.getId(),
                     testSubmissionID,
                     questionID,
                     file
@@ -106,37 +106,22 @@ public class TestController {
         return "Answer Submitted";
     }
 
-    private List<TranscriptionResult> getTranscriptionResults(final FileSystemResource fsr) {
-        return Arrays.stream(this.voiceTranscriptionService.vts(fsr))
-                .filter(result -> {
-                    try {
-                        Integer.parseInt(result.getText());
-                    } catch (NumberFormatException | NullPointerException nfe) {
-                        return false;
-                    }
-                    return true;
-                })
-                .limit(2)
-                .collect(Collectors.toList());
-    }
-
     @RequestMapping(value = "start",
             method = RequestMethod.POST,
             produces = "application/json")
     public StartTestResponse start(@RequestBody StartTestRequest request,
                                    Authentication authentication) {
         System.out.println("Starting Test");
-        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        final Examiner examiner = this.examinerRepository.findByEmail(userDetails.getUsername()).get();
+        final AppUser userDetails = (AppUser) authentication.getPrincipal();
 
         final Patient patient = new Patient();
         patient.setPatientID(request.getPatientID());
-        patient.setExamID(examiner.getExamID());
+        patient.setExamID(userDetails.getId());
         this.patientRepository.save(patient);
 
         final TestSubmission submission = this.createTestSubmission(
                 request.getTestID(),
-                examiner.getExamID(),
+                userDetails.getId(),
                 request.getPatientID()
         );
 
