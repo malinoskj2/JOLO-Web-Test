@@ -11,6 +11,9 @@ public class Question implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer questionID;
 
+    private Integer correctAngle1;
+    private Integer correctAngle2;
+
     private String label;
     private Integer position;
 
@@ -114,5 +117,21 @@ public class Question implements Serializable {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public Integer getCorrectAngle1() {
+        return correctAngle1;
+    }
+
+    public void setCorrectAngle1(Integer correctAngle1) {
+        this.correctAngle1 = correctAngle1;
+    }
+
+    public Integer getCorrectAngle2() {
+        return correctAngle2;
+    }
+
+    public void setCorrectAngle2(Integer correctAngle2) {
+        this.correctAngle2 = correctAngle2;
     }
 }
