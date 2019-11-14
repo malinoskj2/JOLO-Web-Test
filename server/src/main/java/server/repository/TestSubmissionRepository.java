@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface TestSubmissionRepository extends CrudRepository<TestSubmission, Long> {
     public Optional<TestSubmission>
-    findByExamIDAndAndTestSubmissionID(final Integer examID, final Integer testSubmissionID);
+    findByExamIDAndTestSubmissionID(final Integer examID, final Integer testSubmissionID);
     public Optional<TestSubmission>
-    findByPatientIDAndAndExamID(final Integer patientID, final Integer examID);
+    findByPatientIDAndExamID(final Integer patientID, final Integer examID);
 }

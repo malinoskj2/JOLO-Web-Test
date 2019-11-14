@@ -6,5 +6,5 @@ import server.model.db.AnswerAttempt;
 import java.util.List;
 
 public interface AnswerAttemptRepository extends CrudRepository<AnswerAttempt, Long> {
-    public List<AnswerAttempt> findByTestSubmissionID(final Integer testSubmissionID);
+    public List<AnswerAttempt> findAllByTestSubmissionID(final Integer testSubmissionID);
 }

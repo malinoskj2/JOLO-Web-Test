@@ -17,7 +17,6 @@ import server.repository.QuestionRepository;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
@@ -42,67 +41,65 @@ public class SpreadsheetService {
         this.attempts = attempts;
     }
 
-    public FileSystemResource convertToSpreadsheet() throws IOException {
+    public FileSystemResource convertToSpreadsheet() {
 
         File f = new File(System.getProperty("user.dir") + "/spreadsheet1.xls");
-        TestSubmission submission = submissionOptional.get();
+
 
         Workbook wb = new HSSFWorkbook();//WorkbookFactory.create(new File("-spreadsheet.xls"));
-        Sheet sheet = wb.createSheet("Results for pid" + submission.getPatientID());
-        Row row1_labels = sheet.createRow(0);
-        Row row2_data = sheet.createRow(1);
-        row1_labels.createCell(1).setCellValue("testID");
-        row2_data  .createCell(1).setCellValue(submission.getTestID());
-        row1_labels.createCell(2).setCellValue("examinerID");
-        row2_data  .createCell(2).setCellValue(submission.getExamID());
-        row1_labels.createCell(3).setCellValue("patientID");
-        row2_data  .createCell(3).setCellValue(submission.getPatientID());
-        row1_labels.createCell(4).setCellValue("date");
-        row2_data  .createCell(4).setCellValue(submission.getCreatedDate().toString());
+        if (submissionOptional.isPresent()) {
+            TestSubmission submission = submissionOptional.get();
+            Sheet sheet = wb.createSheet("Results for pid" + submission.getPatientID());
+            Row row1_labels = sheet.createRow(0);
+            Row row2_data = sheet.createRow(1);
+            row1_labels.createCell(1).setCellValue("testID");
+            row2_data.createCell(1).setCellValue(submission.getTestID());
+            row1_labels.createCell(2).setCellValue("examinerID");
+            row2_data.createCell(2).setCellValue(submission.getExamID());
+            row1_labels.createCell(3).setCellValue("patientID");
+            row2_data.createCell(3).setCellValue(submission.getPatientID());
+            row1_labels.createCell(4).setCellValue("date");
+            row2_data.createCell(4).setCellValue(submission.getCreatedDate().toString());
 
-        Row row3_resultLabels = sheet.createRow(2);
-        row3_resultLabels.createCell(2).setCellValue("correct 1");
-        row3_resultLabels.createCell(2).setCellValue("angle 1");
-        row3_resultLabels.createCell(2).setCellValue("guess 1");
-        row3_resultLabels.createCell(2).setCellValue("time 1");
-        row3_resultLabels.createCell(2).setCellValue("correct 2");
-        row3_resultLabels.createCell(2).setCellValue("angle 2");
-        row3_resultLabels.createCell(2).setCellValue("guess 2");
-        row3_resultLabels.createCell(2).setCellValue("time 2");
+            Row row3_resultLabels = sheet.createRow(2);
+            row3_resultLabels.createCell(2).setCellValue("correct 1");
+            row3_resultLabels.createCell(2).setCellValue("angle 1");
+            row3_resultLabels.createCell(2).setCellValue("guess 1");
+            row3_resultLabels.createCell(2).setCellValue("time 1");
+            row3_resultLabels.createCell(2).setCellValue("correct 2");
+            row3_resultLabels.createCell(2).setCellValue("angle 2");
+            row3_resultLabels.createCell(2).setCellValue("guess 2");
+            row3_resultLabels.createCell(2).setCellValue("time 2");
 
-        int questionNumber = 1;
-        for(AnswerAttempt attempt : attempts) {
-            Question question= questionRepository.findByQuestionID(attempt.getQuestionID()).get();
+            int questionNumber = 1;
+            for (AnswerAttempt attempt : attempts) {
+                Optional<Question> questionOptional = questionRepository.findByQuestionID(attempt.getQuestionID());
+                if(questionOptional.isPresent()) {
+                    Question question = questionOptional.get();
 
-            Row row_question_results = sheet.createRow(questionNumber + 2);
-            row_question_results.createCell(0).setCellValue("q" + questionNumber);
-            row_question_results.createCell(1).setCellValue(question.getCorrectAngle1() == attempt.getGuessedAngle1());
-            row_question_results.createCell(2).setCellValue(question.getCorrectAngle1());
-            row_question_results.createCell(3).setCellValue(attempt.getGuessedAngle1());
-            row_question_results.createCell(4).setCellValue(attempt.getTime1());
-            row_question_results.createCell(5).setCellValue(question.getCorrectAngle2() == attempt.getGuessedAngle2());
-            row_question_results.createCell(6).setCellValue(question.getCorrectAngle2());
-            row_question_results.createCell(7).setCellValue(attempt.getGuessedAngle2());
-            row_question_results.createCell(8).setCellValue(attempt.getTime2());
-
-            questionNumber++;
+                    Row row_question_results = sheet.createRow(questionNumber + 2);
+                    row_question_results.createCell(0).setCellValue("q" + questionNumber);
+                    row_question_results.createCell(1).setCellValue(question.getCorrectAngle1().equals
+                                                                        (attempt.getGuessedAngle1()));
+                    row_question_results.createCell(2).setCellValue(question.getCorrectAngle1());
+                    row_question_results.createCell(3).setCellValue(attempt.getGuessedAngle1());
+                    row_question_results.createCell(4).setCellValue(attempt.getTime1());
+                    row_question_results.createCell(5).setCellValue(question.getCorrectAngle2().equals
+                                                                        (attempt.getGuessedAngle2()));
+                    row_question_results.createCell(6).setCellValue(question.getCorrectAngle2());
+                    row_question_results.createCell(7).setCellValue(attempt.getGuessedAngle2());
+                    row_question_results.createCell(8).setCellValue(attempt.getTime2());
+                }
+                questionNumber++;
+            }
         }
         try (OutputStream fileOut = new FileOutputStream(f)){
             wb.write(fileOut);
             System.out.println("\nfile written " + f.getAbsolutePath());
-
         }catch (Exception e) {
             System.out.println("caught:" + e);
             e.printStackTrace();
-        } finally { }
-
-
-        //try  (OutputStream fileOut = new FileOutputStream("server/workbook.xls")) {
-           // System.out.println("writing");
-           // wb.write(fileOut);
-       //}
-       // catch (Exception e) {}
-
+        }
         return new FileSystemResource(f);
     }
 

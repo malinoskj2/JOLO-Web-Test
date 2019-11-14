@@ -17,7 +17,6 @@ import server.model.request.StartTestRequest;
 import server.model.response.StartTestResponse;
 import server.repository.*;
 import server.service.FileStorageService;
-import server.service.SpreadsheetService;
 import server.service.VoiceTranscriptionService;
 
 import java.io.IOException;
@@ -64,7 +63,7 @@ public class TestController {
 
         final AppUser userDetails = (AppUser) authentication.getPrincipal();
 
-        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByExamIDAndAndTestSubmissionID(
+        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByExamIDAndTestSubmissionID(
                 userDetails.getId(),
                 testSubmissionID
         );
@@ -138,30 +137,6 @@ public class TestController {
         return this.testSubmissionRepository.save(submission);
     }
 
-    @RequestMapping(value = "/spreadsheet",
-            method = RequestMethod.POST,
-            produces = "application/json")
-    public String get_spreadsheet(@RequestParam("patientID") int patientID,
-                                  @RequestParam("examinerID") int examinerID,
-                                  Authentication authentication) {
-        //patientID = 0;
-        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByExamIDAndAndTestSubmissionID(
-                patientID,
-                examinerID
-        );
-        final List<AnswerAttempt> attempts = this.answerAttemptRepository.findByTestSubmissionID(
-                submission.get().getTestSubmissionID()
-        );
 
-        if (submission.isPresent()) {
-            SpreadsheetService ss = new SpreadsheetService(
-                    submission,
-                    attempts
-            );
-            try { return ss.convertToSpreadsheet().getFilename(); }
-            catch( Exception e ) { System.out.println(e.getStackTrace()); return e.toString();}
-        }
-        return "submission unreachable";
-    }
 
 }
