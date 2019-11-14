@@ -1,116 +1,93 @@
 package server.service;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
+import server.model.db.AnswerAttempt;
+import server.model.db.Question;
+import server.model.db.TestSubmission;
+import server.repository.QuestionRepository;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
-@PropertySource("classpath:application.properties")
+
 @Service
 public class SpreadsheetService {
 
 
-    private String databaseURL;
-    private String databaseUser;
-    private String databasePass;
-
+    private Optional<TestSubmission> submissionOptional;
+    private List<AnswerAttempt> attempts;
+    @Autowired
+    private QuestionRepository questionRepository;
     @Autowired
     private Environment env;
 
-    public SpreadsheetService( @Value("${spring.datasource.url}") String databaseURL,
-                               @Value("${spring.datasource.username}") String databaseUser,
-                               @Value("${spring.datasource.password}") String databasePass) {
+    Logger logger = LoggerFactory.getLogger(SpreadsheetService.class);
 
-        this.databaseURL = databaseURL;
-        this.databaseUser = databaseUser;
-        this.databasePass = databasePass;
+    public SpreadsheetService(Optional<TestSubmission> submission,
+                              List<AnswerAttempt> attempts) {
+        this.submissionOptional = submission;
+        this.attempts = attempts;
     }
 
-    public FileSystemResource convertToSpreadsheet(int patientID) throws IOException {
-        //String data = "";
-
-
-        //Workbook wb = new HSSFWorkbook();
-        //Sheet sheet = wb.createSheet("newsheet");
-        //CreationHelper createHelper = wb.getCreationHelper();
-        //Row row = sheet.createRow(0);
-
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("javax.persistence.jdbc.user", databaseUser);
-        properties.put("javax.persistence.jdbc.password", databasePass);
-
-
-        //System.out.println(databaseURL + " " + databaseUser);
+    public FileSystemResource convertToSpreadsheet() throws IOException {
 
         File f = new File(System.getProperty("user.dir") + "/spreadsheet1.xls");
-       // System.out.println("file made: " + f.getAbsolutePath());
+        TestSubmission submission = submissionOptional.get();
 
         Workbook wb = new HSSFWorkbook();//WorkbookFactory.create(new File("-spreadsheet.xls"));
-        Sheet sheet = wb.createSheet("Results for pid" + patientID);
-        Row row_metadata = sheet.createRow(0);
-        Row row_data = sheet.createRow(1);
-        //row_data.createCell(0).setCellValue(1);
-        //row_data.createCell(1).setCellValue(2);
+        Sheet sheet = wb.createSheet("Results for pid" + submission.getPatientID());
+        Row row1_labels = sheet.createRow(0);
+        Row row2_data = sheet.createRow(1);
+        row1_labels.createCell(1).setCellValue("testID");
+        row2_data  .createCell(1).setCellValue(submission.getTestID());
+        row1_labels.createCell(2).setCellValue("examinerID");
+        row2_data  .createCell(2).setCellValue(submission.getExamID());
+        row1_labels.createCell(3).setCellValue("patientID");
+        row2_data  .createCell(3).setCellValue(submission.getPatientID());
+        row1_labels.createCell(4).setCellValue("date");
+        row2_data  .createCell(4).setCellValue(submission.getCreatedDate().toString());
 
+        Row row3_resultLabels = sheet.createRow(2);
+        row3_resultLabels.createCell(2).setCellValue("correct 1");
+        row3_resultLabels.createCell(2).setCellValue("angle 1");
+        row3_resultLabels.createCell(2).setCellValue("guess 1");
+        row3_resultLabels.createCell(2).setCellValue("time 1");
+        row3_resultLabels.createCell(2).setCellValue("correct 2");
+        row3_resultLabels.createCell(2).setCellValue("angle 2");
+        row3_resultLabels.createCell(2).setCellValue("guess 2");
+        row3_resultLabels.createCell(2).setCellValue("time 2");
+
+        int questionNumber = 1;
+        for(AnswerAttempt attempt : attempts) {
+            Question question= questionRepository.findByQuestionID(attempt.getQuestionID()).get();
+
+            Row row_question_results = sheet.createRow(questionNumber + 2);
+            row_question_results.createCell(0).setCellValue("q" + questionNumber);
+            row_question_results.createCell(1).setCellValue(question.getCorrectAngle1() == attempt.getGuessedAngle1());
+            row_question_results.createCell(2).setCellValue(question.getCorrectAngle1());
+            row_question_results.createCell(3).setCellValue(attempt.getGuessedAngle1());
+            row_question_results.createCell(4).setCellValue(attempt.getTime1());
+            row_question_results.createCell(5).setCellValue(question.getCorrectAngle2() == attempt.getGuessedAngle2());
+            row_question_results.createCell(6).setCellValue(question.getCorrectAngle2());
+            row_question_results.createCell(7).setCellValue(attempt.getGuessedAngle2());
+            row_question_results.createCell(8).setCellValue(attempt.getTime2());
+
+            questionNumber++;
+        }
         try (OutputStream fileOut = new FileOutputStream(f)){
-            ///*
-            String dbQuery = "SHOW TABLES";//todo: create query that retrieves correct info
-            Class.forName("org.hsqldb.jdbcDriver");                    //import driver for SQL
-            Connection connection = DriverManager.getConnection(databaseURL, databaseUser, databasePass);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(dbQuery);
-            ResultSetMetaData metadata = resultSet.getMetaData();
-
-            //System.out.println("here");
-            System.out.println("connection schema: " + connection.getSchema() +
-                                "\nconnection statement: " + statement +
-                                "\nresult: " + resultSet +
-                                "\nmeta: " + metadata +
-                                "\n----------------------------------");
-
-            for (int i = 0; i < metadata.getColumnCount(); i++) {
-
-                if(metadata.getColumnLabel(i+1) == null) {
-                    System.out.print("\t"+ metadata.getColumnLabel(i + 1));
-                    row_metadata.createCell(i).setCellValue(metadata.getColumnLabel(i+1));
-                } else {
-                    System.out.print("null metadata value i=" + i);
-                    row_metadata.createCell(i).setCellValue("null metadata");
-                }
-            }
-            System.out.println("\n----------------------------------");
-
-            while (resultSet.next()) {
-                for (int i = 0; i < metadata.getColumnCount(); i++) {
-                    Object value = resultSet.getObject(i + 1);
-                    Cell cell = row_data.createCell(i);
-                    if (value == null) {
-                        cell.setCellValue("null value");
-                        System.out.print("\t null  ");
-                    } else {
-                        cell.setCellValue(value.toString().trim());
-                        System.out.print("\t"+value.toString().trim());
-                    }
-                }
-                //System.out.println("hi");
-            }//*/
-
-
             wb.write(fileOut);
             System.out.println("\nfile written " + f.getAbsolutePath());
 

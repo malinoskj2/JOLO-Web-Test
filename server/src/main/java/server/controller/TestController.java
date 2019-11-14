@@ -4,24 +4,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.multipart.MultipartFile;
 import server.config.auth.AppUser;
-import server.model.AudioResult;
 import server.model.TranscriptionResult;
-import server.model.db.*;
+import server.model.db.AnswerAttempt;
+import server.model.db.Patient;
+import server.model.db.Question;
+import server.model.db.TestSubmission;
 import server.model.request.StartTestRequest;
 import server.model.response.StartTestResponse;
-import server.repository.AnswerAttemptRepository;
-import server.repository.ExaminerRepository;
-import server.repository.QuestionRepository;
-import server.repository.TestSubmissionRepository;
-import server.repository.PatientRepository;
+import server.repository.*;
 import server.service.FileStorageService;
+import server.service.SpreadsheetService;
 import server.service.VoiceTranscriptionService;
 
 import java.io.IOException;
@@ -29,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/test")
@@ -141,6 +136,32 @@ public class TestController {
         submission.setPatientID(patientID);
 
         return this.testSubmissionRepository.save(submission);
+    }
+
+    @RequestMapping(value = "/spreadsheet",
+            method = RequestMethod.POST,
+            produces = "application/json")
+    public String get_spreadsheet(@RequestParam("patientID") int patientID,
+                                  @RequestParam("examinerID") int examinerID,
+                                  Authentication authentication) {
+        //patientID = 0;
+        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByExamIDAndAndTestSubmissionID(
+                patientID,
+                examinerID
+        );
+        final List<AnswerAttempt> attempts = this.answerAttemptRepository.findByTestSubmissionID(
+                submission.get().getTestSubmissionID()
+        );
+
+        if (submission.isPresent()) {
+            SpreadsheetService ss = new SpreadsheetService(
+                    submission,
+                    attempts
+            );
+            try { return ss.convertToSpreadsheet().getFilename(); }
+            catch( Exception e ) { System.out.println(e.getStackTrace()); return e.toString();}
+        }
+        return "submission unreachable";
     }
 
 }
