@@ -1,6 +1,5 @@
 <template>
   <div class="my-auto mx-auto">
-    <patient-i-d-prompt @set-patient="startTest"/>
     <DrawTest :questions="test.questions"
               :testSubmissionID="test.testSubmissionID"/>
     <v-spacer></v-spacer>
@@ -10,30 +9,22 @@
 
 <script>
 import DrawTest from '@/components/DrawTest.vue';
-import PatientIDPrompt from '../components/PatientIDPrompt.vue';
 
 export default {
   name: 'exam',
   components: {
     DrawTest,
-    PatientIDPrompt,
-  },
-  metaInfo() {
-    return {
-      title: 'Exam',
-    };
   },
   data() {
     return {
-      test: {},
+      test: {
+        questions: [],
+        testSubmissionID: 0,
+      },
     };
   },
   methods: {
-    startTest(payload) {
-      this.fetchTest(payload.patientID);
-      this.draw();
-    },
-    async fetchTest(patientID) {
+    async fetchTest() {
       const response = await fetch('http://localhost:8081/test/start', {
         method: 'POST',
         headers: {
@@ -41,7 +32,7 @@ export default {
           Authorization: `Bearer ${this.$store.state.token}`,
         },
         body: JSON.stringify({
-          patientID,
+          patientID: Math.floor(Math.random() * Math.floor(10)),
           testID: 1,
         }),
       });
@@ -93,14 +84,12 @@ export default {
     },
   },
   mounted() {
-
+    this.fetchTest();
+    this.draw();
   },
 };
 </script>
 
 <style>
-  #canvas2 {
-    width:400px;
-    height: 400px;
-  }
+
 </style>

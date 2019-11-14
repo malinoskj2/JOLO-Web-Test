@@ -1,10 +1,11 @@
 <template>
 <div id="test">
-    <div class="my-3 mx-auto">
-      <v-btn @click="submitRecord" class="mr-5">Submit</v-btn>
+   <v-btn @click="recorder.start()">Start</v-btn>
+  <v-btn @click="recorder.stop()">Stop</v-btn>
+  <v-btn @click="this.submitRecord">Submit</v-btn>
+   <v-divider
+      vertical></v-divider>
       <v-btn @click="next()">Next</v-btn>
-    </div>
-
     <v-spacer></v-spacer>
     <canvas id="canvas" style="border:2px solid #000000"></canvas>
 </div>
@@ -33,9 +34,7 @@ export default {
   },
   methods: {
     submitRecord() {
-      this.recorder.stop();
       const formData = new FormData();
-
       formData.append('file', this.recorder.getLastRecording());
       formData.append('testSubmissionID', this.testSubmissionID);
       formData.append('questionID', this.questions[this.i - 1].questionID);
@@ -54,7 +53,8 @@ export default {
       const canvas = document.getElementById('canvas');
       if (canvas.getContext) {
         const ctx = canvas.getContext('2d');
-
+        ctx.canvas.width = 400;
+        ctx.canvas.height = 400;
         ctx.beginPath();
         ctx.strokeStyle = 'black';
         ctx.moveTo(xStart1, yStart1);
@@ -75,9 +75,7 @@ export default {
           this.questions[this.i].line2EndX,
           this.questions[this.i].line2EndY);
         this.i = this.i + 1;
-        this.recorder.start();
       } else {
-        this.recorder.stop();
         this.$router.push('/results');
       }
     },
@@ -87,10 +85,5 @@ export default {
 </script>
 
 <style>
-#canvas {
-  height: 400px;
-  width: 400px;
-  min-width: 400px;
-  min-height: 200px;
-}
+
 </style>
