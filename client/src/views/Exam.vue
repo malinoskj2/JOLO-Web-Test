@@ -1,19 +1,22 @@
 <template>
-  <div class="my-auto mx-auto">
-    <DrawTest :questions="test.questions"
-              :testSubmissionID="test.testSubmissionID"/>
-    <v-spacer></v-spacer>
-    <canvas id="canvas2" style="border:2px solid #000000"></canvas>
-  </div>
+    <div class="my-auto mx-auto">
+      <patient-i-d-prompt @set-patient="start"/>
+      <DrawTest :questions="test.questions"
+                :testSubmissionID="test.testSubmissionID"/>
+      <v-spacer></v-spacer>
+      <canvas id="canvas2" style="border:2px solid #000000"></canvas>
+    </div>
 </template>
 
 <script>
 import DrawTest from '@/components/DrawTest.vue';
+import PatientIDPrompt from '@/components/PatientIDPrompt.vue';
 
 export default {
   name: 'exam',
   components: {
     DrawTest,
+    PatientIDPrompt,
   },
   data() {
     return {
@@ -24,7 +27,11 @@ export default {
     };
   },
   methods: {
-    async fetchTest() {
+    start(payload) {
+      this.fetchTest(payload.patientID);
+      this.draw();
+    },
+    async fetchTest(patientID) {
       const response = await fetch('http://localhost:8081/test/start', {
         method: 'POST',
         headers: {
@@ -32,7 +39,7 @@ export default {
           Authorization: `Bearer ${this.$store.state.token}`,
         },
         body: JSON.stringify({
-          patientID: Math.floor(Math.random() * Math.floor(10)),
+          patientID,
           testID: 1,
         }),
       });
@@ -84,8 +91,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchTest();
-    this.draw();
+
   },
 };
 </script>
