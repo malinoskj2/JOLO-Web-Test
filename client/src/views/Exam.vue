@@ -4,7 +4,7 @@
       <DrawTest :questions="test.questions"
                 :testSubmissionID="test.testSubmissionID"/>
       <v-spacer></v-spacer>
-      <canvas id="canvas2" style="border:2px solid #000000"></canvas>
+      <canvas id="canvas2"></canvas>
     </div>
 </template>
 
