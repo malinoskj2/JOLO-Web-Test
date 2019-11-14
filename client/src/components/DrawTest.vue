@@ -1,11 +1,11 @@
 <template>
 <div id="test">
-   <v-btn @click="recorder.start()">Start</v-btn>
-  <v-btn @click="recorder.stop()">Stop</v-btn>
-  <v-btn @click="this.submitRecord">Submit</v-btn>
-   <v-divider
-      vertical></v-divider>
+    <div class="my-3 mx-auto">
+      <v-btn @click="recorder.start()" class="mr-5">Submit</v-btn>
       <v-btn @click="next()">Next</v-btn>
+    </div>
+
+
     <v-spacer></v-spacer>
     <canvas id="canvas" style="border:2px solid #000000"></canvas>
 </div>
@@ -53,8 +53,7 @@ export default {
       const canvas = document.getElementById('canvas');
       if (canvas.getContext) {
         const ctx = canvas.getContext('2d');
-        ctx.canvas.width = 400;
-        ctx.canvas.height = 400;
+
         ctx.beginPath();
         ctx.strokeStyle = 'black';
         ctx.moveTo(xStart1, yStart1);
@@ -85,5 +84,10 @@ export default {
 </script>
 
 <style>
-
+#canvas {
+  height: 400px;
+  width: 400px;
+  min-width: 400px;
+  min-height: 200px;
+}
 </style>
