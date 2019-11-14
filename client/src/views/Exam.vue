@@ -32,7 +32,7 @@ export default {
       this.draw();
     },
     async fetchTest(patientID) {
-      const response = await fetch('http://localhost:8081/test/start', {
+      const response = await fetch(`${process.env.VUE_APP_API}/test/start`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

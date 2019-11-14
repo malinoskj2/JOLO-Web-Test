@@ -39,7 +39,7 @@ export default {
       formData.append('testSubmissionID', this.testSubmissionID);
       formData.append('questionID', this.questions[this.i - 1].questionID);
 
-      fetch('http://localhost:8081/test/result', {
+      fetch(`${process.env.VUE_APP_API}/test/result`, {
         method: 'POST',
         body: formData,
         headers: {

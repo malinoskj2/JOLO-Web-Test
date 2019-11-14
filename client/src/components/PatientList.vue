@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     async fetchPatients() {
-      const response = await fetch('http://localhost:8081/patient/all', {
+      const response = await fetch(`${process.env.VUE_APP_API}/patient/all`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${this.$store.state.token}`,

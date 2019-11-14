@@ -65,7 +65,7 @@ export default {
   }),
   methods: {
     getUserAuth() {
-      fetch('http://localhost:8081/auth/authenticate', {
+      fetch(`${process.env.VUE_APP_API}/auth/authenticate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
