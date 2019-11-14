@@ -16,19 +16,21 @@
              <v-card-title class="justify-center">Sign Up</v-card-title>
              </v-flex>
           <v-card-text>
-          <v-form>
+          <v-form ref="form" lazy-validation>
               <v-text-field
                 v-model="userData.fName"
                 label="First Name"
                 name="fName"
                 type="text"
+                :rules="firstNameRules"
                 required
                 />
                  <v-text-field
                 v-model="userData.lName"
                 label="Last Name"
-                name="lNamee"
+                name="lName"
                 type="text"
+                :rules="lastNameRules"
                 required
                 />
                  <v-text-field
@@ -37,12 +39,14 @@
                 name="Email"
                 type="email"
                 required
+                :rules="emailRules"
                 />
                  <v-text-field
                  v-model="userData.password"
                 label="Password"
                 name="Password"
                 type="password"
+                :rules="passwordRules"
                 required
                 />
                 <v-text-field
@@ -50,14 +54,20 @@
                 label="Retype Password"
                 name="retypePassword"
                 type="password"
+                :rules="passwordRules"
                 required
                 />
             </v-form>
           </v-card-text>
-          <v-card-actions >
+          <v-card-actions @keydown.enter="submit()">
                 <v-spacer />
                 <v-flex>
-                <v-btn class="justify-center" color="primary" @click="submit()">Submit</v-btn>
+                <v-btn
+                class="justify-center"
+                color="primary"
+                @click="submit()">
+                Submit
+                </v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
@@ -72,16 +82,53 @@
 
 export default {
   name: 'signup',
-  data: () => ({
-    userData: {
-      fName: '',
-      lName: '',
-      email: '',
-      password: '',
-      retypedPassword: '',
-    },
-  }),
+  data() {
+    return {
+      userData: {
+        fName: '',
+        lName: '',
+        email: '',
+        password: '',
+        retypedPassword: '',
+      },
+      valid: true,
+      firstNameRules: [
+        v => !!v || 'Name is required',
+      ],
+      lastNameRules: [
+        v => !!v || 'Last name is required',
+      ],
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => (v && v.length >= 8) || 'Password must be longer 8 characters or longer.',
+      ],
+    };
+  },
   methods: {
+    autoLogin() {
+      fetch('http://localhost:8081/auth/authenticate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: this.userData.email,
+          password: this.userData.password,
+        }),
+      })
+        .then(response => response.json())
+        .then((token) => {
+          this.$store.commit('saveEmail', this.userData.email);
+          this.$store.commit('saveToken', token.token);
+          this.$router.push('/results');
+        })
+        // eslint-disable-next-line no-unused-vars
+        .catch((error) => {});
+    },
     postUserData() {
       fetch('http://localhost:8081/auth/register', {
         method: 'POST',
@@ -97,12 +144,14 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
-            this.$router.push('/login');
+            this.autoLogin();
           }
         });
     },
     submit() {
-      this.postUserData();
+      if (this.$refs.form.validate()) {
+        this.postUserData();
+      }
     },
   },
 };

@@ -7,7 +7,7 @@
       vertical></v-divider>
       <v-btn @click="next()">Next</v-btn>
     <v-spacer></v-spacer>
-    <canvas id="canvas" style="border:2px solid #000000"></canvas>
+    <canvas id="canvas"></canvas>
 </div>
 </template>
 

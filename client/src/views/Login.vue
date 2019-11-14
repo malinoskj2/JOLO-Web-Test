@@ -1,7 +1,7 @@
 <template>
 <div id="login">
   <v-content>
-      <v-container>
+      <v-container @keypress.enter="submit()">
          <v-row
           align="center"
           justify="center"
@@ -36,7 +36,12 @@
           <v-card-actions >
                 <v-spacer />
                 <v-flex>
-                <v-btn class="justify-center" color="primary" @click="submit()">Submit</v-btn>
+                <v-btn
+                class="justify-center"
+                color="primary"
+                @click="submit()">
+                Submit
+                </v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
@@ -74,6 +79,7 @@ export default {
         .then((token) => {
           this.$store.commit('saveEmail', this.loginCred.email);
           this.$store.commit('saveToken', token.token);
+          this.$router.push('/results');
         })
         // eslint-disable-next-line no-unused-vars
         .catch((error) => {});
