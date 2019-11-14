@@ -15,6 +15,11 @@ export default {
   components: {
     DrawTest,
   },
+  metaInfo() {
+    return {
+      title: 'Exam',
+    };
+  },
   data() {
     return {
       test: {},

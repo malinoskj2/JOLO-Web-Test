@@ -11,6 +11,11 @@ import HelloWorld from '@/components/HelloWorld.vue';
 
 export default {
   name: 'home',
+  metaInfo() {
+    return {
+      title: 'Angle Test',
+    };
+  },
   components: {
     HelloWorld,
   },

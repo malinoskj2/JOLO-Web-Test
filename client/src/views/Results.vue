@@ -7,6 +7,11 @@ import PatientList from '@/components/PatientList.vue';
 
 export default {
   name: 'results',
+  metaInfo() {
+    return {
+      title: 'Results',
+    };
+  },
   components: {
     PatientList,
   },
