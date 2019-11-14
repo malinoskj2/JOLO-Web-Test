@@ -17,7 +17,10 @@ export default {
   },
   data() {
     return {
-      test: {},
+      test: {
+        questions: [],
+        testSubmissionID: 0,
+      },
     };
   },
   methods: {

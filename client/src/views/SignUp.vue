@@ -72,6 +72,11 @@
 
 export default {
   name: 'signup',
+  metaInfo() {
+    return {
+      title: 'Sign Up',
+    };
+  },
   data: () => ({
     userData: {
       fName: '',
