@@ -1,10 +1,9 @@
 <template>
 <div id="test">
     <div class="my-3 mx-auto">
-      <v-btn @click="recorder.start()" class="mr-5">Submit</v-btn>
+      <v-btn @click="submitRecord" class="mr-5">Submit</v-btn>
       <v-btn @click="next()">Next</v-btn>
     </div>
-
 
     <v-spacer></v-spacer>
     <canvas id="canvas" style="border:2px solid #000000"></canvas>
@@ -34,7 +33,9 @@ export default {
   },
   methods: {
     submitRecord() {
+      this.recorder.stop();
       const formData = new FormData();
+
       formData.append('file', this.recorder.getLastRecording());
       formData.append('testSubmissionID', this.testSubmissionID);
       formData.append('questionID', this.questions[this.i - 1].questionID);
@@ -74,7 +75,9 @@ export default {
           this.questions[this.i].line2EndX,
           this.questions[this.i].line2EndY);
         this.i = this.i + 1;
+        this.recorder.start();
       } else {
+        this.recorder.stop();
         this.$router.push('/results');
       }
     },
