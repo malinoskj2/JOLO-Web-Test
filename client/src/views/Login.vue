@@ -52,6 +52,11 @@
 
 export default {
   name: 'login',
+  metaInfo() {
+    return {
+      title: 'Log In',
+    };
+  },
   data: () => ({
     loginCred: {
       email: '',

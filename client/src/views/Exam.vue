@@ -18,6 +18,11 @@ export default {
     DrawTest,
     PatientIDPrompt,
   },
+  metaInfo() {
+    return {
+      title: 'Exam',
+    };
+  },
   data() {
     return {
       test: {},
