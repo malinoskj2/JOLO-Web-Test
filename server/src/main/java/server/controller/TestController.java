@@ -20,10 +20,7 @@ import server.service.FileStorageService;
 import server.service.VoiceTranscriptionService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/test")
@@ -51,6 +48,21 @@ public class TestController {
     private VoiceTranscriptionService voiceTranscriptionService;
 
     Logger logger = LoggerFactory.getLogger(TestController.class);
+
+    static HashMap<String, Integer> numbers= new HashMap<String, Integer>();
+
+    public TestController() {
+        numbers.put("zero", 0);
+        numbers.put("one", 1);
+        numbers.put("two", 2);
+        numbers.put("three", 3);
+        numbers.put("four", 4);
+        numbers.put("five", 5);
+        numbers.put("six", 6);
+        numbers.put("seven", 7);
+        numbers.put("eight", 8);
+        numbers.put("nine", 9);
+    }
 
     @RequestMapping(value = "/result",
             method = RequestMethod.POST,
@@ -84,13 +96,12 @@ public class TestController {
             logger.info("Transcription Result Count: " + results.length);
             Arrays.stream(results).forEach(result ->  logger.info(result.toString()));
 
-
             AnswerAttempt answer = new AnswerAttempt();
             answer.setTestSubmissionID(testSubmissionID);
             answer.setQuestionID(questionID);
-            answer.setGuessedAngle1(Integer.parseInt(results[0].getText()));
+            answer.setGuessedAngle1(toNumber(results[0].getText()));
             answer.setTime1(results[0].getTimeA());
-            answer.setGuessedAngle2(Integer.parseInt(results[0].getText()));
+            answer.setGuessedAngle2(toNumber(results[0].getText()));
             answer.setTime2(results[1].getTimeA());
             answer.setAudioFilePath(fsr.getPath());
 
@@ -98,6 +109,10 @@ public class TestController {
         }
 
         return "Answer Submitted";
+    }
+
+    public Integer toNumber(final String numberText) {
+        return numbers.get(numberText);
     }
 
     @RequestMapping(value = "start",
@@ -136,7 +151,5 @@ public class TestController {
 
         return this.testSubmissionRepository.save(submission);
     }
-
-
 
 }
