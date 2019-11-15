@@ -88,7 +88,7 @@ export default {
   }),
   methods: {
     postUserData() {
-      fetch('http://localhost:8081/auth/register', {
+      fetch(`${process.env.VUE_APP_API}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
