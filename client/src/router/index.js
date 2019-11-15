@@ -1,10 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import SignUp from '../views/SignUp.vue';
-import Login from '../views/Login.vue';
-import Results from '../views/Results.vue';
-import Exam from '../views/Exam.vue';
 
 Vue.use(VueRouter);
 
@@ -12,7 +7,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home,
+    component: () => import('../views/Home.vue'),
   },
   {
     path: '/about',
@@ -25,22 +20,22 @@ const routes = [
   {
     path: '/signup',
     name: 'signup',
-    component: SignUp,
+    component: () => import('../views/SignUp.vue'),
   },
   {
     path: '/login',
     name: 'login',
-    component: Login,
+    component: () => import('../views/Login.vue'),
   },
   {
     path: '/results',
     name: 'results',
-    component: Results,
+    component: () => import('../views/Results.vue'),
   },
   {
     path: '/exam',
     name: 'exam',
-    component: Exam,
+    component: () => import('../views/Exam.vue'),
   },
 ];
 
