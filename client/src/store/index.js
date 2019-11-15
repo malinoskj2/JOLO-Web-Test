@@ -20,6 +20,10 @@ export default new Vuex.Store({
     saveEmail(state, email) {
       state.email = email;
     },
+    signOut(state) {
+      state.email = null;
+      state.token = null;
+    },
   },
   getters: {
     token: state => state.token,
