@@ -49,11 +49,9 @@ public class PatientController {
             method = RequestMethod.POST,
             produces = "application/json")
     public String get_spreadsheet(@RequestParam("patientID") int patientID,
-                                  @RequestParam("examinerID") int examinerID,
                                   Authentication authentication) {
-        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByExamIDAndTestSubmissionID(
-                patientID,
-                examinerID
+        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByPatientID(
+                patientID
         );
         final List<AnswerAttempt> attempts = this.answerAttemptRepository.findAllByTestSubmissionID(
                 submission.get().getTestSubmissionID()
