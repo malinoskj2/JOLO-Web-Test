@@ -33,7 +33,7 @@
           </v-list-item>
         </router-link>
 
-        <v-list-item>
+        <v-list-item @click="$emit('sign-out')">
           <v-list-item-icon>
             <v-icon>close</v-icon>
           </v-list-item-icon>

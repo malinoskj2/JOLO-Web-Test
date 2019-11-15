@@ -7,7 +7,8 @@
 
       <template v-slot:profile-menu>
         <profile-menu :auth-links="navConfig.authLinks"
-                      :username="email"/>
+                      :username="email"
+                      @sign-out="$store.commit('signOut')"/>
       </template>
     </Nav>
     <router-view></router-view>
