@@ -12,6 +12,8 @@ export default new Vuex.Store({
   state: {
     token: null,
     email: null,
+    firstName: null,
+    lastName: null,
   },
   mutations: {
     saveToken(state, token) {
@@ -19,6 +21,12 @@ export default new Vuex.Store({
     },
     saveEmail(state, email) {
       state.email = email;
+    },
+    saveFirstName(state, firstName) {
+      state.firstName = firstName;
+    },
+    saveLastName(state, lastName) {
+      state.lastName = lastName;
     },
     signOut(state) {
       state.email = null;
@@ -28,6 +36,8 @@ export default new Vuex.Store({
   getters: {
     token: state => state.token,
     email: state => state.email,
+    firstName: state => state.firstName,
+    lastName: state => state.lastName,
     isAuthenticated: state => Boolean(state.token),
   },
   actions: {

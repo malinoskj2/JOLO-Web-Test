@@ -79,6 +79,8 @@ export default {
         .then((token) => {
           this.$store.commit('saveEmail', this.loginCred.email);
           this.$store.commit('saveToken', token.token);
+          this.$store.commit('saveFirstName', token.firstName);
+          this.$store.commit('saveLastName', token.lastName);
         })
         // eslint-disable-next-line no-unused-vars
         .catch((error) => {});

@@ -8,6 +8,8 @@
       <template v-slot:profile-menu>
         <profile-menu :auth-links="navConfig.authLinks"
                       :username="email"
+                      :first-name="firstName"
+                      :last-name="lastName"
                       @sign-out="$store.commit('signOut')"/>
       </template>
     </Nav>
@@ -49,6 +51,8 @@ export default {
   computed: {
     ...mapGetters([
       'email',
+      'firstName',
+      'lastName',
       'isAuthenticated',
     ]),
   },
