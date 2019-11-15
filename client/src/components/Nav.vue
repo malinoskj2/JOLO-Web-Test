@@ -15,7 +15,7 @@
                     flat
                     hide-details
                     label="Search"
-                    prepend-inner-icon="search"/>
+                    :prepend-inner-icon="magnifySvgPath"/>
 
       <v-spacer/>
       <div v-if="this.isAuthenticated">
@@ -69,7 +69,7 @@
                        exact-active-class="route-active">
             <v-list-item :key="i" link>
               <v-list-item-action>
-                <v-icon class="route-icon">{{ item.icon }}</v-icon>
+                <v-icon class="route-icon">{{item.icon}}</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title class="grey--text route-title">
@@ -86,11 +86,13 @@
 </template>
 
 <script>
+import { mdiMagnify } from '@mdi/js';
 
 export default {
   name: 'Nav',
   data() {
     return {
+      magnifySvgPath: mdiMagnify,
       drawer: null,
       outline: false,
     };

@@ -20,8 +20,15 @@
 <script>
 
 import { mapGetters } from 'vuex';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import {
+  mdiHome, mdiLightbulbOutline, mdiPackageDown,
+  mdiAccountPlus, mdiLoginVariant,
+  mdiSettings, mdiHelp,
+} from '@mdi/js';
 import Nav from '@/components/Nav.vue';
 import ProfileMenu from './components/ProfileMenu.vue';
+
 
 export default {
   name: 'App',
@@ -31,16 +38,16 @@ export default {
         textA: 'Angle',
         textB: 'Test',
         navLinks: [
-          { icon: 'home', text: 'Home', route: '/' },
+          { icon: mdiHome, text: 'Home', route: '/' },
           { divider: true },
-          { icon: 'lightbulb_outline', text: 'Start Exam', route: 'exam' },
-          { icon: 'archive', text: 'Results', route: 'results' },
+          { icon: mdiLightbulbOutline, text: 'Start Exam', route: 'exam' },
+          { icon: mdiPackageDown, text: 'Results', route: 'results' },
           { divider: true },
-          { icon: 'mdi-account-plus', text: 'Sign Up', route: 'signup' },
-          { icon: 'mdi-login-variant', text: 'Log In', route: 'login' },
+          { icon: mdiAccountPlus, text: 'Sign Up', route: 'signup' },
+          { icon: mdiLoginVariant, text: 'Log In', route: 'login' },
           { divider: true },
-          { icon: 'settings', text: 'Settings', route: 'settings' },
-          { icon: 'help', text: 'Help', route: 'help' },
+          { icon: mdiSettings, text: 'Settings', route: 'settings' },
+          { icon: mdiHelp, text: 'Help', route: 'help' },
         ],
         authLinks: [
           { text: 'Account', icon: 'mdi-account-card-details', route: 'account' },
