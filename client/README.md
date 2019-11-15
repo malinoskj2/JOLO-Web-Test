@@ -1,7 +1,7 @@
 # client
 
 ## Configuration
-The following environment variables must be defined in order to build the client. Variables can be defined within the 
+The following environment variables must be defined for the client to function. Variables can be defined within the 
 environment or inside a *.env.local* file within the *client* directory.
 
 | Variable              | Function                                   | 
