@@ -1,5 +1,7 @@
 package server.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,7 @@ public class PatientController {
     private AnswerAttemptRepository answerAttemptRepository;
     @Autowired
     private SpreadsheetService spreadsheetService;
+    Logger logger = LoggerFactory.getLogger(PatientController.class);
 
     @RequestMapping(value = "/all",
             method = RequestMethod.GET,
@@ -63,7 +66,7 @@ public class PatientController {
             final List<AnswerAttempt> attempts = this.answerAttemptRepository.findAllByTestSubmissionID(
                     submission.get().getTestSubmissionID()
             );
-            System.out.println("findFirstByPatientIDAndExamID found:" + submission.get().getTestSubmissionID() +
+            logger.info("findFirstByPatientIDAndExamID found:" + submission.get().getTestSubmissionID() +
                     "\n" + attempts.size());
 
 
