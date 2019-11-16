@@ -1,7 +1,5 @@
 package server.model.request;
 
-import jdk.javadoc.internal.doclets.toolkit.SerializedFormWriter;
-
 import java.io.Serializable;
 
 public class PatientRequest implements Serializable{
