@@ -57,7 +57,7 @@
           <v-card-actions >
                 <v-spacer />
                 <v-flex>
-                <v-btn class="justify-center" color="primary" @click="submit()">Submit</v-btn>
+                <v-btn class="justify-center" color="primary" @click="postUserData()">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
@@ -88,26 +88,13 @@ export default {
   }),
   methods: {
     postUserData() {
-      fetch(`${process.env.VUE_APP_API}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fName: this.userData.fName,
-          lName: this.userData.lName,
-          password: this.userData.password,
-          email: this.userData.email,
-        }),
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            this.$router.push('/login');
-          }
-        });
-    },
-    submit() {
-      this.postUserData();
+      this.$store.dispatch('signup',
+        {
+          successFunction: () => this.$router.push('/login'),
+          ...this.userData,
+        })
+        .then(() => console.log('dispatched signup'))
+        .catch(() => console.log('failed to dispatch signup'));
     },
   },
 };

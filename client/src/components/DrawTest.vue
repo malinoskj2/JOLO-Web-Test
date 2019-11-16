@@ -34,20 +34,14 @@ export default {
   },
   methods: {
     submitRecord() {
-      const formData = new FormData();
-      formData.append('file', this.recorder.getLastRecording());
-      formData.append('testSubmissionID', this.testSubmissionID);
-      formData.append('questionID', this.questions[this.i - 1].questionID);
-
-      fetch(`${process.env.VUE_APP_API}/test/result`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${this.$store.state.token}`,
-        },
-      })
-        .then(() => {})
-        .catch(() => {});
+      this.$store.dispatch('submitRecord',
+        {
+          recording: this.recorder.getLastRecording(),
+          testSubmissionID: this.testSubmissionID,
+          questionID: this.questions[this.i - 1].questionID,
+        })
+        .then(() => console.log('dispatched submitRecord'))
+        .catch(() => console.log('failed to dispatch submitRecord'));
     },
     draw(xStart1, yStart1, xEnd1, yEnd1, xStart2, yStart2, xEnd2, yEnd2) {
       const canvas = document.getElementById('canvas');
