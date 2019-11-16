@@ -37,14 +37,6 @@ public class TestSubmission implements Serializable {
         this.testSubmissionID = testSubmissionID;
     }
 
-    public Integer getTestID() {
-        return testID;
-    }
-
-    public void setTestID(Integer testID) {
-        this.testID = testID;
-    }
-
     public Integer getExamID() {
         return examID;
     }
