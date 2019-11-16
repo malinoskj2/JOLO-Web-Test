@@ -57,6 +57,7 @@ public class TestController {
         numbers.put("two", 2);
         numbers.put("three", 3);
         numbers.put("four", 4);
+        numbers.put("for", 4);
         numbers.put("five", 5);
         numbers.put("six", 6);
         numbers.put("seven", 7);
@@ -99,10 +100,22 @@ public class TestController {
             AnswerAttempt answer = new AnswerAttempt();
             answer.setTestSubmissionID(testSubmissionID);
             answer.setQuestionID(questionID);
-            answer.setGuessedAngle1(toNumber(results[0].getText()));
-            answer.setTime1(results[0].getTimeA());
-            answer.setGuessedAngle2(toNumber(results[0].getText()));
-            answer.setTime2(results[1].getTimeA());
+            if( results.length == 0 ) {
+                answer.setGuessedAngle1(-1);
+                answer.setTime1(-1.0);
+                answer.setGuessedAngle2(-1);
+                answer.setTime2(-1.0);
+            } else {
+                answer.setGuessedAngle1(toNumber(results[0].getText()));
+                answer.setTime1(results[0].getTimeA());
+                if(results.length < 2) {
+                    answer.setGuessedAngle2(-1);
+                    answer.setTime2(-1.0);
+                } else {
+                    answer.setGuessedAngle2(toNumber(results[1].getText()));
+                    answer.setTime2(results[1].getTimeA());
+                }
+            }
             answer.setAudioFilePath(fsr.getPath());
 
             this.answerAttemptRepository.save(answer);

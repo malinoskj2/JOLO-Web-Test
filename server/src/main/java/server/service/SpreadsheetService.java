@@ -43,11 +43,12 @@ public class SpreadsheetService {
 
     public FileSystemResource convertToSpreadsheet() {
 
-        File f = new File(System.getProperty("user.dir") + "/spreadsheet1.xls");
+
 
 
         Workbook wb = new HSSFWorkbook();//WorkbookFactory.create(new File("-spreadsheet.xls"));
         if (submissionOptional.isPresent()) {
+            File f = new File(System.getProperty("user.dir") + "/spreadsheet" + submissionOptional.get().getPatientID() +".xls");
             TestSubmission submission = submissionOptional.get();
             Sheet sheet = wb.createSheet("raw data");
             Sheet sheet_derived_data = wb.createSheet("derived data");
@@ -71,18 +72,20 @@ public class SpreadsheetService {
             row3_resultLabels.createCell(6).setCellValue("angle 2");
             row3_resultLabels.createCell(7).setCellValue("guess 2");
             row3_resultLabels.createCell(8).setCellValue("time 2");
-            row3_resultLabels.createCell(9).setCellValue("oblique angles");
+            row3_resultLabels.createCell(9).setCellValue("oblique angles (3,4 + 8,9)");
 
+            Iterable<Question> questionIterable = questionRepository.findAll();
+            //Iterator<Question> questionIterator = questionRepository.findAll().iterator();
             int questionNumber = 1;
             for (AnswerAttempt attempt : attempts) {
-                Optional<Question> questionOptional = questionRepository.findByQuestionID(attempt.getQuestionID());
-                if(questionOptional.isPresent()) {
-                    Question question = questionOptional.get();
+               // Optional<Question> questionOptional = questionRepository.findByQuestionid(1);//attempt.getQuestionID());
+                //if(questionOptional.isPresent()) {
+                    //Question question = questionIterator.next();
 
                     Row row_question_results = sheet.createRow(questionNumber + 2);
 
                     row_question_results.createCell(0).setCellValue("q" + questionNumber);
-                    ///*
+                    /*
                     row_question_results.createCell(1).setCellValue(question.getCorrectAngle1().equals
                                                                         (attempt.getGuessedAngle1()));
                     row_question_results.createCell(2).setCellValue(question.getCorrectAngle1());
@@ -93,20 +96,25 @@ public class SpreadsheetService {
                     row_question_results.createCell(6).setCellValue(question.getCorrectAngle2());
                     row_question_results.createCell(7).setCellValue(attempt.getGuessedAngle2());
                     row_question_results.createCell(8).setCellValue(attempt.getTime2());
+                    row_question_results.createCell(9).setCellValue(
+                                        question.getCorrectAngle1().equals(3) && question.getCorrectAngle2().equals(4) ||
+                                        question.getCorrectAngle1().equals(8) && question.getCorrectAngle2().equals(9)
+                                         );
 
                     // */
-                }
+                //}
                 questionNumber++;
             }
+            try (OutputStream fileOut = new FileOutputStream(f)){
+                wb.write(fileOut);
+                System.out.println("\nfile written " + f.getAbsolutePath());
+            }catch (Exception e) {
+                System.out.println("caught:" + e);
+                e.printStackTrace();
+            }
+            return new FileSystemResource(f);
         }
-        try (OutputStream fileOut = new FileOutputStream(f)){
-            wb.write(fileOut);
-            System.out.println("\nfile written " + f.getAbsolutePath());
-        }catch (Exception e) {
-            System.out.println("caught:" + e);
-            e.printStackTrace();
-        }
-        return new FileSystemResource(f);
+        return new FileSystemResource(new File(System.getProperty("user.dir") + "/emptyspreadsheet"));
     }
 
 
