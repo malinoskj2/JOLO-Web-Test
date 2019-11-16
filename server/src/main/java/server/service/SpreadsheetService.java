@@ -49,27 +49,29 @@ public class SpreadsheetService {
         Workbook wb = new HSSFWorkbook();//WorkbookFactory.create(new File("-spreadsheet.xls"));
         if (submissionOptional.isPresent()) {
             TestSubmission submission = submissionOptional.get();
-            Sheet sheet = wb.createSheet("Results for pid" + submission.getPatientID());
+            Sheet sheet = wb.createSheet("raw data");
+            Sheet sheet_derived_data = wb.createSheet("derived data");
             Row row1_labels = sheet.createRow(0);
             Row row2_data = sheet.createRow(1);
-            row1_labels.createCell(1).setCellValue("testID");
-            row2_data.createCell(1).setCellValue(submission.getTestID());
-            row1_labels.createCell(2).setCellValue("examinerID");
-            row2_data.createCell(2).setCellValue(submission.getExamID());
-            row1_labels.createCell(3).setCellValue("patientID");
-            row2_data.createCell(3).setCellValue(submission.getPatientID());
-            row1_labels.createCell(4).setCellValue("date");
-            row2_data.createCell(4).setCellValue(submission.getCreatedDate().toString());
+            row1_labels.createCell(0).setCellValue("testID");
+            row2_data.createCell(0).setCellValue(submission.getTestID());
+            row1_labels.createCell(1).setCellValue("examinerID");
+            row2_data.createCell(1).setCellValue(submission.getExamID());
+            row1_labels.createCell(2).setCellValue("patientID");
+            row2_data.createCell(2).setCellValue(submission.getPatientID());
+            //row1_labels.createCell(4).setCellValue("date");
+            //row2_data.createCell(4).setCellValue(submission.getCreatedDate().toString());
 
             Row row3_resultLabels = sheet.createRow(2);
-            row3_resultLabels.createCell(2).setCellValue("correct 1");
+            row3_resultLabels.createCell(1).setCellValue("correct 1");
             row3_resultLabels.createCell(2).setCellValue("angle 1");
-            row3_resultLabels.createCell(2).setCellValue("guess 1");
-            row3_resultLabels.createCell(2).setCellValue("time 1");
-            row3_resultLabels.createCell(2).setCellValue("correct 2");
-            row3_resultLabels.createCell(2).setCellValue("angle 2");
-            row3_resultLabels.createCell(2).setCellValue("guess 2");
-            row3_resultLabels.createCell(2).setCellValue("time 2");
+            row3_resultLabels.createCell(3).setCellValue("guess 1");
+            row3_resultLabels.createCell(4).setCellValue("time 1");
+            row3_resultLabels.createCell(5).setCellValue("correct 2");
+            row3_resultLabels.createCell(6).setCellValue("angle 2");
+            row3_resultLabels.createCell(7).setCellValue("guess 2");
+            row3_resultLabels.createCell(8).setCellValue("time 2");
+            row3_resultLabels.createCell(9).setCellValue("oblique angles");
 
             int questionNumber = 1;
             for (AnswerAttempt attempt : attempts) {
@@ -78,7 +80,9 @@ public class SpreadsheetService {
                     Question question = questionOptional.get();
 
                     Row row_question_results = sheet.createRow(questionNumber + 2);
+
                     row_question_results.createCell(0).setCellValue("q" + questionNumber);
+                    ///*
                     row_question_results.createCell(1).setCellValue(question.getCorrectAngle1().equals
                                                                         (attempt.getGuessedAngle1()));
                     row_question_results.createCell(2).setCellValue(question.getCorrectAngle1());
@@ -89,6 +93,8 @@ public class SpreadsheetService {
                     row_question_results.createCell(6).setCellValue(question.getCorrectAngle2());
                     row_question_results.createCell(7).setCellValue(attempt.getGuessedAngle2());
                     row_question_results.createCell(8).setCellValue(attempt.getTime2());
+
+                    // */
                 }
                 questionNumber++;
             }

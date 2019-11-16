@@ -46,20 +46,26 @@ public class PatientController {
     }
 
     @RequestMapping(value = "/spreadsheet",
-            method = RequestMethod.POST,
+            method = RequestMethod.GET,
             produces = "application/json")
     public String get_spreadsheet(@RequestParam("patientID") int patientID,
                                   Authentication authentication) {
-        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByPatientID(
-                patientID
+        AppUser userDetails = (AppUser) authentication.getPrincipal();
+        final Optional<TestSubmission> submission = this.testSubmissionRepository.findFirstByPatientIDAndExamID(
+                patientID,
+                userDetails.getId()
         );
-        final List<AnswerAttempt> attempts = this.answerAttemptRepository.findAllByTestSubmissionID(
-                submission.get().getTestSubmissionID()
-        );
+        //for(TestSubmission t : submission)
+        //    System.out.println(t.getTestSubmissionID() + "\n" + t.getPatientID() + "\n" + t.getExamID() + "\n" + t.getTestID());
+        System.out.println("findFirstByPatientIDAndExamID found:" + submission.get().getTestSubmissionID());
+
 
         if (submission.isPresent() ) {
+            final List<AnswerAttempt> attempts = this.answerAttemptRepository.findAllByTestSubmissionID(
+                    submission.get().getTestSubmissionID()
+            );
             SpreadsheetService ss = new SpreadsheetService(
-                    submission,
+                   submission,
                     attempts
             );
             return ss.convertToSpreadsheet().getFilename();

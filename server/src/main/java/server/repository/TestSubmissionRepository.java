@@ -9,7 +9,7 @@ public interface TestSubmissionRepository extends CrudRepository<TestSubmission,
     public Optional<TestSubmission>
     findByExamIDAndTestSubmissionID(final Integer examID, final Integer testSubmissionID);
     public Optional<TestSubmission>
-    findByPatientIDAndExamID(final Integer patientID, final Integer examID);
-    public Optional<TestSubmission>
-    findByPatientID(final Integer patientID);
+    findFirstByPatientIDAndExamID(final Integer patientID, final Integer examID);
+    //public Optional<TestSubmission>
+    //findByPatientID(final Integer patientID);
 }
