@@ -102,10 +102,13 @@ public class TestController {
             answer.setQuestionID(questionID);
             if(results[0] == null) {
                 answer.setGuessedAngle1(-1);
-                answer.setTime1(-1.0);
+                answer.setGuess1time1(-1.0);
+                answer.setGuess1time2(-1.0);
                 logger.info("result[0] is null, set relevant data to -1 ");
             } else {
                 answer.setGuessedAngle1(toNumber(results[0].getText()));
+                //answer.setGuess1time1();
+                //answer.setGuess1time2();todo
                 answer.setTime1(results[0].getTimeA());
             } if( results[1] == null) {
                 answer.setGuessedAngle2(-1);

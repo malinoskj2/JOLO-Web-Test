@@ -123,14 +123,21 @@ public class SpreadsheetService {
 
             /* test data */
             row2_data_derived.createCell(0).setCellFormula("COUNTA(raw_data!A4:raw_data!A17)");
-            row2_data_derived.createCell(1).setCellFormula("COUNTIF(raw_data!B4:raw_data!B17,TRUE)+" +
-                                                                    "COUNTIF(raw_data!F4:raw_data!F17,TRUE)");
-            row2_data_derived.createCell(2).setCellValue(row2_data_derived.getCell(0).getNumericCellValue() /
-                                                                 row2_data_derived.getCell(1).getNumericCellValue());//setCellFormula("SUM(A2:B2)");
-            row2_data_derived.createCell(3).setCellValue(row2_data_derived.getCell(0).getNumericCellValue() * 2);
+            row2_data_derived.createCell(1).setCellFormula("COUNTIFS(raw_data!B4:raw_data!B17,TRUE," +
+                                                                             "raw_data!F4:raw_data!F17,TRUE)");
+            row2_data_derived.createCell(2).setCellFormula("A2/B2");
+            row2_data_derived.createCell(3).setCellFormula("2*A2");
             row2_data_derived.createCell(4).setCellFormula("SUM(" +
                                                                   "COUNTIF(raw_data!B4:raw_data!B17,\"TRUE\")," +
                                                                   "COUNTIF(raw_data!F4:raw_data!F17, \"TRUE\"))");
+            row2_data_derived.createCell(5).setCellFormula("E2/D2");
+            row2_data_derived.createCell(6).setCellFormula("COUNTIF(raw_data!J4:raw_data!J17, \"True\")");
+            row2_data_derived.createCell(7).setCellFormula("COUNTIFS(raw_data!J4:raw_data!J17,\"True\"," +
+                                                                            "raw_data!B4:raw_data!B17,\"TRUE\"," +
+                                                                            "raw_data!F4:raw_data!F17,\"TRUE\")");
+            row2_data_derived.createCell(8).setCellFormula("G2/H2");
+
+
 
 
             HSSFFormulaEvaluator evaluator = new HSSFFormulaEvaluator(wb);
