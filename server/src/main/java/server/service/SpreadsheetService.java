@@ -21,30 +21,19 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class SpreadsheetService {
 
-
-    private Optional<TestSubmission> submissionOptional;
-    private List<AnswerAttempt> attempts;
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private Environment env;
-
     Logger logger = LoggerFactory.getLogger(SpreadsheetService.class);
 
-    public SpreadsheetService(Optional<TestSubmission> submission,
-                              List<AnswerAttempt> attempts) {
-        this.submissionOptional = submission;
-        this.attempts = attempts;
-    }
+    public SpreadsheetService() { }
 
-    public FileSystemResource convertToSpreadsheet() {
-
-
-
+    public String convertToSpreadsheet(Optional<TestSubmission> submissionOptional,
+                                                   List<AnswerAttempt> attempts) {
 
         Workbook wb = new HSSFWorkbook();//WorkbookFactory.create(new File("-spreadsheet.xls"));
         if (submissionOptional.isPresent()) {
@@ -74,36 +63,42 @@ public class SpreadsheetService {
             row3_resultLabels.createCell(8).setCellValue("time 2");
             row3_resultLabels.createCell(9).setCellValue("oblique angles (3,4 + 8,9)");
 
-            Iterable<Question> questionIterable = questionRepository.findAll();
+            //Iterable<Question> questionIterable = questionRepository.findAll();
             //Iterator<Question> questionIterator = questionRepository.findAll().iterator();
-            int questionNumber = 1;
-            for (AnswerAttempt attempt : attempts) {
-               // Optional<Question> questionOptional = questionRepository.findByQuestionid(1);//attempt.getQuestionID());
-                //if(questionOptional.isPresent()) {
+
+            for (int questionNumber = 0; questionNumber < attempts.size()-1; questionNumber++) {
+                Optional<Question> questionOptional = questionRepository.findByQuestionID(questionNumber+1);//attempt.getQuestionID());
+                if(questionOptional.isPresent()) {
                     //Question question = questionIterator.next();
+                    Question question = questionOptional.get();
 
-                    Row row_question_results = sheet.createRow(questionNumber + 2);
+                    Row row_question_results = sheet.createRow(questionNumber + 3);
 
-                    row_question_results.createCell(0).setCellValue("q" + questionNumber);
+                    row_question_results.createCell(0).setCellValue("q" + questionNumber+1);
+
+                    System.out.println(questionNumber + ":" + attempts.get(questionNumber).getGuessedAngle1() + "\t" +
+                            attempts.get(questionNumber).getGuessedAngle2() + "\n" +
+                            question.getCorrectAngle1() + "\t" +
+                            question.getCorrectAngle2() + "\n" );
+
                     /*
                     row_question_results.createCell(1).setCellValue(question.getCorrectAngle1().equals
-                                                                        (attempt.getGuessedAngle1()));
+                                                                        (attempts.get(questionNumber).getGuessedAngle1()));
                     row_question_results.createCell(2).setCellValue(question.getCorrectAngle1());
-                    row_question_results.createCell(3).setCellValue(attempt.getGuessedAngle1());
-                    row_question_results.createCell(4).setCellValue(attempt.getTime1());
+                    row_question_results.createCell(3).setCellValue(attempts.get(questionNumber).getGuessedAngle1());
+                    row_question_results.createCell(4).setCellValue(attempts.get(questionNumber).getTime1());
                     row_question_results.createCell(5).setCellValue(question.getCorrectAngle2().equals
-                                                                        (attempt.getGuessedAngle2()));
+                                                                        (attempts.get(questionNumber).getGuessedAngle2()));
                     row_question_results.createCell(6).setCellValue(question.getCorrectAngle2());
-                    row_question_results.createCell(7).setCellValue(attempt.getGuessedAngle2());
-                    row_question_results.createCell(8).setCellValue(attempt.getTime2());
+                    row_question_results.createCell(7).setCellValue(attempts.get(questionNumber).getGuessedAngle2());
+                    row_question_results.createCell(8).setCellValue(attempts.get(questionNumber).getTime2());
                     row_question_results.createCell(9).setCellValue(
                                         question.getCorrectAngle1().equals(3) && question.getCorrectAngle2().equals(4) ||
                                         question.getCorrectAngle1().equals(8) && question.getCorrectAngle2().equals(9)
                                          );
 
                     // */
-                //}
-                questionNumber++;
+                }
             }
             try (OutputStream fileOut = new FileOutputStream(f)){
                 wb.write(fileOut);
@@ -112,9 +107,9 @@ public class SpreadsheetService {
                 System.out.println("caught:" + e);
                 e.printStackTrace();
             }
-            return new FileSystemResource(f);
+            return new FileSystemResource(f).getPath();
         }
-        return new FileSystemResource(new File(System.getProperty("user.dir") + "/emptyspreadsheet"));
+        return "Spreadsheet not created";
     }
 
 

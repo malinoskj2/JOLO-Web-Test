@@ -100,22 +100,23 @@ public class TestController {
             AnswerAttempt answer = new AnswerAttempt();
             answer.setTestSubmissionID(testSubmissionID);
             answer.setQuestionID(questionID);
-            if( results.length == 0 ) {
+            if(results[0] == null) {
                 answer.setGuessedAngle1(-1);
                 answer.setTime1(-1.0);
-                answer.setGuessedAngle2(-1);
-                answer.setTime2(-1.0);
+                logger.info("result[0] is null, set relevant data to -1 ");
             } else {
                 answer.setGuessedAngle1(toNumber(results[0].getText()));
                 answer.setTime1(results[0].getTimeA());
-                if(results.length < 2) {
-                    answer.setGuessedAngle2(-1);
-                    answer.setTime2(-1.0);
-                } else {
-                    answer.setGuessedAngle2(toNumber(results[1].getText()));
-                    answer.setTime2(results[1].getTimeA());
-                }
+            } if( results[1] == null) {
+                answer.setGuessedAngle2(-1);
+                answer.setTime2(-1.0);
+                logger.info("result[1] is null, set relevant data to -1 ");
+            } else {
+                answer.setGuessedAngle2(toNumber(results[1].getText()));
+                answer.setTime2(results[1].getTimeA());
             }
+
+
             answer.setAudioFilePath(fsr.getPath());
 
             this.answerAttemptRepository.save(answer);

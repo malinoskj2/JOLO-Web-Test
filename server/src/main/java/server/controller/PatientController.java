@@ -33,6 +33,8 @@ public class PatientController {
     private TestSubmissionRepository testSubmissionRepository;
     @Autowired
     private AnswerAttemptRepository answerAttemptRepository;
+    @Autowired
+    private SpreadsheetService spreadsheetService;
 
     @RequestMapping(value = "/all",
             method = RequestMethod.GET,
@@ -55,20 +57,20 @@ public class PatientController {
                 patientID,
                 userDetails.getId()
         );
-        //for(TestSubmission t : submission)
-        //    System.out.println(t.getTestSubmissionID() + "\n" + t.getPatientID() + "\n" + t.getExamID() + "\n" + t.getTestID());
-        System.out.println("findFirstByPatientIDAndExamID found:" + submission.get().getTestSubmissionID());
 
 
         if (submission.isPresent() ) {
             final List<AnswerAttempt> attempts = this.answerAttemptRepository.findAllByTestSubmissionID(
                     submission.get().getTestSubmissionID()
             );
-            SpreadsheetService ss = new SpreadsheetService(
-                   submission,
+            System.out.println("findFirstByPatientIDAndExamID found:" + submission.get().getTestSubmissionID() +
+                    "\n" + attempts.size());
+
+
+            return spreadsheetService.convertToSpreadsheet(
+                    submission,
                     attempts
             );
-            return ss.convertToSpreadsheet().getFilename();
         }
         return "submission unreachable";
     }
