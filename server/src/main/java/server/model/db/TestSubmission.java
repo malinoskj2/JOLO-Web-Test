@@ -8,15 +8,21 @@ import java.util.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name="test_submission")
+@Table(name="test_submission")//TestSubmission
 public class TestSubmission implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "testSubmissionID")
     private Integer testSubmissionID;
-    private Integer testID;
+    
+    @Column(name = "examID")
     private Integer examID;
+    
+    @Column(name = "patientID")
     private Integer patientID;
+    
     @Temporal(TemporalType.DATE)
+    @Column(name = "date")
     private Date createdDate;
 
     public TestSubmission() {}

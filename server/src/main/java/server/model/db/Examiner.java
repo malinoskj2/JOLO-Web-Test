@@ -7,12 +7,23 @@ import java.io.Serializable;
 @Table(name="Examiner")
 public class Examiner implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer examID;
-
+    
+    @Length(max = 20)
+    @Column(name = "fName")
     private String fName;
+    
+    @Length(max=  20)
+    @Column(name = "lName")
     private String lName;
+    
+    @Length(max = 24)
+    @Column(name = "Password")
     private String password;
+    
+    @Length(max = 255)
+    @Column(name = "Email")
     private String email;
 
     public Examiner() {};

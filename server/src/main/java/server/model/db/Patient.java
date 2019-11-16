@@ -7,10 +7,13 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name="patient")
+@Table(name="patient")//Patients
 public class Patient implements Serializable {
     @Id
+    @Column(name = "patientID")
     private Integer patientID;
+    
+    @Column(name = "examID")
     private Integer examID;
 
     public Patient() { }

@@ -7,17 +7,34 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name="answer_attempt")
+@Table(name="answer_attempt")//AnswerAttempt
 public class AnswerAttempt implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    
+    @Column(name = "answerAttemptID")
     private Integer answerAttemptID;
+    
+    @Column(name = "testSubmissionID")
     private Integer testSubmissionID;
+    
+    @Column(name = "questionID")
     private Integer questionID;
+    
+    @Column(name = "GuessedAngle1")
     private Integer guessedAngle1;
+    
+    @Column(name = "GuessedAngle2")
     private Integer guessedAngle2;
+    
+    @Column(name = "Time1")
     private Double  time1;
+    
+    @Column(name = "Time2")
     private Double  time2;
+    
+    @Length(max = 2083)
+    @Column(name = "audioFile")
     private String  audioFilePath;
 
     public AnswerAttempt() {}

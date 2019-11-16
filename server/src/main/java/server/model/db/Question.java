@@ -4,29 +4,51 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="question")
+@Table(name="question")//Questions
 public class Question implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "questionID")
     private Integer questionID;
-
+    
+    @Length(max = 3)
+    @Column(name = "correctAngle1")
     private Integer correctAngle1;
+    
+    @Length(max = 3)
+    @Column(name = "correctAngle2")
     private Integer correctAngle2;
 
+    @Length(max = 3)
+    @Column(name = "Label")
     private String label;
+    
+    @Column(name = "position")
     private Integer position;
 
+    @Column(name = "Line1StartX")
     private Integer line1StartX;
+    
+    @Column(name = "Line1StartY")
     private Integer line1StartY;
 
+    @Column(name = "Line1EndX")
     private Integer line1EndX;
+    
+    @Column(name = "Line1EndY")
     private Integer line1EndY;
 
+    @Column(name = "Line2StartX")
     private Integer line2StartX;
+    
+    @Column(name = "Line2StartY")
     private Integer line2StartY;
 
+    @Column(name = "Line2EndX")
     private Integer line2EndX;
+    
+    @Column(name = "Line2EndY")
     private Integer line2EndY;
 
     public Question(){}
