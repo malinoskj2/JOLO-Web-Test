@@ -3,6 +3,7 @@ package server.model.db;
 import javax.persistence.*;
 import java.io.Serializable;
 import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
 
 @Entity
 @Table(name="Examiner")
@@ -19,7 +20,7 @@ public class Examiner implements Serializable {
     @Column(name = "lName")
     private String lName;
     
-    @Length(max = 24)
+    @Length(max = 255)
     @Column(name = "Password")
     private String password;
     

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.sql.Timestamp;
 import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
 
 @Entity
 @Table(name="test_submission")//TestSubmission
@@ -34,14 +35,6 @@ public class TestSubmission implements Serializable {
 
     public void setTestSubmissionID(Integer testSubmissionID) {
         this.testSubmissionID = testSubmissionID;
-    }
-
-    public Integer getTestID() {
-        return testID;
-    }
-
-    public void setTestID(Integer testID) {
-        this.testID = testID;
     }
 
     public Integer getExamID() {

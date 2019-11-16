@@ -135,7 +135,6 @@ public class TestController {
         this.patientRepository.save(patient);
 
         final TestSubmission submission = this.createTestSubmission(
-                request.getTestID(),
                 userDetails.getId(),
                 request.getPatientID()
         );
@@ -146,12 +145,10 @@ public class TestController {
         return new StartTestResponse(submission.getTestSubmissionID(), questions);
     }
 
-    public TestSubmission createTestSubmission(final Integer testID,
-                                               final Integer examID,
+    public TestSubmission createTestSubmission(final Integer examID,
                                                final Integer patientID) {
 
         final TestSubmission submission = new TestSubmission();
-        submission.setTestID(testID);
         submission.setExamID(examID);
         submission.setPatientID(patientID);
 

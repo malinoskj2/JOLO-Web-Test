@@ -3,6 +3,7 @@ package server.model.db;
 import javax.persistence.*;
 import java.io.Serializable;
 import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
 
 @Entity
 @Table(name="question")//Questions
