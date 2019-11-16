@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name="answer_attempt")//AnswerAttempt

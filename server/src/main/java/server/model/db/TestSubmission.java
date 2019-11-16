@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.sql.Timestamp;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name="test_submission")//TestSubmission
