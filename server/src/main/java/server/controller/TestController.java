@@ -117,8 +117,8 @@ public class TestController {
                 logger.warn("result[1] is null, set relevant data to -1 ");
             } else {
                 answer.setGuessedAngle2(toNumber(results[1].getText()));
-                answer.setGuess2time1(results[0].getTimeA());
-                answer.setGuess2time2(results[0].getTimeB());
+                answer.setGuess2time1(results[1].getTimeA());
+                answer.setGuess2time2(results[1].getTimeB());
             }
             answer.setAudioFilePath(fsr.getPath());
 

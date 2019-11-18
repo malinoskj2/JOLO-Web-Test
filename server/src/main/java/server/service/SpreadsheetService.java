@@ -127,27 +127,40 @@ public class SpreadsheetService {
 
             /* test data */
             row2_data_derived.createCell(0).setCellFormula("COUNTA(raw_data!A4:raw_data!A17)");
+                                                                    //counting correct trials
             row2_data_derived.createCell(1).setCellFormula("COUNTIFS(raw_data!B4:raw_data!B17,TRUE," +
                                                                              "raw_data!F4:raw_data!F17,TRUE)");
-            row2_data_derived.createCell(2).setCellFormula("A2/B2");
+            row2_data_derived.createCell(2).setCellFormula("B2/A2");
             row2_data_derived.createCell(3).setCellFormula("2*A2");
+                                                                    //summing correct items
             row2_data_derived.createCell(4).setCellFormula("SUM(" +
                                                                   "COUNTIF(raw_data!B4:raw_data!B17,\"TRUE\")," +
                                                                   "COUNTIF(raw_data!F4:raw_data!F17, \"TRUE\"))");
             row2_data_derived.createCell(5).setCellFormula("E2/D2");
-            row2_data_derived.createCell(6).setCellFormula("COUNTIF(raw_data!J4:raw_data!J17, \"True\")");
+            row2_data_derived.createCell(6).setCellFormula("COUNTIF(raw_data!L4:raw_data!L17, \"True\")");
+                                                                    //counting correct oblique trials
             row2_data_derived.createCell(7).setCellFormula("COUNTIFS(raw_data!J4:raw_data!J17,\"True\"," +
                                                                             "raw_data!B4:raw_data!B17,\"TRUE\"," +
                                                                             "raw_data!F4:raw_data!F17,\"TRUE\")");
-            row2_data_derived.createCell(8).setCellFormula("G2/H2");
-
+            row2_data_derived.createCell(8).setCellFormula("H2/G2");
+            row2_data_derived.createCell(9).setCellFormula("SUM(raw_data!F4:raw_data!F17)" +   //sum of each
+                                                                    "+SUM(raw_data!K4:raw_data!K17)"+   //finish time
+                                                                    "-SUM(raw_data!E3:raw_data!E17)" + //minus sum of
+                                                                    "-SUM(raw_data!J3:raw_data!J17)");//each start time
+            row2_data_derived.createCell(10).setCellFormula("J2/A2");
+                                                                    //if oblique sum time
+            row2_data_derived.createCell(11).setCellFormula("SUMIF(raw_data!L4:raw_data!L17,\"TRUE\",raw_data!F4:raw_data!F17)" +
+                                                                     "+SUMIF(raw_data!L4:raw_data!L17,\"TRUE\",raw_data!K4:raw_data!K17)" +
+                                                                     "-SUMIF(raw_data!L4:raw_data!L17,\"TRUE\",raw_data!E4:raw_data!E17)" +
+                                                                     "-SUMIF(raw_data!L4:raw_data!L17,\"TRUE\",raw_data!J4:raw_data!J17)");
+            row2_data_derived.createCell(12).setCellFormula("L2/G2");
 
 
 
             HSSFFormulaEvaluator evaluator = new HSSFFormulaEvaluator(wb);
-            Iterator<Cell> celliterator = row2_data_derived.cellIterator();
-            while(celliterator.hasNext())
-                evaluator.evaluateInCell(celliterator.next());
+            Iterator<Cell> cellIterator = row2_data_derived.cellIterator();
+            while(cellIterator.hasNext())
+                evaluator.evaluateInCell(cellIterator.next());
 
 
 

@@ -68,8 +68,6 @@ public class PatientController {
             );
             logger.info("findFirstByPatientIDAndExamID found:" + submission.get().getTestSubmissionID() +
                     "\n" + attempts.size());
-
-
             return spreadsheetService.convertToSpreadsheet(
                     submission,
                     attempts
