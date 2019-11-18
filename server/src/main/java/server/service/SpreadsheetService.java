@@ -55,12 +55,14 @@ public class SpreadsheetService {
             row3_resultLabels.createCell(1).setCellValue("correct 1");
             row3_resultLabels.createCell(2).setCellValue("angle 1");
             row3_resultLabels.createCell(3).setCellValue("guess 1");
-            row3_resultLabels.createCell(4).setCellValue("time 1");
-            row3_resultLabels.createCell(5).setCellValue("correct 2");
-            row3_resultLabels.createCell(6).setCellValue("angle 2");
-            row3_resultLabels.createCell(7).setCellValue("guess 2");
-            row3_resultLabels.createCell(8).setCellValue("time 2");
-            row3_resultLabels.createCell(9).setCellValue("oblique angles (3,4 + 8,9)");
+            row3_resultLabels.createCell(4).setCellValue("time a1");
+            row3_resultLabels.createCell(5).setCellValue("time a2");
+            row3_resultLabels.createCell(6).setCellValue("correct 2");
+            row3_resultLabels.createCell(7).setCellValue("angle 2");
+            row3_resultLabels.createCell(8).setCellValue("guess 2");
+            row3_resultLabels.createCell(9).setCellValue("time b1");
+            row3_resultLabels.createCell(10).setCellValue("time b2");
+            row3_resultLabels.createCell(11).setCellValue("oblique angles (3,4 + 8,9)");
 
             /* RAW DATA INPUT TO WORKBOOK */
             for (int questionNumber = 0; questionNumber < attempts.size(); questionNumber++) {
@@ -89,13 +91,15 @@ public class SpreadsheetService {
                                                                         (attempts.get(questionNumber).getGuessedAngle1()));
                     row_question_results.createCell(2).setCellValue(correctAngle1);
                     row_question_results.createCell(3).setCellValue(attempts.get(questionNumber).getGuessedAngle1());
-                    row_question_results.createCell(4).setCellValue(attempts.get(questionNumber).getTime1());
-                    row_question_results.createCell(5).setCellValue(correctAngle2 ==
+                    row_question_results.createCell(4).setCellValue(attempts.get(questionNumber).getGuess1time1());
+                    row_question_results.createCell(5).setCellValue(attempts.get(questionNumber).getGuess1time2());
+                    row_question_results.createCell(6).setCellValue(correctAngle2 ==
                                                                         (attempts.get(questionNumber).getGuessedAngle2()));
-                    row_question_results.createCell(6).setCellValue(correctAngle2);
-                    row_question_results.createCell(7).setCellValue(attempts.get(questionNumber).getGuessedAngle2());
-                    row_question_results.createCell(8).setCellValue(attempts.get(questionNumber).getTime2());
-                    row_question_results.createCell(9).setCellValue(correctAngle1 == 3 && correctAngle2 == 4 ||
+                    row_question_results.createCell(7).setCellValue(correctAngle2);
+                    row_question_results.createCell(8).setCellValue(attempts.get(questionNumber).getGuessedAngle2());
+                    row_question_results.createCell(9).setCellValue(attempts.get(questionNumber).getGuess2time1());
+                    row_question_results.createCell(10).setCellValue(attempts.get(questionNumber).getGuess2time2());
+                    row_question_results.createCell(11).setCellValue(correctAngle1 == 3 && correctAngle2 == 4 ||
                                                                              correctAngle1 == 8 && correctAngle2 == 9 );
 
                     // */

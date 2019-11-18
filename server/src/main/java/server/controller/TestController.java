@@ -104,27 +104,27 @@ public class TestController {
                 answer.setGuessedAngle1(-1);
                 answer.setGuess1time1(-1.0);
                 answer.setGuess1time2(-1.0);
-                logger.info("result[0] is null, set relevant data to -1 ");
+                logger.warn("result[0] is null, set relevant data to -1 ");
             } else {
                 answer.setGuessedAngle1(toNumber(results[0].getText()));
-                //answer.setGuess1time1();
-                //answer.setGuess1time2();todo
-                answer.setTime1(results[0].getTimeA());
+                answer.setGuess1time1(results[0].getTimeA());
+                answer.setGuess1time2(results[0].getTimeB());
+                //answer.setTime1(results[0].getTimeA());
             } if( results[1] == null) {
                 answer.setGuessedAngle2(-1);
-                answer.setTime2(-1.0);
-                logger.info("result[1] is null, set relevant data to -1 ");
+                answer.setGuess2time1(-1.0);
+                answer.setGuess2time2(-1.0);
+                logger.warn("result[1] is null, set relevant data to -1 ");
             } else {
                 answer.setGuessedAngle2(toNumber(results[1].getText()));
-                answer.setTime2(results[1].getTimeA());
+                answer.setGuess2time1(results[0].getTimeA());
+                answer.setGuess2time2(results[0].getTimeB());
             }
-
-
             answer.setAudioFilePath(fsr.getPath());
 
             this.answerAttemptRepository.save(answer);
         }
-
+        logger.info("answer submitted");
         return "Answer Submitted";
     }
 
