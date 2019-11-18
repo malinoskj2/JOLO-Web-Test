@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import DrawTest from '@/components/DrawTest.vue';
 import PatientIDPrompt from '@/components/PatientIDPrompt.vue';
 
@@ -36,32 +37,16 @@ export default {
   },
   data() {
     return {
-      test: {
-        questions: [],
-        testSubmissionID: 0,
-      },
       exitGuard: false,
       next: {},
     };
   },
   methods: {
     start(payload) {
-      this.fetchTest(payload.patientID);
+      this.$store.dispatch('fetchTest', payload.patientID)
+        .then(() => console.log('fetched test'))
+        .catch(() => console.log('error fetching test'));
       this.draw();
-    },
-    async fetchTest(patientID) {
-      const response = await fetch(`${process.env.VUE_APP_API}/test/start`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.$store.state.token}`,
-        },
-        body: JSON.stringify({
-          patientID,
-          testID: 1,
-        }),
-      });
-      this.test = await response.json();
     },
     draw() {
       const canvas = document.getElementById('canvas2');
@@ -107,6 +92,11 @@ export default {
         ctx.stroke();
       }
     },
+  },
+  computed: {
+    ...mapGetters([
+      'test',
+    ]),
   },
   mounted() {
 

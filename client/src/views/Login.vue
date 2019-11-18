@@ -36,7 +36,8 @@
           <v-card-actions >
                 <v-spacer />
                 <v-flex>
-                <v-btn class="justify-center" color="primary" @click="submit()">Submit</v-btn>
+                <v-btn class="justify-center" color="primary"
+                       @click="$store.dispatch('login', loginCred)">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
@@ -62,32 +63,6 @@ export default {
       password: '',
     },
   }),
-  methods: {
-    getUserAuth() {
-      fetch(`${process.env.VUE_APP_API}/auth/authenticate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: this.loginCred.email,
-          password: this.loginCred.password,
-        }),
-      })
-        .then(response => response.json())
-        .then((token) => {
-          this.$store.commit('saveEmail', this.loginCred.email);
-          this.$store.commit('saveToken', token.token);
-          this.$store.commit('saveFirstName', token.firstName);
-          this.$store.commit('saveLastName', token.lastName);
-        })
-        // eslint-disable-next-line no-unused-vars
-        .catch((error) => {});
-    },
-    submit() {
-      this.getUserAuth();
-    },
-  },
 };
 </script>
 
