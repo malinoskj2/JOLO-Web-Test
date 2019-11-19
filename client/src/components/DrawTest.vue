@@ -34,8 +34,9 @@ export default {
   },
   methods: {
     submitRecord() {
-      this.$store.dispatch('submitRecord',
+      this.$store.dispatch('makeAuthenticatedCall',
         {
+          action: 'submitRecord',
           recording: this.recorder.getLastRecording(),
           testSubmissionID: this.testSubmissionID,
           questionID: this.questions[this.i - 1].questionID,

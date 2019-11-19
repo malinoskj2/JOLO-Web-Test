@@ -32,7 +32,9 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch('fetchPatients')
+    this.$store.dispatch('makeAuthenticatedCall', {
+      action: 'fetchPatients',
+    })
       .then(() => console.log('fetched patients successfully.'))
       .catch(() => console.log('failed to fetch patients'));
   },

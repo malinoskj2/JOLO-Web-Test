@@ -43,7 +43,10 @@ export default {
   },
   methods: {
     start(payload) {
-      this.$store.dispatch('fetchTest', payload.patientID)
+      this.$store.dispatch('makeAuthenticatedCall', {
+        action: 'fetchTest',
+        patientID: payload.patientID,
+      })
         .then(() => console.log('fetched test'))
         .catch(() => console.log('error fetching test'));
       this.draw();

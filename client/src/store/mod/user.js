@@ -63,9 +63,7 @@ export default {
         }),
       });
 
-      if (response.ok) {
-        payload.successFunction();
-      }
+      if (response.ok) { payload.successFunction(); }
     },
   },
 };
