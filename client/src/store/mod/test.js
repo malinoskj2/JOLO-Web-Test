@@ -14,7 +14,7 @@ export default {
     test: state => state.test,
   },
   actions: {
-    async fetchTest(context, patientID) {
+    async fetchTest(context, payload) {
       const response = await fetch(`${process.env.VUE_APP_API}/test/start`, {
         method: 'POST',
         headers: {
@@ -22,12 +22,14 @@ export default {
           Authorization: `Bearer ${context.getters.token}`,
         },
         body: JSON.stringify({
-          patientID,
+          patientID: payload.patientID,
           testID: 1,
         }),
       });
 
       context.commit('saveTest', await response.json());
+
+      return response.status;
     },
   },
   async submitRecord(context, payload) {
@@ -36,12 +38,14 @@ export default {
     formData.append('testSubmissionID', payload.testSubmissionID);
     formData.append('questionID', payload.questionID);
 
-    return fetch(`${process.env.VUE_APP_API}/test/result`, {
+    const response = await fetch(`${process.env.VUE_APP_API}/test/result`, {
       method: 'POST',
       body: formData,
       headers: {
         Authorization: `Bearer ${context.getters.token}`,
       },
     });
+
+    return response.status;
   },
 };

@@ -23,6 +23,8 @@ export default {
 
       context.commit('savePatients',
         json.patients.map(patientID => ({ ID: patientID })));
+
+      return response.status;
     },
   },
 };
