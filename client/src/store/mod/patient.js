@@ -26,5 +26,20 @@ export default {
 
       return response.status;
     },
+    async isIdAvailable(context, payload) {
+      const response = await fetch(`${process.env.VUE_APP_API}/patient/existsID`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${context.getters.token}`,
+        },
+        body: JSON.stringify({
+          patientID: payload.patientID,
+        }),
+      });
+
+      const inUse = await response.json();
+      return Boolean(!inUse);
+    },
   },
 };
