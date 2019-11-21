@@ -16,7 +16,7 @@
              <v-card-title class="justify-center">Sign Up</v-card-title>
              </v-flex>
           <v-card-text>
-          <v-form>
+          <v-form ref="form" v-model="valid">
               <v-text-field
                 v-model="userData.fName"
                 label="First Name"
@@ -34,7 +34,7 @@
                 required
                 />
                  <v-text-field
-                v-model="userData.email"
+                v-model="email"
                 label="Email"
                 name="Email"
                 type="email"
@@ -62,7 +62,11 @@
           <v-card-actions >
                 <v-spacer />
                 <v-flex>
-                <v-btn class="justify-center" color="primary" @click="submit()">Submit</v-btn>
+                <v-btn
+                :disabled="!valid"
+                class="justify-center"
+                color="primary"
+                @click="submit()">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
@@ -74,6 +78,7 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 
 export default {
   name: 'signup',
@@ -87,11 +92,12 @@ export default {
       userData: {
         fName: '',
         lName: '',
-        email: '',
         password: '',
         retypedPassword: '',
       },
-      valid: true,
+      email: '',
+      emailTaken: false,
+      valid: false,
       firstNameRules: [
         v => !!v || 'Name is required',
       ],
@@ -101,6 +107,7 @@ export default {
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        v => (v && this.emailTaken === true) || 'E-mail is taken.',
       ],
       passwordRules: [
         v => !!v || 'Password is required',
@@ -128,9 +135,20 @@ export default {
     },
     submit() {
       if (this.$refs.form.validate()) {
+        this.valid = true;
         this.postUserData();
       }
     },
+  },
+  watch: {
+    email: debounce(function () {
+      this.$store.dispatch('emailAvailability', { email: this.email })
+        .then((response) => {
+          if (response) {
+            this.emailTaken = true;
+          }
+        });
+    }, 800),
   },
 };
 </script>

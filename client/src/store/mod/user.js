@@ -65,5 +65,19 @@ export default {
 
       if (response.ok) { payload.successFunction(); }
     },
+    async emailAvailability(context, payload) {
+      const response = await fetch(`${process.env.VUE_APP_API}/auth/existsEmail`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: payload.email,
+        }),
+      });
+
+      const isEmailTaken = await response.json();
+      return isEmailTaken;
+    },
   },
 };

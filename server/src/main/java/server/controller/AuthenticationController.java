@@ -86,17 +86,13 @@ public class AuthenticationController {
         }
     }
 
-    @RequestMapping(value = "/existsEmail",
+   @RequestMapping(value = "/existsEmail",
             method = RequestMethod.POST,
             produces = "application/json")
-    public Boolean existsEmail(@RequestBody SignupRequest examinerRequest, Authentication auth)
+    public Boolean existsEmail(@RequestBody SignupRequest examinerRequest)
     {
-        AppUser userDetails = (AppUser) auth.getPrincipal();
-
         final Optional<Examiner> examinerEmails =
-                this.examinerRepository.findByEmail(userDetails.getUsername());
-
+                this.examinerRepository.findByEmail(examinerRequest.getEmail());
         return examinerEmails.isPresent();
-
     }
 }
