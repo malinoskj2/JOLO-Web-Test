@@ -39,6 +39,8 @@
                 name="Email"
                 type="email"
                 :rules="emailRules"
+                :error="error"
+                :error-messages="errorMessages"
                 required
                 />
                  <v-text-field
@@ -80,6 +82,8 @@
 <script>
 import debounce from 'lodash/debounce';
 
+const emailCheckDebounceMS = 120;
+
 export default {
   name: 'signup',
   metaInfo() {
@@ -98,6 +102,8 @@ export default {
       email: '',
       emailTaken: false,
       valid: false,
+      error: false,
+      errorMessages: '',
       firstNameRules: [
         v => !!v || 'Name is required',
       ],
@@ -107,7 +113,6 @@ export default {
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-        v => (v && this.emailTaken === true) || 'E-mail is taken.',
       ],
       passwordRules: [
         v => !!v || 'Password is required',
@@ -128,6 +133,7 @@ export default {
       this.$store.dispatch('signup',
         {
           successFunction: () => this.$router.push('/login'),
+          email: this.email,
           ...this.userData,
         })
         .then(() => console.log('dispatched signup'))
@@ -139,16 +145,26 @@ export default {
         this.postUserData();
       }
     },
+    showEmailUnavailable() {
+      this.error = true;
+      this.errorMessages = 'Email already in use.';
+    },
+    showEmailAvailable() {
+      this.error = false;
+      this.errorMessages = '';
+    },
   },
   watch: {
     email: debounce(function () {
       this.$store.dispatch('emailAvailability', { email: this.email })
         .then((response) => {
           if (response) {
-            this.emailTaken = true;
+            this.showEmailUnavailable();
+          } else {
+            this.showEmailAvailable();
           }
         });
-    }, 800),
+    }, emailCheckDebounceMS),
   },
 };
 </script>
