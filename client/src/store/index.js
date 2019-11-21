@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+// eslint-disable-line
 import VuexPersistence from 'vuex-persist';
 import user from '@/store/mod/user';
 import test from '@/store/mod/test';
