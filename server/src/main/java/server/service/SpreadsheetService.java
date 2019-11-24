@@ -38,6 +38,14 @@ public class SpreadsheetService {
         HSSFWorkbook wb = new HSSFWorkbook();
         if (submissionOptional.isPresent()) {
             File f = new File(System.getProperty("user.dir") + "/spreadsheet" + submissionOptional.get().getPatientID() +".xls");
+            CellStyle aqua = wb.createCellStyle();
+            CellStyle coral = wb.createCellStyle();
+            CellStyle green = wb.createCellStyle();
+            CellStyle yellow = wb.createCellStyle();
+            aqua.setFillBackgroundColor(IndexedColors.AQUA.getIndex());
+            coral.setFillBackgroundColor(IndexedColors.CORAL.getIndex());
+            green.setFillBackgroundColor(IndexedColors.SEA_GREEN.getIndex());
+            yellow.setFillBackgroundColor(IndexedColors.GOLD.getIndex());
             TestSubmission submission = submissionOptional.get();
             Sheet sheet = wb.createSheet("raw_data");
             Row row1_labels = sheet.createRow(0);
@@ -52,6 +60,7 @@ public class SpreadsheetService {
             //row2_data.createCell(4).setCellValue(submission.getCreatedDate().toString());
 
             Row row3_resultLabels = sheet.createRow(2);
+            row3_resultLabels.setRowStyle(yellow);
             row3_resultLabels.createCell(1).setCellValue("correct 1");
             row3_resultLabels.createCell(2).setCellValue("angle 1");
             row3_resultLabels.createCell(3).setCellValue("guess 1");
@@ -72,7 +81,9 @@ public class SpreadsheetService {
 
                     Row row_question_results = sheet.createRow(questionNumber + 3);
 
-                    row_question_results.createCell(0).setCellValue("q" + (questionNumber+1));
+                    Cell labelCell =row_question_results.createCell(0);
+                    labelCell.setCellValue("q" + (questionNumber+1));
+                    labelCell.setCellStyle(aqua);
 
                     logger.info("spreadsheet write: question#:" +questionNumber +
                             ": guess1:" + attempts.get(questionNumber).getGuessedAngle1() +
@@ -87,21 +98,31 @@ public class SpreadsheetService {
                          correctAngle2 = -1;
                     else correctAngle2 = question.getCorrectAngle2();
 
-                    row_question_results.createCell(1).setCellValue(correctAngle1 ==
-                                                                        (attempts.get(questionNumber).getGuessedAngle1()));
+                    Cell correct1 = row_question_results.createCell(1);
+                    correct1.setCellValue(correctAngle1 == (attempts.get(questionNumber).getGuessedAngle1()));
+                    if(correct1.getBooleanCellValue())
+                        correct1.setCellStyle(green);
+                    else correct1.setCellStyle(coral);
                     row_question_results.createCell(2).setCellValue(correctAngle1);
                     row_question_results.createCell(3).setCellValue(attempts.get(questionNumber).getGuessedAngle1());
                     row_question_results.createCell(4).setCellValue(attempts.get(questionNumber).getGuess1time1());
                     row_question_results.createCell(5).setCellValue(attempts.get(questionNumber).getGuess1time2());
-                    row_question_results.createCell(6).setCellValue(correctAngle2 ==
-                                                                        (attempts.get(questionNumber).getGuessedAngle2()));
+
+                    Cell correct2 =row_question_results.createCell(6);
+                    correct2.setCellValue(correctAngle2 ==(attempts.get(questionNumber).getGuessedAngle2()));
+                    if(correct2.getBooleanCellValue())
+                        correct2.setCellStyle(green);
+                    else correct2.setCellStyle(coral);
                     row_question_results.createCell(7).setCellValue(correctAngle2);
                     row_question_results.createCell(8).setCellValue(attempts.get(questionNumber).getGuessedAngle2());
                     row_question_results.createCell(9).setCellValue(attempts.get(questionNumber).getGuess2time1());
                     row_question_results.createCell(10).setCellValue(attempts.get(questionNumber).getGuess2time2());
-                    row_question_results.createCell(11).setCellValue(correctAngle1 == 3 && correctAngle2 == 4 ||
+                    Cell correct3 = row_question_results.createCell(11);
+                    correct3.setCellValue(correctAngle1 == 3 && correctAngle2 == 4 ||
                                                                              correctAngle1 == 8 && correctAngle2 == 9 );
-
+                    if(correct3.getBooleanCellValue())
+                        correct3.setCellStyle(green);
+                    else correct3.setCellStyle(coral);
                     // */
                 }
             }
