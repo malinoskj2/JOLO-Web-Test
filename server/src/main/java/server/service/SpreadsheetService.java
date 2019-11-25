@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import server.model.db.AnswerAttempt;
@@ -32,7 +33,7 @@ public class SpreadsheetService {
 
     public SpreadsheetService() { }
 
-    public String convertToSpreadsheet(Optional<TestSubmission> submissionOptional,
+    public ByteArrayResource convertToSpreadsheet(Optional<TestSubmission> submissionOptional,
                                                    List<AnswerAttempt> attempts) {
         /*** Displays information about a single text, as well as requested derived data ***/
         HSSFWorkbook wb = new HSSFWorkbook();
@@ -217,9 +218,8 @@ public class SpreadsheetService {
                 evaluator.evaluateInCell(cellIterator.next());
 
 
-
-
-            /* WRITE FILE */
+            return new ByteArrayResource(wb.getBytes());
+            /* WRITE FILE
             try (OutputStream fileOut = new FileOutputStream(f)){
                 wb.write(fileOut);
                 logger.info("\nfile written " + f.getAbsolutePath());
@@ -227,9 +227,11 @@ public class SpreadsheetService {
                 logger.error("caught:" + e);
                 e.printStackTrace();
             }
-            return new FileSystemResource(f).getPath();
+            return new FileSystemResource(f).getPath(); */
         }
-        return "Spreadsheet not created";
+        logger.warn("Spreadsheet not created");
+        byte[] empty = {};
+        return new ByteArrayResource(empty);
     }
 
 

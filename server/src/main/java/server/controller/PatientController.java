@@ -3,8 +3,11 @@ package server.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +25,7 @@ import server.repository.PatientRepository;
 import server.repository.TestSubmissionRepository;
 import server.service.SpreadsheetService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,9 +61,10 @@ public class PatientController {
     @RequestMapping(value = "/spreadsheet",
             method = RequestMethod.GET,
             produces = "application/json")
-    public String get_spreadsheet(@RequestParam("patientID") int patientID,
-                                  Authentication authentication) {
+    public ResponseEntity<ByteArrayResource> get_spreadsheet(@RequestParam("patientID") int patientID,
+                                                             Authentication authentication) throws IOException {
         AppUser userDetails = (AppUser) authentication.getPrincipal();
+        ByteArrayResource bar;
         final Optional<TestSubmission> submission = this.testSubmissionRepository.findFirstByPatientIDAndExamID(
                 patientID,
                 userDetails.getId()
@@ -70,12 +75,30 @@ public class PatientController {
             );
             logger.info("findFirstByPatientIDAndExamID found:" + submission.get().getTestSubmissionID() +
                     "\n" + attempts.size());
-            return spreadsheetService.convertToSpreadsheet(
+            bar = spreadsheetService.convertToSpreadsheet(
                     submission,
                     attempts
             );
+        } else {
+            logger.warn("submission unreachable");
+            byte[] empty = {};
+            bar = new ByteArrayResource(empty);
         }
-        return "submission unreachable";
+
+
+        //Path path = Paths.get(file.getAbsolutePath());
+        //ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=workbook.xls");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(bar.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(bar);
+
+
+
     }
 
     @RequestMapping(value = "/existsID",
