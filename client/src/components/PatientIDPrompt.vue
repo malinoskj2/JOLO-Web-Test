@@ -23,7 +23,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1"
+          <v-btn color="primary"
                  text @click="start"
                  :disabled="this.error"
                  class="text-none">Start</v-btn>
