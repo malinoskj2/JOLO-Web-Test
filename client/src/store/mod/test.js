@@ -4,14 +4,22 @@ export default {
       questions: [],
       testSubmissionID: 0,
     },
+    inProgress: false,
   },
   mutations: {
     saveTest(state, test) {
       state.test = test;
     },
+    setInProgress(state) {
+      state.inProgress = true;
+    },
+    unsetInProgress(state) {
+      state.inProgress = false;
+    },
   },
   getters: {
     test: state => state.test,
+    inProgress: state => state.inProgress,
   },
   actions: {
     async fetchTest(context, payload) {

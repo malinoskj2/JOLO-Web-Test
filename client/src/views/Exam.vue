@@ -28,8 +28,12 @@ export default {
   name: 'exam',
   // eslint-disable-next-line no-unused-vars
   beforeRouteLeave(to, from, next) {
-    this.next = next;
-    this.exitGuard = true;
+    if (this.$store.getters.inProgress) {
+      this.next = next;
+      this.exitGuard = true;
+    } else {
+      next();
+    }
   },
   components: {
     DrawTest,
@@ -50,6 +54,7 @@ export default {
         .then(() => console.log('fetched test'))
         .catch(() => console.log('error fetching test'));
       this.draw();
+      this.$store.commit('setInProgress');
     },
     draw() {
       const canvas = document.getElementById('canvas2');
@@ -99,10 +104,8 @@ export default {
   computed: {
     ...mapGetters([
       'test',
+      'inProgress',
     ]),
-  },
-  mounted() {
-
   },
 };
 </script>

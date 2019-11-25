@@ -71,6 +71,7 @@ export default {
           this.questions[this.i].line2EndY);
         this.i = this.i + 1;
       } else {
+        this.$store.commit('unsetInProgress');
         this.$router.push('/results');
       }
     },
