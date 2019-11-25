@@ -5,6 +5,7 @@ export default {
       testSubmissionID: 0,
     },
     inProgress: false,
+    questionsComplete: 0,
   },
   mutations: {
     saveTest(state, test) {
@@ -16,10 +17,18 @@ export default {
     unsetInProgress(state) {
       state.inProgress = false;
     },
+    incrementQuestionsComplete(state) {
+      state.questionsComplete += 1;
+    },
+    resetQuestionsComplete(state) {
+      state.questionsComplete = 0;
+    },
   },
   getters: {
     test: state => state.test,
     inProgress: state => state.inProgress,
+    numQuestionsComplete: state => state.questionsComplete,
+    numQuestions: state => state.test.questions.length,
   },
   actions: {
     async fetchTest(context, payload) {

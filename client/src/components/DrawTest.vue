@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Recorder from '../services/recorder';
 
 export default {
@@ -28,7 +29,6 @@ export default {
   },
   data() {
     return {
-      i: 0,
       recorder: new Recorder(),
     };
   },
@@ -39,7 +39,7 @@ export default {
           action: 'submitRecord',
           recording: this.recorder.getLastRecording(),
           testSubmissionID: this.testSubmissionID,
-          questionID: this.questions[this.i - 1].questionID,
+          questionID: this.questions[this.numQuestionsComplete - 1].questionID,
         })
         .then(() => console.log('dispatched submitRecord'))
         .catch(() => console.log('failed to dispatch submitRecord'));
@@ -60,21 +60,29 @@ export default {
       }
     },
     next() {
-      if (this.i < this.questions.length) {
-        this.draw(this.questions[this.i].line1StartX,
-          this.questions[this.i].line1StartY,
-          this.questions[this.i].line1EndX,
-          this.questions[this.i].line1EndY,
-          this.questions[this.i].line2StartX,
-          this.questions[this.i].line2StartY,
-          this.questions[this.i].line2EndX,
-          this.questions[this.i].line2EndY);
-        this.i = this.i + 1;
+      if (this.numQuestionsComplete < this.numQuestions) {
+        this.draw(this.questions[this.numQuestionsComplete].line1StartX,
+          this.questions[this.numQuestionsComplete].line1StartY,
+          this.questions[this.numQuestionsComplete].line1EndX,
+          this.questions[this.numQuestionsComplete].line1EndY,
+          this.questions[this.numQuestionsComplete].line2StartX,
+          this.questions[this.numQuestionsComplete].line2StartY,
+          this.questions[this.numQuestionsComplete].line2EndX,
+          this.questions[this.numQuestionsComplete].line2EndY);
+
+        this.$store.commit('incrementQuestionsComplete');
       } else {
         this.$store.commit('unsetInProgress');
+        this.$store.commit('resetQuestionsComplete');
         this.$router.push('/results');
       }
     },
+  },
+  computed: {
+    ...mapGetters([
+      'numQuestionsComplete',
+      'numQuestions',
+    ]),
   },
 
 };

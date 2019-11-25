@@ -124,6 +124,19 @@ export default {
       type: Boolean,
       required: false,
     },
+    showProgress: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    currentProgressValue: {
+      type: Number,
+      required: false,
+    },
+    finishedProgressValue: {
+      type: Number,
+      required: false,
+    },
   },
 
 };
