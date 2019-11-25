@@ -19,7 +19,6 @@
 
       <v-spacer/>
       <div v-if="this.isAuthenticated">
-
         <slot name="profile-menu"></slot>
       </div>
       <div v-else>
@@ -30,6 +29,14 @@
           <v-btn depressed color="primary" class="white--text text-none">Sign Up</v-btn>
         </router-link>
       </div>
+
+      <v-progress-linear
+        :active="this.showProgress"
+        absolute
+        bottom
+        color="primary"
+        :value="this.progress"
+      ></v-progress-linear>
 
     </v-app-bar>
 
@@ -105,6 +112,11 @@ export default {
     async hideOutline() {
       this.outline = false;
       await this.$nextTick();
+    },
+  },
+  computed: {
+    progress() {
+      return (this.currentProgressValue / this.finishedProgressValue) * 100;
     },
   },
   props: {

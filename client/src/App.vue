@@ -3,7 +3,10 @@
     <Nav :textA="navConfig.textA"
          :textB="navConfig.textB"
          :items="navConfig.navLinks"
-         :isAuthenticated="isAuthenticated">
+         :isAuthenticated="isAuthenticated"
+         :showProgress="inProgress"
+         :currentProgressValue="numQuestionsComplete"
+         :finishedProgressValue="numQuestions">
 
       <template v-slot:profile-menu>
         <profile-menu :auth-links="navConfig.authLinks"
@@ -61,6 +64,9 @@ export default {
       'firstName',
       'lastName',
       'isAuthenticated',
+      'inProgress',
+      'numQuestionsComplete',
+      'numQuestions',
     ]),
   },
   components: {
