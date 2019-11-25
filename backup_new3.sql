@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.27, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.28, for Linux (x86_64)
 --
 -- Host: localhost    Database: jolo
 -- ------------------------------------------------------
--- Server version	5.7.27-0ubuntu0.18.04.1
+-- Server version	5.7.28-0ubuntu0.18.04.4
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,6 +29,8 @@ CREATE TABLE `AnswerAttempt` (
   `GuessedAngle1` int(3) DEFAULT NULL,
   `GuessedAngle2` int(3) DEFAULT NULL,
   `audioFile` varchar(2083) DEFAULT NULL,
+  `Time1` double DEFAULT NULL,
+  `Time2` double DEFAULT NULL,
   PRIMARY KEY (`answerAttemptID`),
   KEY `AA_CON_1` (`testSubmissionID`),
   KEY `questionID` (`questionID`),
@@ -55,11 +57,11 @@ DROP TABLE IF EXISTS `Examiner`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Examiner` (
   `examID` int(11) NOT NULL,
-  `fNAME` varchar(20) DEFAULT NULL,
+  `fName` varchar(20) DEFAULT NULL,
   `lName` varchar(20) DEFAULT NULL,
-  `uName` varchar(20) DEFAULT NULL,
-  `password` varchar(20) DEFAULT NULL,
-  `email` varchar(40) DEFAULT NULL,
+  `Password` varchar(255) DEFAULT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  `Salt` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`examID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -107,12 +109,18 @@ DROP TABLE IF EXISTS `Questions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Questions` (
   `questionID` int(11) NOT NULL,
-  `angle1` varchar(3) DEFAULT NULL,
-  `angle2` varchar(3) DEFAULT NULL,
-  `line1Start` varchar(3) DEFAULT NULL,
-  `line1End` varchar(3) DEFAULT NULL,
-  `line2Start` varchar(3) DEFAULT NULL,
-  `line2End` varchar(3) DEFAULT NULL,
+  `correctAngle1` varchar(3) DEFAULT NULL,
+  `correctAngle2` varchar(3) DEFAULT NULL,
+  `Line1StartX` int(11) DEFAULT NULL,
+  `Line1StartY` int(11) DEFAULT NULL,
+  `Line2StartX` int(11) DEFAULT NULL,
+  `Line2StartY` int(11) DEFAULT NULL,
+  `Line1EndX` int(11) DEFAULT NULL,
+  `Line1EndY` int(11) DEFAULT NULL,
+  `Line2EndX` int(11) DEFAULT NULL,
+  `Line2EndY` int(11) DEFAULT NULL,
+  `Label` varchar(3) DEFAULT NULL,
+  `position` int(11) DEFAULT NULL,
   PRIMARY KEY (`questionID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -127,28 +135,6 @@ LOCK TABLES `Questions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Test`
---
-
-DROP TABLE IF EXISTS `Test`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Test` (
-  `testID` int(11) NOT NULL,
-  PRIMARY KEY (`testID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Test`
---
-
-LOCK TABLES `Test` WRITE;
-/*!40000 ALTER TABLE `Test` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Test` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `TestSubmission`
 --
 
@@ -157,15 +143,12 @@ DROP TABLE IF EXISTS `TestSubmission`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `TestSubmission` (
   `testSubmissionID` int(11) NOT NULL,
-  `testID` int(11) NOT NULL,
   `examID` int(11) NOT NULL,
   `patientID` int(11) NOT NULL,
   `date` datetime NOT NULL,
   PRIMARY KEY (`testSubmissionID`),
-  KEY `testID` (`testID`),
   KEY `examID` (`examID`),
   KEY `patientID` (`patientID`),
-  CONSTRAINT `TestSubmission_ibfk_1` FOREIGN KEY (`testID`) REFERENCES `Test` (`testID`),
   CONSTRAINT `TestSubmission_ibfk_2` FOREIGN KEY (`examID`) REFERENCES `Examiner` (`examID`),
   CONSTRAINT `TestSubmission_ibfk_3` FOREIGN KEY (`patientID`) REFERENCES `Patients` (`patientID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -179,32 +162,6 @@ LOCK TABLES `TestSubmission` WRITE;
 /*!40000 ALTER TABLE `TestSubmission` DISABLE KEYS */;
 /*!40000 ALTER TABLE `TestSubmission` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `TestToQuestion`
---
-
-DROP TABLE IF EXISTS `TestToQuestion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TestToQuestion` (
-  `testID` int(11) DEFAULT NULL,
-  `questionID` int(11) DEFAULT NULL,
-  KEY `testID` (`testID`),
-  KEY `questionID` (`questionID`),
-  CONSTRAINT `TestToQuestion_ibfk_1` FOREIGN KEY (`testID`) REFERENCES `Test` (`testID`),
-  CONSTRAINT `TestToQuestion_ibfk_2` FOREIGN KEY (`questionID`) REFERENCES `Questions` (`questionID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `TestToQuestion`
---
-
-LOCK TABLES `TestToQuestion` WRITE;
-/*!40000 ALTER TABLE `TestToQuestion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `TestToQuestion` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -215,4 +172,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-31 21:10:12
+-- Dump completed on 2019-11-19 20:03:51

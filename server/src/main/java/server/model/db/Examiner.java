@@ -2,17 +2,30 @@ package server.model.db;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
 
 @Entity
 @Table(name="Examiner")
 public class Examiner implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer examID;
-
+    
+    @Length(max = 20)
+    @Column(name = "fName")
     private String fName;
+    
+    @Length(max=  20)
+    @Column(name = "lName")
     private String lName;
+    
+    @Length(max = 255)
+    @Column(name = "Password")
     private String password;
+    
+    @Length(max = 255)
+    @Column(name = "Email")
     private String email;
 
     public Examiner() {};

@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +14,7 @@ import server.config.auth.AppUser;
 import server.model.db.AnswerAttempt;
 import server.model.db.Patient;
 import server.model.db.TestSubmission;
+import server.model.request.PatientRequest;
 import server.model.response.PatientList;
 import server.repository.AnswerAttemptRepository;
 import server.repository.ExaminerRepository;
@@ -38,6 +41,7 @@ public class PatientController {
     @Autowired
     private SpreadsheetService spreadsheetService;
     Logger logger = LoggerFactory.getLogger(PatientController.class);
+    private TestSubmissionRepository testRepository;
 
     @RequestMapping(value = "/all",
             method = RequestMethod.GET,
@@ -60,9 +64,7 @@ public class PatientController {
                 patientID,
                 userDetails.getId()
         );
-
-
-        if (submission.isPresent() ) {
+        if (submission.isPresent()) {
             final List<AnswerAttempt> attempts = this.answerAttemptRepository.findAllByTestSubmissionID(
                     submission.get().getTestSubmissionID()
             );
@@ -74,5 +76,19 @@ public class PatientController {
             );
         }
         return "submission unreachable";
+    }
+
+    @RequestMapping(value = "/existsID",
+            method = RequestMethod.POST,
+            produces = "application/json")
+    public Boolean existsID(@RequestBody PatientRequest patientRequest, Authentication auth)
+    {
+        AppUser userDetails = (AppUser) auth.getPrincipal();
+
+        final Optional<List<TestSubmission>> patientIDs =
+                this.testRepository.findAllByExamIDAndPatientID(userDetails.getId(), patientRequest.getPatientID());
+
+        return patientIDs.isPresent();
+
     }
 }

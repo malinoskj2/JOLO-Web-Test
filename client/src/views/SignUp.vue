@@ -16,12 +16,13 @@
              <v-card-title class="justify-center">Sign Up</v-card-title>
              </v-flex>
           <v-card-text>
-          <v-form>
+          <v-form ref="form" v-model="valid">
               <v-text-field
                 v-model="userData.fName"
                 label="First Name"
                 name="fName"
                 type="text"
+                :rules="firstNameRules"
                 required
                 />
                  <v-text-field
@@ -29,13 +30,17 @@
                 label="Last Name"
                 name="lNamee"
                 type="text"
+                :rules="lastNameRules"
                 required
                 />
                  <v-text-field
-                v-model="userData.email"
+                v-model="email"
                 label="Email"
                 name="Email"
                 type="email"
+                :rules="emailRules"
+                :error="error"
+                :error-messages="errorMessages"
                 required
                 />
                  <v-text-field
@@ -43,13 +48,15 @@
                 label="Password"
                 name="Password"
                 type="password"
+                :rules="passwordRules"
                 required
                 />
                 <v-text-field
                 v-model="userData.retypedPassword"
-                label="Retype Password"
+                label="Confirm Password"
                 name="retypePassword"
                 type="password"
+                :rules="passwordMatchRules"
                 required
                 />
             </v-form>
@@ -57,7 +64,11 @@
           <v-card-actions >
                 <v-spacer />
                 <v-flex>
-                <v-btn class="justify-center" color="primary" @click="submit()">Submit</v-btn>
+                <v-btn
+                :disabled="!valid"
+                class="justify-center"
+                color="primary"
+                @click="submit()">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
@@ -69,6 +80,9 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
+
+const emailCheckDebounceMS = 120;
 
 export default {
   name: 'signup',
@@ -77,38 +91,80 @@ export default {
       title: 'Sign Up',
     };
   },
-  data: () => ({
-    userData: {
-      fName: '',
-      lName: '',
+  data() {
+    return {
+      userData: {
+        fName: '',
+        lName: '',
+        password: '',
+        retypedPassword: '',
+      },
       email: '',
-      password: '',
-      retypedPassword: '',
-    },
-  }),
+      emailTaken: false,
+      valid: false,
+      error: false,
+      errorMessages: '',
+      firstNameRules: [
+        v => !!v || 'Name is required',
+      ],
+      lastNameRules: [
+        v => !!v || 'Last name is required',
+      ],
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => (v && v.length >= 8) || 'Password must be longer 8 characters or longer.',
+        v => /(?=.*[a-z])/.test(v) || 'Password must have atleast one lowercase character.',
+        v => /(?=.*[A-Z])/.test(v) || 'Password must have atleast one uppercase character.',
+        v => /(?=.*[0-9])/.test(v) || 'Password must contain atleast one numeric character.',
+        v => /(?=.[!@#$%^&])/.test(v) || 'Password must contain atleast a one special character. (! @ # $ % ^ &)',
+      ],
+      passwordMatchRules: [
+        v => !!v || 'Please retype your password.',
+        v => (v && v === this.userData.password) || 'Does not match password.',
+      ],
+    };
+  },
   methods: {
     postUserData() {
-      fetch(`${process.env.VUE_APP_API}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fName: this.userData.fName,
-          lName: this.userData.lName,
-          password: this.userData.password,
-          email: this.userData.email,
-        }),
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            this.$router.push('/login');
-          }
-        });
+      this.$store.dispatch('signup',
+        {
+          successFunction: () => this.$router.push('/login'),
+          email: this.email,
+          ...this.userData,
+        })
+        .then(() => console.log('dispatched signup'))
+        .catch(() => console.log('failed to dispatch signup'));
     },
     submit() {
-      this.postUserData();
+      if (this.$refs.form.validate()) {
+        this.valid = true;
+        this.postUserData();
+      }
     },
+    showEmailUnavailable() {
+      this.error = true;
+      this.errorMessages = 'Email already in use.';
+    },
+    showEmailAvailable() {
+      this.error = false;
+      this.errorMessages = '';
+    },
+  },
+  watch: {
+    email: debounce(function () {
+      this.$store.dispatch('emailAvailability', { email: this.email })
+        .then((response) => {
+          if (response) {
+            this.showEmailUnavailable();
+          } else {
+            this.showEmailAvailable();
+          }
+        });
+    }, emailCheckDebounceMS),
   },
 };
 </script>

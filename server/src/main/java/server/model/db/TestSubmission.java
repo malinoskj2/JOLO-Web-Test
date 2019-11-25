@@ -6,17 +6,25 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.sql.Timestamp;
+import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
 
 @Entity
-@Table(name="test_submission")
+@Table(name="test_submission")//TestSubmission
 public class TestSubmission implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "testSubmissionID")
     private Integer testSubmissionID;
-    private Integer testID;
+    
+    @Column(name = "examID")
     private Integer examID;
+    
+    @Column(name = "patientID")
     private Integer patientID;
+    
     @Temporal(TemporalType.DATE)
+    @Column(name = "date")
     private Date createdDate;
 
     public TestSubmission() {}
@@ -27,14 +35,6 @@ public class TestSubmission implements Serializable {
 
     public void setTestSubmissionID(Integer testSubmissionID) {
         this.testSubmissionID = testSubmissionID;
-    }
-
-    public Integer getTestID() {
-        return testID;
-    }
-
-    public void setTestID(Integer testID) {
-        this.testID = testID;
     }
 
     public Integer getExamID() {

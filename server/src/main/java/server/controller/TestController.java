@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -135,34 +136,42 @@ public class TestController {
     @RequestMapping(value = "start",
             method = RequestMethod.POST,
             produces = "application/json")
-    public StartTestResponse start(@RequestBody StartTestRequest request,
+    public ResponseEntity<?> start(@RequestBody StartTestRequest request,
                                    Authentication authentication) {
         System.out.println("Starting Test");
         final AppUser userDetails = (AppUser) authentication.getPrincipal();
 
         final Patient patient = new Patient();
+
         patient.setPatientID(request.getPatientID());
         patient.setExamID(userDetails.getId());
-        this.patientRepository.save(patient);
 
-        final TestSubmission submission = this.createTestSubmission(
-                request.getTestID(),
-                userDetails.getId(),
-                request.getPatientID()
-        );
+        Optional<List<TestSubmission>> patientList =
+                this.testSubmissionRepository.findAllByExamIDAndPatientID(patient.getExamID(), patient.getPatientID());
+        if(patientList.isPresent())
+        {
+            return ResponseEntity.badRequest().body("The PatientID you requested is already in use");
+        }
+        else {
+            this.patientRepository.save(patient);
 
-        List<Question> questions = new ArrayList<Question>();
-        this.questionRepository.findAll().forEach(questions::add);
+            final TestSubmission submission = this.createTestSubmission(
+                    userDetails.getId(),
+                    request.getPatientID()
+            );
 
-        return new StartTestResponse(submission.getTestSubmissionID(), questions);
+            List<Question> questions = new ArrayList<Question>();
+            this.questionRepository.findAll().forEach(questions::add);
+
+            return ResponseEntity.ok(new StartTestResponse(submission.getTestSubmissionID(), questions));
+
+        }
     }
 
-    public TestSubmission createTestSubmission(final Integer testID,
-                                               final Integer examID,
+    public TestSubmission createTestSubmission(final Integer examID,
                                                final Integer patientID) {
 
         final TestSubmission submission = new TestSubmission();
-        submission.setTestID(testID);
         submission.setExamID(examID);
         submission.setPatientID(patientID);
 

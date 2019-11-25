@@ -2,7 +2,7 @@
   <div>
     <v-data-table
     :headers="headers"
-    :items="patientData"
+    :items="$store.getters.patients"
     :items-per-page="5"
     class="elevation-1"
   ></v-data-table>
@@ -31,20 +31,12 @@ export default {
       patientData: [],
     };
   },
-  methods: {
-    async fetchPatients() {
-      const response = await fetch(`${process.env.VUE_APP_API}/patient/all`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${this.$store.state.token}`,
-        },
-      });
-      const json = await response.json();
-      this.patientData = json.patients.map(patientID => ({ ID: patientID }));
-    },
-  },
   mounted() {
-    this.fetchPatients();
+    this.$store.dispatch('makeAuthenticatedCall', {
+      action: 'fetchPatients',
+    })
+      .then(() => console.log('fetched patients successfully.'))
+      .catch(() => console.log('failed to fetch patients'));
   },
 };
 </script>

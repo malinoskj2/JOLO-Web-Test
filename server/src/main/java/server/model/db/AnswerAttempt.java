@@ -5,21 +5,39 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
 
 @Entity
-@Table(name="answer_attempt")
+@Table(name="answer_attempt")//AnswerAttempt
 public class AnswerAttempt implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    
+    @Column(name = "answerAttemptID")
     private Integer answerAttemptID;
+    
+    @Column(name = "testSubmissionID")
     private Integer testSubmissionID;
+    
+    @Column(name = "questionID")
     private Integer questionID;
+    
+    @Column(name = "GuessedAngle1")
     private Integer guessedAngle1;
+    
+    @Column(name = "GuessedAngle2")
     private Integer guessedAngle2;
+    @Column(name = "Guess1time1")
     private Double  guess1time1;
+    @Column(name = "Guess1time2")
     private Double  guess1time2;
+    @Column(name = "Guess2time1")
     private Double  guess2time1;
+    @Column(name = "Guess2time2")
     private Double  guess2time2;
+    @Length(max = 2083)
+    @Column(name = "audioFile")
     private String  audioFilePath;
 
     public AnswerAttempt() {}

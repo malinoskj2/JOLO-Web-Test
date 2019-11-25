@@ -5,12 +5,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
+import javax.persistence.*;
 
 @Entity
-@Table(name="patient")
+@Table(name="patient")//Patients
 public class Patient implements Serializable {
     @Id
+    @Column(name = "patientID")
     private Integer patientID;
+    
+    @Column(name = "examID")
     private Integer examID;
 
     public Patient() { }

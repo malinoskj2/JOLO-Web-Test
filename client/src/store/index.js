@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+// eslint-disable-line
 import VuexPersistence from 'vuex-persist';
+import user from '@/store/mod/user';
+import test from '@/store/mod/test';
+import patient from '@/store/mod/patient';
+import router from '@/router';
 
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
@@ -8,41 +13,35 @@ const vuexLocal = new VuexPersistence({
 
 Vue.use(Vuex);
 
+const UNAUTHORIZED = 401;
+
+const handleUnauthorized = (context) => {
+  context.commit('signOut');
+  router.push('login');
+};
+
+const ResponseStatusHandlers = new Map([
+  [UNAUTHORIZED, handleUnauthorized],
+]);
+
 export default new Vuex.Store({
-  state: {
-    token: null,
-    email: null,
-    firstName: null,
-    lastName: null,
-  },
-  mutations: {
-    saveToken(state, token) {
-      state.token = token;
-    },
-    saveEmail(state, email) {
-      state.email = email;
-    },
-    saveFirstName(state, firstName) {
-      state.firstName = firstName;
-    },
-    saveLastName(state, lastName) {
-      state.lastName = lastName;
-    },
-    signOut(state) {
-      state.email = null;
-      state.token = null;
-    },
-  },
-  getters: {
-    token: state => state.token,
-    email: state => state.email,
-    firstName: state => state.firstName,
-    lastName: state => state.lastName,
-    isAuthenticated: state => Boolean(state.token),
-  },
+  modules: { user, test, patient },
   actions: {
-  },
-  modules: {
+    makeAuthenticatedCall(context, payload) {
+      context.dispatch(payload.action, payload)
+        .then((responseStatus) => {
+          console.log(`Made Authenticated Call: ${payload.action}`);
+
+          if (ResponseStatusHandlers.has(responseStatus)) {
+            ResponseStatusHandlers.get(responseStatus)(context);
+          }
+        })
+        .catch(() => {
+          console.log(`Failed Authenticated Call: ${payload.action}`);
+
+          handleUnauthorized(context);
+        });
+    },
   },
   plugins: [vuexLocal.plugin],
 });
