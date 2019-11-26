@@ -33,7 +33,7 @@ public class SpreadsheetService {
 
     public SpreadsheetService() { }
 
-    public ByteArrayResource convertToSpreadsheet(Optional<TestSubmission> submissionOptional,
+    public HSSFWorkbook convertToSpreadsheet(Optional<TestSubmission> submissionOptional,
                                                    List<AnswerAttempt> attempts) {
         /*** Displays information about a single text, as well as requested derived data ***/
         HSSFWorkbook wb = new HSSFWorkbook();
@@ -218,20 +218,10 @@ public class SpreadsheetService {
                 evaluator.evaluateInCell(cellIterator.next());
 
 
-            return new ByteArrayResource(wb.getBytes());
-            /* WRITE FILE
-            try (OutputStream fileOut = new FileOutputStream(f)){
-                wb.write(fileOut);
-                logger.info("\nfile written " + f.getAbsolutePath());
-            }catch (Exception e) {
-                logger.error("caught:" + e);
-                e.printStackTrace();
-            }
-            return new FileSystemResource(f).getPath(); */
+            return wb;
         }
         logger.warn("Spreadsheet not created");
-        byte[] empty = {};
-        return new ByteArrayResource(empty);
+        return wb;
     }
 
 
