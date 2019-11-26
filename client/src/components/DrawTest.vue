@@ -58,7 +58,7 @@ export default {
         ctx.lineTo(xEnd1, yEnd1);
         ctx.moveTo(xStart2, yStart2);
         ctx.lineTo(xEnd2, yEnd2);
-        ctx.font = '17px Oswald';
+        ctx.font = '500 17px Arial';
         // Line 1
         ctx.fillText('1', 163, 685);
         ctx.moveTo(177, 682);
