@@ -60,12 +60,11 @@ public class PatientController {
             method = RequestMethod.GET,
             produces = "application/json")
     @ResponseBody
-    public void get_spreadsheet(@RequestParam("patientID") int patientID,
+    public Object get_spreadsheet(@RequestParam("patientID") int patientID,
                                                              Authentication authentication,
                                                             HttpServletResponse response
                                 ) throws IOException {
         AppUser userDetails = (AppUser) authentication.getPrincipal();
-        ByteArrayResource bar;
         HSSFWorkbook workbook;
         final Optional<TestSubmission> submission = this.testSubmissionRepository.findFirstByPatientIDAndExamID(
                 patientID,
@@ -88,9 +87,10 @@ public class PatientController {
 
         workbook.write(response.getOutputStream());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE,"text/html; charset=utf-8");
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment");
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=workbook.xls");
+        return null;
     }
 
     @RequestMapping(value = "/existsID",

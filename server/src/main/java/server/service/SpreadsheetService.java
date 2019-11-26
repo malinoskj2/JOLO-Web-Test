@@ -101,11 +101,6 @@ public class SpreadsheetService {
                     labelCell.setCellValue("q" + (questionNumber+1));
                     labelCell.setCellStyle(aqua);
 
-                    logger.info("spreadsheet write: question#:" +questionNumber +
-                            ": guess1:" + attempts.get(questionNumber).getGuessedAngle1() +
-                            "\t guess2:" + attempts.get(questionNumber).getGuessedAngle2() +
-                            "\n \t\t\tcorrect1:" + question.getCorrectAngle1() +
-                            "\t correct2:" + question.getCorrectAngle2());
                     int correctAngle1, correctAngle2;
                     if(question.getCorrectAngle1() == null)
                          correctAngle1 = -1;
@@ -210,13 +205,11 @@ public class SpreadsheetService {
                                                                      "-SUMIF(raw_data!L4:raw_data!L17,\"TRUE\",raw_data!J4:raw_data!J17)");
             row2_data_derived.createCell(12).setCellFormula("L2/G2");
 
-
-
             HSSFFormulaEvaluator evaluator = new HSSFFormulaEvaluator(wb);
             Iterator<Cell> cellIterator = row2_data_derived.cellIterator();
             while(cellIterator.hasNext())
                 evaluator.evaluateInCell(cellIterator.next());
-
+            logger.info("spreadsheet created" );
 
             return wb;
         }
