@@ -90,7 +90,9 @@ public class PatientController {
         //ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=workbook.xls");
+        headers.add(HttpHeaders.CONTENT_TYPE,"text/html; charset=utf-8");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment");
+        //headers.add(HttpHeaders.CONTENT_DISPOSITION, "form-data");
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentLength(bar.contentLength())
