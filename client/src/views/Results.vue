@@ -1,5 +1,5 @@
 <template>
-  <PatientList class="my-auto" />
+  <PatientList id="patient-list"/>
 </template>
 
 <script>
@@ -19,5 +19,7 @@ export default {
 </script>
 
 <style>
-
+#patient-list {
+  margin-top: 80px;
+}
 </style>
