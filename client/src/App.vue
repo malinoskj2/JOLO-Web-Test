@@ -27,7 +27,7 @@ import { mapGetters } from 'vuex';
 import {
   mdiHome, mdiLightbulbOutline, mdiPackageDown,
   mdiAccountPlus, mdiLoginVariant,
-  mdiSettings, mdiHelp,
+  mdiSettings, mdiHelp, mdiAccountCardDetails,
 } from '@mdi/js';
 import Nav from '@/components/Nav.vue';
 import ProfileMenu from './components/ProfileMenu.vue';
@@ -53,7 +53,7 @@ export default {
           { icon: mdiHelp, text: 'Help', route: 'help' },
         ],
         authLinks: [
-          { text: 'Account', icon: 'mdi-account-card-details', route: 'account' },
+          { text: 'Account', icon: mdiAccountCardDetails, route: 'account' },
         ],
       },
     };
