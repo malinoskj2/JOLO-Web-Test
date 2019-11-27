@@ -57,7 +57,7 @@ public class PatientController {
 
     @RequestMapping(value = "/spreadsheet",
             method = RequestMethod.GET,
-            produces = "application/json")
+            produces = "application/vnd.ms-excel")
     @ResponseBody
     public Object get_spreadsheet(@RequestParam("patientID") int patientID,
                                                              Authentication authentication,

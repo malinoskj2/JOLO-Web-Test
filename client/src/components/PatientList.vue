@@ -51,9 +51,7 @@ export default {
   },
   methods: {
     downloadSpreadSheet(patientID) {
-      console.log(patientID);
-
-      fetch(`${process.env.VUE_APP_API}/patient/spreadsheet`, {
+      fetch(`${process.env.VUE_APP_API}/patient/spreadsheet?patientID=${patientID}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${this.$store.getters.token}`,
@@ -69,7 +67,6 @@ export default {
           document.body.appendChild(a);
           a.click();
           window.URL.revokeObjectURL(url);
-          alert('your file has downloaded!');
         })
         .catch(() => console.log('Could not download the spreadsheet.'));
     },
