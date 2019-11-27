@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y>
     <template v-slot:activator="{ on }">
-      <v-icon size="2rem" v-on="on">{{dotsSvgPath}}</v-icon>
+      <v-icon large v-on="on">{{dotsSvgPath}}</v-icon>
     </template>
 
     <v-system-bar></v-system-bar>
@@ -16,7 +16,7 @@
     <v-divider></v-divider>
 
     <v-list nav dense>
-      <v-list-item-group v-model="item" color="primary">
+      <v-list-item-group color="primary">
 
         <router-link  v-for="(item, i) in authLinks"
                       :key="i" :to="item.route"
