@@ -62,8 +62,7 @@ export default {
           const a = document.createElement('a');
           a.style.display = 'none';
           a.href = url;
-          // the filename you want
-          a.download = 'todo-1.xls';
+          a.download = `patient-${patientID}.xls`;
           document.body.appendChild(a);
           a.click();
           window.URL.revokeObjectURL(url);
