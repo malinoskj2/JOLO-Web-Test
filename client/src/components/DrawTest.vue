@@ -1,71 +1,61 @@
 <template>
 <div id="test">
-   <v-btn @click="recorder.start()">Start</v-btn>
-  <v-btn @click="recorder.stop()">Stop</v-btn>
-  <v-btn @click="this.submitRecord">Submit</v-btn>
-   <v-divider
-      vertical></v-divider>
-      <v-btn @click="next()">Next</v-btn>
-    <v-spacer></v-spacer>
     <canvas id="canvas"></canvas>
 </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Recorder from '../services/recorder';
 
 export default {
   name: 'DrawTest',
   props: {
-    questions: {
-      type: Array,
-      required: true,
-    },
-    testSubmissionID: {
-      type: Number,
+    question: {
+      type: Object,
       required: true,
     },
   },
   data() {
-    return {
-      recorder: new Recorder(),
-    };
+    return { canvasWidth: 613, canvasHeight: 797 };
+  },
+  mounted() {
+    this.setDimensions();
   },
   methods: {
-    submitRecord() {
-      this.$store.dispatch('makeAuthenticatedCall',
-        {
-          action: 'submitRecord',
-          recording: this.recorder.getLastRecording(),
-          testSubmissionID: this.testSubmissionID,
-          questionID: this.questions[this.numQuestionsComplete - 1].questionID,
-        })
-        .then(() => console.log('dispatched submitRecord'))
-        .catch(() => console.log('failed to dispatch submitRecord'));
-    },
-    draw(xStart1, yStart1, xEnd1, yEnd1, xStart2, yStart2, xEnd2, yEnd2) {
+    setDimensions() {
       const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.canvas.width = this.canvasWidth;
+      ctx.canvas.height = this.canvasHeight;
+    },
+    draw() {
+      const {
+        line1StartX, line1StartY,
+        line1EndX, line1EndY,
+        line2StartX, line2StartY,
+        line2EndX, line2EndY,
+      } = this.question;
+
+      const canvas = document.getElementById('canvas');
+
       if (canvas.getContext) {
         const ctx = canvas.getContext('2d');
-        ctx.canvas.width = 613;
-        ctx.canvas.height = 797;
+        this.setDimensions();
         ctx.lineWidth = 3;
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.strokeStyle = 'black';
-        ctx.moveTo(xStart1, yStart1);
-        ctx.lineTo(xEnd1, yEnd1);
-        ctx.moveTo(xStart2, yStart2);
-        ctx.lineTo(xEnd2, yEnd2);
-        ctx.font = '17px Oswald';
+        ctx.moveTo(line1StartX, line1StartY);
+        ctx.lineTo(line1EndX, line1EndY);
+        ctx.moveTo(line2StartX, line2StartY);
+        ctx.lineTo(line2EndX, line2EndY);
+        ctx.font = 'bold 17px Oswald';
         // Line 1
         ctx.fillText('1', 163, 685);
         ctx.moveTo(177, 682);
-        ctx.lineTo(288, 681);
+        ctx.lineTo(288, 682);
         // Line 2
-        ctx.fillText('2', 170, 645);
-        ctx.moveTo(184, 642);
+        ctx.fillText('2', 170, 639);
+        ctx.moveTo(184, 638);
         ctx.lineTo(288, 676);
         // Line 3
         ctx.fillText('3', 188, 603);
@@ -97,41 +87,21 @@ export default {
         ctx.lineTo(325, 666);
         // Line 10
         ctx.fillText('10', 436, 639);
-        ctx.moveTo(431, 636);
-        ctx.lineTo(328, 671);
+        ctx.moveTo(431, 638);
+        ctx.lineTo(328, 676);
         // Line 11
-        ctx.fillText('11', 445, 680);
-        ctx.moveTo(438, 675);
-        ctx.lineTo(330, 677);
+        ctx.fillText('11', 445, 685);
+        ctx.moveTo(438, 682);
+        ctx.lineTo(330, 682);
         ctx.stroke();
       }
     },
-    next() {
-      if (this.numQuestionsComplete < this.numQuestions) {
-        this.draw(this.questions[this.numQuestionsComplete].line1StartX,
-          this.questions[this.numQuestionsComplete].line1StartY,
-          this.questions[this.numQuestionsComplete].line1EndX,
-          this.questions[this.numQuestionsComplete].line1EndY,
-          this.questions[this.numQuestionsComplete].line2StartX,
-          this.questions[this.numQuestionsComplete].line2StartY,
-          this.questions[this.numQuestionsComplete].line2EndX,
-          this.questions[this.numQuestionsComplete].line2EndY);
-
-        this.$store.commit('incrementQuestionsComplete');
-      } else {
-        this.$store.commit('unsetInProgress');
-        this.$store.commit('resetQuestionsComplete');
-        this.$router.push('/results');
-      }
+  },
+  watch: {
+    question() {
+      this.draw();
     },
   },
-  computed: {
-    ...mapGetters([
-      'numQuestionsComplete',
-      'numQuestions',
-    ]),
-  },
-
 };
 </script>
 

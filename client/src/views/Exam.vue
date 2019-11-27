@@ -1,33 +1,60 @@
 <template>
-    <div class="my-auto mx-auto">
-      <patient-i-d-prompt @set-patient="start"/>
-      <v-dialog v-model="exitGuard" persistent max-width="290">
-        <v-card>
-          <v-card-title class="headline">Quitting The Exam?</v-card-title>
-          <v-card-text>Only completed trials will be recorded.</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="exitGuard = false">No</v-btn>
-            <v-btn color="primary" text @click="exitExam">Yes</v-btn>
-          </v-card-actions>
+
+      <div id="exam" class="mx-auto">
+        <patient-i-d-prompt @set-patient="start"/>
+
+        <v-dialog v-model="exitGuard" persistent max-width="290">
+          <v-card>
+            <v-card-title class="headline">Quitting The Exam?</v-card-title>
+            <v-card-text>Only completed trials will be recorded.</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="exitGuard = false">No</v-btn>
+              <v-btn color="primary" text @click="exitExam">Yes</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <div id="exam-nav" class="d-flex justify-space-around">
+          <v-icon @click="previousTrial"
+                  :color="this.hasPreviousQuestion ? 'primary' : 'secondary'"
+                  x-large class="exam-nav-arrow">
+            {{leftArrowSvgPath}}
+          </v-icon>
+          <v-icon @click="submitDelayed(2000)" large class="align-self-center"
+                  :color="this.recorder.isRecording ? 'primary' : 'secondary'">
+            {{microphoneSvgPath}}
+          </v-icon>
+          <v-icon @click="nextTrial"
+                  :color="this.hasNextQuestion ? 'primary' : 'secondary'"
+                  x-large class="exam-nav-arrow">
+            {{rightArrowSvgPath}}
+          </v-icon>
+        </div>
+
+        <v-card id="drawing-card">
+          <p id="trial-count">Trial {{this.currentTrialNumber}} of {{this.numQuestions}}</p>
+          <DrawTest id="drawing-test" :question="this.currentQuestion"/>
         </v-card>
-      </v-dialog>
-      <DrawTest :questions="test.questions"
-                :testSubmissionID="test.testSubmissionID"/>
-      <v-spacer></v-spacer>
-    </div>
+
+
+        <v-spacer></v-spacer>
+      </div>
+
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
+import { mdiArrowLeftCircle, mdiArrowRightCircle, mdiMicrophone } from '@mdi/js';
 import DrawTest from '@/components/DrawTest.vue';
 import PatientIDPrompt from '@/components/PatientIDPrompt.vue';
+import Recorder from '../services/recorder';
 
 export default {
   name: 'exam',
   // eslint-disable-next-line no-unused-vars
   beforeRouteLeave(to, from, next) {
-    if (this.$store.getters.inProgress) {
+    if (this.inProgress) {
       this.next = next;
       this.exitGuard = true;
     } else {
@@ -40,15 +67,18 @@ export default {
   },
   data() {
     return {
+      recorder: new Recorder(),
       exitGuard: false,
+      leftArrowSvgPath: mdiArrowLeftCircle,
+      rightArrowSvgPath: mdiArrowRightCircle,
+      microphoneSvgPath: mdiMicrophone,
       next: {},
     };
   },
   methods: {
     exitExam() {
+      this.resetTest();
       this.next();
-      this.$store.commit('unsetInProgress');
-      this.$store.commit('resetQuestionsComplete');
     },
     start(payload) {
       this.$store.dispatch('makeAuthenticatedCall', {
@@ -58,17 +88,88 @@ export default {
         .then(() => console.log('fetched test'))
         .catch(() => console.log('error fetching test'));
       this.$store.commit('setInProgress');
+      this.recorder.start();
     },
+    submitRecord() {
+      this.recorder.stop();
+      this.$store.commit('setQuestionAnswered', this.currentQuestion.questionID);
+      this.$store.dispatch('makeAuthenticatedCall',
+        {
+          action: 'submitRecord',
+          recording: this.recorder.getLastRecording(),
+          testSubmissionID: this.testSubmissionID,
+          questionID: this.currentQuestion.questionID,
+        })
+        .then(() => console.log('dispatched submitRecord'))
+        .catch(() => console.log('failed to dispatch submitRecord'));
+    },
+    submitDelayed(delayMs) {
+      this.recorder.stop();
+      setTimeout(() => this.submitRecord(), delayMs);
+    },
+    nextTrial() {
+      if (this.recorder.isRecording) {
+        this.submitDelayed(2000);
+      }
+
+      if (this.onLastQuestion) {
+        this.$router.push('/results');
+      } else {
+        this.incrementActiveQuestion();
+      }
+    },
+    previousTrial() {
+      this.decrementActiveQuestion();
+    },
+    ...mapMutations([
+      'incrementActiveQuestion',
+      'decrementActiveQuestion',
+      'resetTest',
+      'setQuestionAnswered',
+    ]),
   },
   computed: {
     ...mapGetters([
       'test',
       'inProgress',
+      'currentQuestion',
+      'hasPreviousQuestion',
+      'hasNextQuestion',
+      'currentTrialNumber',
+      'numQuestions',
+      'testSubmissionID',
+      'onLastQuestion',
     ]),
   },
 };
 </script>
 
 <style>
+#exam {
+  margin-top: 80px;
+}
 
+#drawing-card {
+  margin-top: 24px;
+}
+
+#trial-count {
+  margin: 0rem .5rem 0 0;
+  padding-top: .2rem;
+  font-size: 1rem;
+  filter: opacity(.3);
+  text-align: right;
+}
+
+#drawing-test {
+  margin-top: -24px;
+}
+
+.exam-nav-arrow {
+  filter: drop-shadow(0px 1px 3px rgba(53, 42, 85, 0.68));
+}
+
+.exam-nav-arrow:hover {
+  filter: drop-shadow(0px 0px 1px #000000);
+}
 </style>

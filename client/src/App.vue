@@ -73,6 +73,9 @@ export default {
     Nav,
     ProfileMenu,
   },
+  mounted() {
+    this.$store.commit('resetTest');
+  },
 
 };
 </script>

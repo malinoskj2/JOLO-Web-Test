@@ -5,6 +5,7 @@ export default class Recorder {
     window.MediaRecorder = polyfill;
     this.recorder = {};
     this.recording = {};
+    this.isRecording = false;
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       this.recorder = new MediaRecorder(stream);
@@ -15,10 +16,12 @@ export default class Recorder {
   }
 
   start() {
+    this.isRecording = true;
     this.recorder.start();
   }
 
   stop() {
+    this.isRecording = false;
     this.recorder.stop();
   }
 
