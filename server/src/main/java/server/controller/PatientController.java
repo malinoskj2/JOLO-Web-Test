@@ -34,16 +34,15 @@ public class PatientController {
 
     @Autowired
     private PatientRepository patientRepository;
-    @Autowired
-    private ExaminerRepository examinerRepository;
+
     @Autowired
     private TestSubmissionRepository testSubmissionRepository;
     @Autowired
     private AnswerAttemptRepository answerAttemptRepository;
     @Autowired
     private SpreadsheetService spreadsheetService;
+
     Logger logger = LoggerFactory.getLogger(PatientController.class);
-    private TestSubmissionRepository testRepository;
 
     @RequestMapping(value = "/all",
             method = RequestMethod.GET,
@@ -100,10 +99,10 @@ public class PatientController {
     {
         AppUser userDetails = (AppUser) auth.getPrincipal();
 
-        final Optional<List<TestSubmission>> patientIDs =
-                this.testRepository.findAllByExamIDAndPatientID(userDetails.getId(), patientRequest.getPatientID());
-
-        return patientIDs.isPresent();
+        return this.testSubmissionRepository.findAllByExamIDAndPatientID(
+                userDetails.getId(),
+                patientRequest.getPatientID()
+        ).isPresent();
 
     }
 }
