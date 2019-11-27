@@ -6,27 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.multipart.MultipartFile;
 import server.config.auth.AppUser;
-import server.model.AudioResult;
 import server.model.TranscriptionResult;
-import server.model.db.*;
+import server.model.db.AnswerAttempt;
+import server.model.db.Patient;
+import server.model.db.Question;
+import server.model.db.TestSubmission;
 import server.model.request.StartTestRequest;
 import server.model.response.StartTestResponse;
-import server.repository.AnswerAttemptRepository;
-import server.repository.ExaminerRepository;
-import server.repository.QuestionRepository;
-import server.repository.TestSubmissionRepository;
-import server.repository.PatientRepository;
+import server.repository.*;
 import server.service.FileStorageService;
 import server.service.VoiceTranscriptionService;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/test")
@@ -63,6 +58,7 @@ public class TestController {
         numbers.put("two", 2);
         numbers.put("three", 3);
         numbers.put("four", 4);
+        numbers.put("for", 4);
         numbers.put("five", 5);
         numbers.put("six", 6);
         numbers.put("seven", 7);
@@ -81,7 +77,7 @@ public class TestController {
 
         final AppUser userDetails = (AppUser) authentication.getPrincipal();
 
-        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByExamIDAndAndTestSubmissionID(
+        final Optional<TestSubmission> submission = this.testSubmissionRepository.findByExamIDAndTestSubmissionID(
                 userDetails.getId(),
                 testSubmissionID
         );
@@ -105,15 +101,31 @@ public class TestController {
             AnswerAttempt answer = new AnswerAttempt();
             answer.setTestSubmissionID(testSubmissionID);
             answer.setQuestionID(questionID);
-            answer.setGuessedAngle1(toNumber(results[0].getText()));
-            answer.setTime1(results[0].getTimeA());
-            answer.setGuessedAngle2(toNumber(results[0].getText()));
-            answer.setTime2(results[1].getTimeA());
+            if(results[0] == null) {
+                answer.setGuessedAngle1(-1);
+                answer.setGuess1time1(-1.0);
+                answer.setGuess1time2(-1.0);
+                logger.warn("result[0] is null, set relevant data to -1 ");
+            } else {
+                answer.setGuessedAngle1(toNumber(results[0].getText()));
+                answer.setGuess1time1(results[0].getTimeA());
+                answer.setGuess1time2(results[0].getTimeB());
+                //answer.setTime1(results[0].getTimeA());
+            } if( results[1] == null) {
+                answer.setGuessedAngle2(-1);
+                answer.setGuess2time1(-1.0);
+                answer.setGuess2time2(-1.0);
+                logger.warn("result[1] is null, set relevant data to -1 ");
+            } else {
+                answer.setGuessedAngle2(toNumber(results[1].getText()));
+                answer.setGuess2time1(results[1].getTimeA());
+                answer.setGuess2time2(results[1].getTimeB());
+            }
             answer.setAudioFilePath(fsr.getPath());
 
             this.answerAttemptRepository.save(answer);
         }
-
+        logger.info("answer submitted");
         return "Answer Submitted";
     }
 

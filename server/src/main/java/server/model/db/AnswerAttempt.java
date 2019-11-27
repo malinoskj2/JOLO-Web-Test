@@ -28,13 +28,14 @@ public class AnswerAttempt implements Serializable {
     
     @Column(name = "GuessedAngle2")
     private Integer guessedAngle2;
-    
-    @Column(name = "Time1")
-    private Double  time1;
-    
-    @Column(name = "Time2")
-    private Double  time2;
-    
+    @Column(name = "Guess1time1")
+    private Double  guess1time1;
+    @Column(name = "Guess1time2")
+    private Double  guess1time2;
+    @Column(name = "Guess2time1")
+    private Double  guess2time1;
+    @Column(name = "Guess2time2")
+    private Double  guess2time2;
     @Length(max = 2083)
     @Column(name = "audioFile")
     private String  audioFilePath;
@@ -81,27 +82,43 @@ public class AnswerAttempt implements Serializable {
         this.guessedAngle2 = guessedAngle2;
     }
 
-    public Double getTime1() {
-        return time1;
-    }
-
-    public void setTime1(Double time1) {
-        this.time1 = time1;
-    }
-
-    public Double getTime2() {
-        return time2;
-    }
-
-    public void setTime2(Double time2) {
-        this.time2 = time2;
-    }
-
     public String getAudioFilePath() {
         return audioFilePath;
     }
 
     public void setAudioFilePath(String audioFilePath) {
         this.audioFilePath = audioFilePath;
+    }
+
+    public Double getGuess1time1() {
+        return guess1time1;
+    }
+
+    public void setGuess1time1(Double guess1time1) {
+        this.guess1time1 = guess1time1;
+    }
+
+    public Double getGuess1time2() {
+        return guess1time2;
+    }
+
+    public void setGuess1time2(Double guess1time2) {
+        this.guess1time2 = guess1time2;
+    }
+
+    public Double getGuess2time1() {
+        return guess2time1;
+    }
+
+    public void setGuess2time1(Double guess2time1) {
+        this.guess2time1 = guess2time1;
+    }
+
+    public Double getGuess2time2() {
+        return guess2time2;
+    }
+
+    public void setGuess2time2(Double guess2time2) {
+        this.guess2time2 = guess2time2;
     }
 }
