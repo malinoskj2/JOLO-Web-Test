@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <v-container>
     <v-data-table
-    :headers="headers"
-    :items="$store.getters.patients"
-    :items-per-page="5"
-    class="elevation-1"
-  ></v-data-table>
-  </div>
+      :headers="headers"
+      :items="$store.getters.patients"
+      :items-per-page="15"
+      class="elevation-1"/>
+  </v-container>
+
 </template>
 
 <script>
