@@ -38,7 +38,7 @@ public class SpreadsheetService {
         /*** Displays information about a single text, as well as requested derived data ***/
         HSSFWorkbook wb = new HSSFWorkbook();
         if (submissionOptional.isPresent()) {
-            File f = new File(System.getProperty("user.dir") + "/spreadsheet" + submissionOptional.get().getPatientID() +".xls");
+           //File f = new File(System.getProperty("user.dir") + "/workbook.xls");
             /* STYLE SETTINGS */
             CellStyle aqua = wb.createCellStyle();
             CellStyle coral = wb.createCellStyle();
@@ -139,6 +139,8 @@ public class SpreadsheetService {
                         correct3.setCellStyle(green);
                     else correct3.setCellStyle(coral);
                     // */
+                } else {
+                    logger.warn("question optional is not present questionid=" + questionNumber+1);
                 }
             }
 
