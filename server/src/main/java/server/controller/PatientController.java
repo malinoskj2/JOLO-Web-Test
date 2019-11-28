@@ -59,7 +59,7 @@ public class PatientController {
             method = RequestMethod.GET,
             produces = "application/vnd.ms-excel")
     @ResponseBody
-    public Object get_spreadsheet(@RequestParam("patientID") int patientID,
+    public Object get_spreadsheet(@RequestParam("patientID") String patientID,
                                                              Authentication authentication,
                                                             HttpServletResponse response
                                 ) throws IOException {

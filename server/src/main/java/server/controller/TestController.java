@@ -169,7 +169,7 @@ public class TestController {
     }
 
     public TestSubmission createTestSubmission(final Integer examID,
-                                               final Integer patientID) {
+                                               final String patientID) {
 
         final TestSubmission submission = new TestSubmission();
         submission.setExamID(examID);

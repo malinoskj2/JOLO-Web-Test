@@ -13,18 +13,18 @@ import javax.persistence.*;
 public class Patient implements Serializable {
     @Id
     @Column(name = "patientID")
-    private Integer patientID;
+    private String patientID;
     
     @Column(name = "examID")
     private Integer examID;
 
     public Patient() { }
 
-    public Integer getPatientID() {
+    public String getPatientID() {
         return patientID;
     }
 
-    public void setPatientID(Integer patientID) {
+    public void setPatientID(String patientID) {
         this.patientID = patientID;
     }
 

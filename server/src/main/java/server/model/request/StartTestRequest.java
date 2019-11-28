@@ -4,17 +4,17 @@ import java.io.Serializable;
 
 public class StartTestRequest implements Serializable {
 
-    private Integer patientID;
+    private String patientID;
     private Integer testID;
 
     public StartTestRequest() {
     }
 
-    public Integer getPatientID() {
+    public String getPatientID() {
         return patientID;
     }
 
-    public void setPatientID(Integer patientID) {
+    public void setPatientID(String patientID) {
         this.patientID = patientID;
     }
 
