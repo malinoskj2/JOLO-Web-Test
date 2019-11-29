@@ -2,15 +2,21 @@
   <v-container>
     <v-data-table
       :headers="headers"
+      item-key="ID"
       :items="patients"
       :items-per-page="itemsPerPage"
+      show-expand
+      single-expand
+      single-select
       class="elevation-1">
 
       <template v-slot:item.download="{ item }">
-
           <v-icon @click="downloadSpreadSheet(item.ID)">
             {{fileDownloadSvgPath}}
           </v-icon>
+      </template>
+      <template v-slot:expanded-item="{ item }">
+          <tr v-for="(trial,index) in item.trials" :key="index">Trial: {{trial}}</tr>
       </template>
     </v-data-table>
   </v-container>
@@ -38,6 +44,7 @@ export default {
           sortable: false,
           value: 'download',
         },
+        { text: '', value: 'data-table-expand' },
       ],
       patientData: [],
       itemsPerPage: 15,

@@ -21,8 +21,24 @@ export default {
 
       const json = await response.json();
 
-      context.commit('savePatients',
-        json.patients.map(patientID => ({ ID: patientID })));
+      const getTrials = async (patientID) => {
+        const resp = await fetch(`${process.env.VUE_APP_API}/test/trials?patientID=${patientID}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${context.getters.token}`,
+            },
+          });
+        const trials = await resp.json();
+        return {
+          ID: patientID,
+          trials,
+        };
+      };
+
+      const patients = await Promise.all(json.patients.map(patientID => getTrials(patientID)));
+
+      context.commit('savePatients', patients);
 
       return response.status;
     },
