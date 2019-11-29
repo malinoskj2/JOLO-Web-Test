@@ -21,10 +21,11 @@
                   x-large class="exam-nav-arrow">
             {{leftArrowSvgPath}}
           </v-icon>
-          <v-icon @click="stopRecording" large class="align-self-center"
-                  :color="this.recorder.state === 'recording' ? 'primary' : 'secondary'">
-            {{microphoneSvgPath}}
-          </v-icon>
+          <div @click="stopRecording">
+            <MicrophoneActivityWidget :is-recording="isRecording"
+                                      class="align-self-center"/>
+          </div>
+
           <v-icon @click="nextTrial"
                   :color="this.hasNextQuestion ? 'primary' : 'secondary'"
                   x-large class="exam-nav-arrow">
@@ -49,6 +50,7 @@ import { mdiArrowLeftCircle, mdiArrowRightCircle, mdiMicrophone } from '@mdi/js'
 import polyfill from 'audio-recorder-polyfill';
 import DrawTest from '@/components/DrawTest.vue';
 import PatientIDPrompt from '@/components/PatientIDPrompt.vue';
+import MicrophoneActivityWidget from '../components/MicrophoneActivityWidget.vue';
 
 export default {
   name: 'exam',
@@ -81,10 +83,12 @@ export default {
   components: {
     DrawTest,
     PatientIDPrompt,
+    MicrophoneActivityWidget,
   },
   data() {
     return {
       recorder: {},
+      isRecording: true,
       exitGuard: false,
       leftArrowSvgPath: mdiArrowLeftCircle,
       rightArrowSvgPath: mdiArrowRightCircle,
@@ -109,8 +113,10 @@ export default {
       this.recorder.start();
     },
     stopRecording() {
+      console.log('Stopping Recording.');
       this.answeredQuestions.push(this.currentQuestion.questionID);
       this.recorder.stop();
+      this.isRecording = false;
     },
     nextTrial() {
       if (this.recorder.state === 'recording') {
@@ -121,6 +127,7 @@ export default {
       } else {
         this.incrementActiveQuestion();
         this.recorder.start();
+        this.isRecording = true;
       }
     },
     previousTrial() {
