@@ -6,7 +6,8 @@
       <span class="title ml-3 mr-5">{{textA}}&nbsp;
         <span class="font-weight-light">{{textB}}</span>
       </span>
-      <v-text-field id="search-bar"
+      <v-text-field v-if="this.enableSearch"
+                    id="search-bar"
                     @focus="showOutline"
                     @blur="hideOutline"
                     :outlined="outline"
@@ -148,6 +149,11 @@ export default {
     finishedProgressValue: {
       type: Number,
       required: false,
+    },
+    enableSearch: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
 
