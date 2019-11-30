@@ -51,8 +51,11 @@ public class PatientController {
         AppUser userDetails = (AppUser) authentication.getPrincipal();
 
         final Optional<List<Patient>> patients = this.patientRepository.findAllByExamID(userDetails.getId());
-
-        return new PatientList(patients.orElseGet(() -> new ArrayList<>()));
+        List<String> pidList = new ArrayList<>();
+        if(patients.isPresent())
+            for(Patient p : patients.get())
+                pidList.add(p.getPatientID());
+        return new PatientList(pidList);
     }
 
     @RequestMapping(value = "/spreadsheet",

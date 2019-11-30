@@ -11,10 +11,9 @@ public class PatientList implements Serializable {
 
     private final List<String> patients;
 
-    public PatientList(List<Patient> patients) {
+    public PatientList(List<String> patientsIDs) {
         this.patients = new ArrayList<>();
-        for(Patient p : patients)
-            this.patients.add(p.getPatientID());
+        this.patients.addAll(patientsIDs);
         /*
             this.patients = patients.stream()
                     .mapToInt(patient -> patient.getPatientID())
