@@ -26,6 +26,8 @@ import server.service.VoiceTranscriptionService;
 
 import java.io.IOException;
 import java.util.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 @RestController
@@ -165,5 +167,25 @@ public class TestController {
 
         return this.testSubmissionRepository.save(submission);
     }
+
+    @RequestMapping(value = "/downloadaudio",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID, Authentication Auth)
+    {
+        AppUser userDetails = (AppUser) Auth.getPrincipal();
+
+        final Optional<AnswerAttempt> answerAttempts =
+                this.answerAttemptRepository.findByID(answerAttemptID);
+
+        final Integer testSubmissionID = answerAttempts.get().getTestSubmissionID();
+
+        final Optional<TestSubmission> testSubmission = this.testSubmissionRepository.findByExamIDAndAndTestSubmissionID()
+
+
+       // return fileStorageService.getFile(filePath);
+
+    }
+}
 
 }
