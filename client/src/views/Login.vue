@@ -37,7 +37,7 @@
                 <v-spacer />
                 <v-flex>
                 <v-btn class="justify-center" color="primary"
-                       @click="$store.dispatch('login', loginCred)">Submit</v-btn>
+                       @click="login">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
@@ -63,6 +63,19 @@ export default {
       password: '',
     },
   }),
+  methods: {
+    login() {
+      this.$store.dispatch('login', this.loginCred)
+        .then(() => {
+          if (this.$store.getters.isAuthenticated) {
+            this.$router.push('/results');
+          } else {
+            console.log('dispatched login but failed to auth');
+          }
+        })
+        .catch(() => console.log('failed to dispatch login'));
+    },
+  },
 };
 </script>
 
