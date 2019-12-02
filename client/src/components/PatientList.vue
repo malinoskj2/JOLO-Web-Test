@@ -40,7 +40,7 @@ export default {
         },
         {
           text: 'Download',
-          align: 'right',
+          align: 'center',
           sortable: false,
           value: 'download',
         },
