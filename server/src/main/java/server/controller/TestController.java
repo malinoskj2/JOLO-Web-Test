@@ -22,6 +22,8 @@ import server.service.FileStorageService;
 import server.service.VoiceTranscriptionService;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -191,19 +193,36 @@ public class TestController {
                         userDetails.getId()
                 );
 
-       if (!testSubmission.isPresent()) {
-           return ResponseEntity.badRequest().body("Could not locate the corresponding test submission");
-       }
+        if (!testSubmission.isPresent()) {
+            return ResponseEntity.badRequest().body("Could not locate the corresponding test submission");
+        }
 
-       final List<Integer> trialIDs =
-               this.answerAttemptRepository.findAllByTestSubmissionID(testSubmission.get().getTestSubmissionID())
-               .stream()
-               .mapToInt(answer -> answer.getAnswerAttemptID())
-               .boxed()
-               .collect(Collectors.toList());
+        final List<Integer> trialIDs =
+                this.answerAttemptRepository.findAllByTestSubmissionID(testSubmission.get().getTestSubmissionID())
+                        .stream()
+                        .mapToInt(answer -> answer.getAnswerAttemptID())
+                        .boxed()
+                        .collect(Collectors.toList());
 
-       return ResponseEntity.ok(trialIDs);
-
+        return ResponseEntity.ok(trialIDs);
     }
 
+    @RequestMapping(value = "/downloadaudio",
+            method = RequestMethod.GET)
+    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID,
+                                            @RequestParam Integer testSubmissionID,
+                                            Authentication Auth) {
+        AppUser userDetails = (AppUser) Auth.getPrincipal();
+
+        final Optional<AnswerAttempt> answerAttempts =
+                this.answerAttemptRepository.findFirstByTestSubmissionIDAndAnswerAttemptID(
+                        testSubmissionID,
+                        answerAttemptID
+                );
+
+        Path audioPath = Paths.get(answerAttempts.get().getAudioFilePath());
+
+        return fileStorageService.getFile(audioPath);
+    }
 }
+
