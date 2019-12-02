@@ -14,6 +14,7 @@ import server.model.db.AnswerAttempt;
 import server.model.db.Patient;
 import server.model.db.Question;
 import server.model.db.TestSubmission;
+import server.model.request.PatientRequest;
 import server.model.request.StartTestRequest;
 import server.model.response.StartTestResponse;
 import server.repository.*;
@@ -22,6 +23,7 @@ import server.service.VoiceTranscriptionService;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/test")
@@ -50,7 +52,7 @@ public class TestController {
 
     Logger logger = LoggerFactory.getLogger(TestController.class);
 
-    static HashMap<String, Integer> numbers= new HashMap<String, Integer>();
+    static HashMap<String, Integer> numbers = new HashMap<String, Integer>();
 
     public TestController() {
         numbers.put("zero", 0);
@@ -90,18 +92,18 @@ public class TestController {
                     file
             );
 
-            logger.info("Audio Received Size: " +  fsr.getFile().length());
+            logger.info("Audio Received Size: " + fsr.getFile().length());
 
             TranscriptionResult[] results = this.voiceTranscriptionService.vts(fsr);
 
             logger.info("Audio Transcribed Successfully");
             logger.info("Transcription Result Count: " + results.length);
-            Arrays.stream(results).forEach(result ->  logger.info(result.toString()));
+            Arrays.stream(results).forEach(result -> logger.info(result.toString()));
 
             AnswerAttempt answer = new AnswerAttempt();
             answer.setTestSubmissionID(testSubmissionID);
             answer.setQuestionID(questionID);
-            if(results[0] == null) {
+            if (results[0] == null) {
                 answer.setGuessedAngle1(-1);
                 answer.setGuess1time1(-1.0);
                 answer.setGuess1time2(-1.0);
@@ -111,7 +113,8 @@ public class TestController {
                 answer.setGuess1time1(results[0].getTimeA());
                 answer.setGuess1time2(results[0].getTimeB());
                 //answer.setTime1(results[0].getTimeA());
-            } if( results[1] == null) {
+            }
+            if (results[1] == null) {
                 answer.setGuessedAngle2(-1);
                 answer.setGuess2time1(-1.0);
                 answer.setGuess2time2(-1.0);
@@ -148,11 +151,9 @@ public class TestController {
 
         Optional<List<TestSubmission>> patientList =
                 this.testSubmissionRepository.findAllByExamIDAndPatientID(patient.getExamID(), patient.getPatientID());
-        if(patientList.isPresent())
-        {
+        if (patientList.isPresent()) {
             return ResponseEntity.badRequest().body("The PatientID you requested is already in use");
-        }
-        else {
+        } else {
             this.patientRepository.save(patient);
 
             final TestSubmission submission = this.createTestSubmission(
@@ -176,6 +177,34 @@ public class TestController {
         submission.setPatientID(patientID);
 
         return this.testSubmissionRepository.save(submission);
+    }
+
+    @RequestMapping(value = "trials",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    public ResponseEntity<?> listTrials(@RequestParam Integer patientID,
+                                        Authentication authentication) {
+        final AppUser userDetails = (AppUser) authentication.getPrincipal();
+
+        final Optional<TestSubmission> testSubmission =
+                this.testSubmissionRepository.findFirstByPatientIDAndExamID(
+                        patientID,
+                        userDetails.getId()
+                );
+
+       if (!testSubmission.isPresent()) {
+           return ResponseEntity.badRequest().body("Could not locate the corresponding test submission");
+       }
+
+       final List<Integer> trialIDs =
+               this.answerAttemptRepository.findAllByTestSubmissionID(testSubmission.get().getTestSubmissionID())
+               .stream()
+               .mapToInt(answer -> answer.getAnswerAttemptID())
+               .boxed()
+               .collect(Collectors.toList());
+
+       return ResponseEntity.ok(trialIDs);
+
     }
 
 }

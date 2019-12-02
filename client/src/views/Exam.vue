@@ -21,10 +21,11 @@
                   x-large class="exam-nav-arrow">
             {{leftArrowSvgPath}}
           </v-icon>
-          <v-icon @click="submitDelayed(2000)" large class="align-self-center"
-                  :color="this.recorder.isRecording ? 'primary' : 'secondary'">
-            {{microphoneSvgPath}}
-          </v-icon>
+          <div @click="stopRecording">
+            <MicrophoneActivityWidget :is-recording="isRecording"
+                                      class="align-self-center"/>
+          </div>
+
           <v-icon @click="nextTrial"
                   :color="this.hasNextQuestion ? 'primary' : 'secondary'"
                   x-large class="exam-nav-arrow">
@@ -46,33 +47,54 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import { mdiArrowLeftCircle, mdiArrowRightCircle, mdiMicrophone } from '@mdi/js';
+import polyfill from 'audio-recorder-polyfill';
 import DrawTest from '@/components/DrawTest.vue';
 import PatientIDPrompt from '@/components/PatientIDPrompt.vue';
-import Recorder from '../services/recorder';
+import MicrophoneActivityWidget from '../components/MicrophoneActivityWidget.vue';
 
 export default {
   name: 'exam',
   // eslint-disable-next-line no-unused-vars
   beforeRouteLeave(to, from, next) {
-    if (this.inProgress) {
+    if (this.inProgress && !this.onLastQuestion) {
       this.next = next;
       this.exitGuard = true;
     } else {
       next();
     }
   },
+  mounted() {
+    window.MediaRecorder = polyfill;
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      this.recorder = new MediaRecorder(stream);
+      this.recorder.addEventListener('dataavailable', (e) => {
+        this.$store.dispatch('makeAuthenticatedCall',
+          {
+            action: 'submitRecord',
+            recording: e.data,
+            testSubmissionID: this.testSubmissionID,
+            questionID: this.answeredQuestions.shift(),
+          })
+          .then(() => console.log('dispatched submitRecord'))
+          .catch(() => console.log('failed to dispatch submitRecord'));
+      });
+    });
+  },
   components: {
     DrawTest,
     PatientIDPrompt,
+    MicrophoneActivityWidget,
   },
   data() {
     return {
-      recorder: new Recorder(),
+      recorder: {},
+      isRecording: true,
       exitGuard: false,
       leftArrowSvgPath: mdiArrowLeftCircle,
       rightArrowSvgPath: mdiArrowRightCircle,
       microphoneSvgPath: mdiMicrophone,
       next: {},
+      answeredQuestions: [],
     };
   },
   methods: {
@@ -90,35 +112,28 @@ export default {
       this.$store.commit('setInProgress');
       this.recorder.start();
     },
-    submitRecord() {
+    stopRecording() {
+      console.log('Stopping Recording.');
+      this.answeredQuestions.push(this.currentQuestion.questionID);
       this.recorder.stop();
-      this.$store.commit('setQuestionAnswered', this.currentQuestion.questionID);
-      this.$store.dispatch('makeAuthenticatedCall',
-        {
-          action: 'submitRecord',
-          recording: this.recorder.getLastRecording(),
-          testSubmissionID: this.testSubmissionID,
-          questionID: this.currentQuestion.questionID,
-        })
-        .then(() => console.log('dispatched submitRecord'))
-        .catch(() => console.log('failed to dispatch submitRecord'));
-    },
-    submitDelayed(delayMs) {
-      this.recorder.stop();
-      setTimeout(() => this.submitRecord(), delayMs);
+      this.isRecording = false;
     },
     nextTrial() {
-      if (this.recorder.isRecording) {
-        this.submitDelayed(2000);
+      if (this.recorder.state === 'recording') {
+        this.stopRecording();
       }
-
       if (this.onLastQuestion) {
         this.$router.push('/results');
       } else {
         this.incrementActiveQuestion();
+        this.recorder.start();
+        this.isRecording = true;
       }
     },
     previousTrial() {
+      if (this.recorder.state === 'recording') {
+        this.stopRecording();
+      }
       this.decrementActiveQuestion();
     },
     ...mapMutations([

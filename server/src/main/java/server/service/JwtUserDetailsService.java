@@ -11,6 +11,7 @@ import server.exception.UserAlreadyExistAuthenticationException;
 import server.model.db.Examiner;
 import server.model.request.SignupRequest;
 import server.repository.ExaminerRepository;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder bcryptEncoder;
+
+    private static final int NUM_SALT_ROUNDS = 12;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -35,14 +38,18 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public Examiner save(final SignupRequest signupRequest)  throws UserAlreadyExistAuthenticationException {
+
         if(this.examinerRepo.findByEmail(signupRequest.getEmail()).isPresent()) {
             throw new UserAlreadyExistAuthenticationException("Username already taken");
         } else {
+            final String salt = BCrypt.gensalt(NUM_SALT_ROUNDS);
+
             final Examiner examiner = new Examiner();
             examiner.setEmail(signupRequest.getEmail());
             examiner.setfName(signupRequest.getfName());
             examiner.setlName(signupRequest.getlName());
-            examiner.setPassword(bcryptEncoder.encode(signupRequest.getPassword()));
+            examiner.setSalt(salt);
+            examiner.setPassword(bcryptEncoder.encode(signupRequest.getPassword() + salt));
             return this.examinerRepo.save(examiner);
         }
     }

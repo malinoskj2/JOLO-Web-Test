@@ -45,12 +45,19 @@ public class AuthenticationController {
     @Autowired
     private ExaminerRepository examinerRepository;
 
-    
+
     @RequestMapping(value = "/authenticate",
-    		method = RequestMethod.POST,
+            method = RequestMethod.POST,
             produces = "application/json")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-    		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
+            throws Exception {
+
+        final Optional<Examiner> examiner = this.examinerRepository.findByEmail(authenticationRequest.getEmail());
+
+        if (examiner.isPresent()) {
+            authenticate( authenticationRequest.getEmail(),
+                    authenticationRequest.getPassword() + examiner.get().getSalt());
+
             final AppUser userDetails = (AppUser) userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
             final String token = tokenProvider.generate(userDetails);
 
@@ -60,13 +67,17 @@ public class AuthenticationController {
             response.setLastName(userDetails.getLastName());
 
             return ResponseEntity.ok(response);
-    	}
+        } else {
+            return ResponseEntity.badRequest().body("Failed to authenticate, could not locate examiner");
+        }
+
+    }
 
     @RequestMapping(value = "/register",
             method = RequestMethod.POST,
             produces = "application/json")
     public ResponseEntity<?> register(@RequestBody SignupRequest request) {
-            return ResponseEntity.ok(this.userDetailsService.save(request));
+        return ResponseEntity.ok(this.userDetailsService.save(request));
     }
 
     private void authenticate(String email, String password) throws Exception {
@@ -86,11 +97,10 @@ public class AuthenticationController {
         }
     }
 
-   @RequestMapping(value = "/existsEmail",
+    @RequestMapping(value = "/existsEmail",
             method = RequestMethod.POST,
             produces = "application/json")
-    public Boolean existsEmail(@RequestBody SignupRequest examinerRequest)
-    {
+    public Boolean existsEmail(@RequestBody SignupRequest examinerRequest) {
         final Optional<Examiner> examinerEmails =
                 this.examinerRepository.findByEmail(examinerRequest.getEmail());
         return examinerEmails.isPresent();

@@ -11,22 +11,25 @@ public class Examiner implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer examID;
-    
+
     @Length(max = 20)
     @Column(name = "fName")
     private String fName;
-    
+
     @Length(max=  20)
     @Column(name = "lName")
     private String lName;
-    
+
     @Length(max = 255)
     @Column(name = "Password")
     private String password;
-    
+
     @Length(max = 255)
     @Column(name = "Email")
     private String email;
+
+    @Column(name = "Salt")
+    private String salt;
 
     public Examiner() {};
 
@@ -70,5 +73,12 @@ public class Examiner implements Serializable {
         this.email = email;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 }
 

@@ -3,10 +3,13 @@
     <v-app-bar app clipped-left color="white" light
                class="elevation-1">
       <v-app-bar-nav-icon @click="drawer = !drawer" color="primary"/>
-      <span class="title ml-3 mr-5">{{textA}}&nbsp;
-        <span class="font-weight-light">{{textB}}</span>
-      </span>
-      <v-text-field id="search-bar"
+      <router-link class="router-link" to="/">
+             <span id="title-text" class="title ml-3 mr-5">{{textA}}&nbsp;
+                <span class="font-weight-light">{{textB}}</span>
+            </span>
+      </router-link>
+      <v-text-field v-if="this.enableSearch"
+                    id="search-bar"
                     @focus="showOutline"
                     @blur="hideOutline"
                     :outlined="outline"
@@ -149,6 +152,11 @@ export default {
       type: Number,
       required: false,
     },
+    enableSearch: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
 
 };
@@ -160,5 +168,8 @@ export default {
   }
   .route-active .route-icon{
     color: #9575CD;
+  }
+  #title-text {
+    color:black !important;
   }
 </style>
