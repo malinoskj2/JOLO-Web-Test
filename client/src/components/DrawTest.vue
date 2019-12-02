@@ -13,9 +13,14 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  data() {
-    return { canvasWidth: 613, canvasHeight: 797 };
+    canvasWidth: {
+      type: Number,
+      required: true,
+    },
+    canvasHeight: {
+      type: Number,
+      required: true,
+    },
   },
   mounted() {
     this.setDimensions();

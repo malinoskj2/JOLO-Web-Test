@@ -33,9 +33,12 @@
           </v-icon>
         </div>
 
-        <v-card id="drawing-card">
+        <v-card id="drawing-card" :style="drawingScale">
           <p id="trial-count">Trial {{this.currentTrialNumber}} of {{this.numQuestions}}</p>
-          <DrawTest id="drawing-test" :question="this.currentQuestion"/>
+          <DrawTest id="drawing-test"
+                    :question="this.currentQuestion"
+          :canvas-width="canvas.width"
+          :canvas-height="canvas.height"/>
         </v-card>
 
 
@@ -64,6 +67,8 @@ export default {
     }
   },
   mounted() {
+    // setup recorder
+    // answer will be submitted async over http when audio binary becomes available
     window.MediaRecorder = polyfill;
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       this.recorder = new MediaRecorder(stream);
@@ -95,6 +100,10 @@ export default {
       microphoneSvgPath: mdiMicrophone,
       next: {},
       answeredQuestions: [],
+      canvas: {
+        width: 613,
+        height: 797,
+      },
     };
   },
   methods: {
@@ -144,6 +153,16 @@ export default {
     ]),
   },
   computed: {
+    drawingScale() {
+      const preDrawingHeight = 230;
+      const heightAvailable = document.body.scrollHeight - preDrawingHeight;
+      const scaleAmount = (heightAvailable / this.canvas.height).toFixed(2);
+      console.log(`scaleAmount: ${scaleAmount}`);
+
+      return {
+        transform: `scale(${scaleAmount})`,
+      };
+    },
     ...mapGetters([
       'test',
       'inProgress',
@@ -161,11 +180,12 @@ export default {
 
 <style>
 #exam {
+  overflow-y:hidden;
   margin-top: 80px;
 }
 
 #drawing-card {
-  margin-top: 24px;
+  margin-top: -30px;
 }
 
 #trial-count {
