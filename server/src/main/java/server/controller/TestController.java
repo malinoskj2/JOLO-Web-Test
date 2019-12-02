@@ -171,21 +171,18 @@ public class TestController {
     @RequestMapping(value = "/downloadaudio",
             method = RequestMethod.GET,
             produces = "application/json")
-    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID, Authentication Auth)
+    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID, @RequestParam Integer testSubmissionID, Authentication Auth)
     {
         AppUser userDetails = (AppUser) Auth.getPrincipal();
 
         final Optional<AnswerAttempt> answerAttempts =
-                this.answerAttemptRepository.findByID(answerAttemptID);
+                this.answerAttemptRepository.findByIDs(testSubmissionID, answerAttemptID);
 
-        final Integer testSubmissionID = answerAttempts.get().getTestSubmissionID();
+        Path audioPath = Paths.get(answerAttempts.get().getAudioFilePath());
 
-        final Optional<TestSubmission> testSubmission = this.testSubmissionRepository.findByExamIDAndAndTestSubmissionID()
-
-
-       // return fileStorageService.getFile(filePath);
+        return fileStorageService.getFile(audioPath);
 
     }
 }
 
-}
+
