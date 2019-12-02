@@ -16,7 +16,7 @@
              <v-card-title class="justify-center">Login</v-card-title>
              </v-flex>
           <v-card-text>
-          <v-form>
+          <v-form @submit="login" id="loginForm">
                  <v-text-field
                 v-model="loginCred.email"
                 label="Email"
@@ -37,7 +37,8 @@
                 <v-spacer />
                 <v-flex>
                 <v-btn class="justify-center" color="primary"
-                       @click="login">Submit</v-btn>
+                      form="loginForm"
+                       type="submit">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>

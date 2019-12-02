@@ -16,7 +16,7 @@
              <v-card-title class="justify-center">Sign Up</v-card-title>
              </v-flex>
           <v-card-text>
-          <v-form ref="form" v-model="valid">
+          <v-form ref="form" v-model="valid" @submit="submit()" id="signUp">
               <v-text-field
                 v-model="userData.fName"
                 label="First Name"
@@ -68,7 +68,8 @@
                 :disabled="!valid"
                 class="justify-center"
                 color="primary"
-                @click="submit()">Submit</v-btn>
+                form="signUp"
+                type="submit">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
