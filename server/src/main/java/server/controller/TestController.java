@@ -112,7 +112,6 @@ public class TestController {
                 answer.setGuessedAngle1(toNumber(results[0].getText()));
                 answer.setGuess1time1(results[0].getTimeA());
                 answer.setGuess1time2(results[0].getTimeB());
-                //answer.setTime1(results[0].getTimeA());
             }
             if (results[1] == null) {
                 answer.setGuessedAngle2(-1);
@@ -182,7 +181,7 @@ public class TestController {
     @RequestMapping(value = "trials",
             method = RequestMethod.GET,
             produces = "application/json")
-    public ResponseEntity<?> listTrials(@RequestParam Integer patientID,
+    public ResponseEntity<?> listTrials(@RequestParam String patientID,
                                         Authentication authentication) {
         final AppUser userDetails = (AppUser) authentication.getPrincipal();
 
