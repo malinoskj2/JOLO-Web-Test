@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-// eslint-disable-next-line
-import store from '../store';
+import store from '@/store/mod/user';
 
 Vue.use(VueRouter);
 
