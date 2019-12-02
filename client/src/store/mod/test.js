@@ -32,7 +32,7 @@ export default {
     },
     incrementActiveQuestion(state) {
       if (state.activeQuestion < state.test.questions.length - 1) {
-        state.activeQuestion = 1;
+        state.activeQuestion += 1;
       }
     },
     decrementActiveQuestion(state) {
