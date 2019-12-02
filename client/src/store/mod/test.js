@@ -1,7 +1,9 @@
 export default {
   state: {
     test: {
-      questions: [],
+      questions: [
+        { },
+      ],
       testSubmissionID: 0,
     },
     answeredQuestions: new Set(),

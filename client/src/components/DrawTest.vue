@@ -9,10 +9,7 @@
 export default {
   name: 'DrawTest',
   props: {
-    question: {
-      type: Object,
-      required: true,
-    },
+    question: Object,
     canvasWidth: {
       type: Number,
       required: true,
