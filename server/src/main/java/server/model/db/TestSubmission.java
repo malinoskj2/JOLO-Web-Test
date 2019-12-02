@@ -21,7 +21,7 @@ public class TestSubmission implements Serializable {
     private Integer examID;
     
     @Column(name = "patientID")
-    private Integer patientID;
+    private String patientID;
     
     @Temporal(TemporalType.DATE)
     @Column(name = "date")
@@ -45,11 +45,11 @@ public class TestSubmission implements Serializable {
         this.examID = examID;
     }
 
-    public Integer getPatientID() {
+    public String getPatientID() {
         return patientID;
     }
 
-    public void setPatientID(Integer patientID) {
+    public void setPatientID(String patientID) {
         this.patientID = patientID;
     }
 
