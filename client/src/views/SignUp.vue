@@ -132,7 +132,14 @@ export default {
     postUserData() {
       this.$store.dispatch('signup',
         {
-          successFunction: () => this.$router.push('/login'),
+          successFunction: () => {
+            this.$store.dispatch('login', {
+              email: this.email,
+              ...this.userData,
+            })
+              .then(() => this.$router.push('/results'))
+              .catch(() => console.log('failed to authenticate after successful registration'));
+          },
           email: this.email,
           ...this.userData,
         })
