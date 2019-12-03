@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface AnswerAttemptRepository extends CrudRepository<AnswerAttempt, Long> {
     public List<AnswerAttempt> findAllByTestSubmissionID(final Integer testSubmissionID);
-    public Optional<AnswerAttempt> findFirstByTestSubmissionIDAndAnswerAttemptID(final Integer testSubmissionID,
-                                                                                 final Integer AnswerAttemptID);
+    public Optional<AnswerAttempt> findFirstByAnswerAttemptID(final Integer AnswerAttemptID);
 }

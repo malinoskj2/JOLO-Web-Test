@@ -16,7 +16,10 @@
           </v-icon>
       </template>
       <template v-slot:expanded-item="{ item }">
-          <tr v-for="(trial,index) in item.trials" :key="index">Trial: {{trial}}</tr>
+          <tr v-for="(trial,index) in item.trials"
+              class="trial-item"
+              @click="downloadTrial(trial)"
+              :key="index">Trial {{trial.questionID}}</tr>
       </template>
     </v-data-table>
   </v-container>
@@ -76,6 +79,25 @@ export default {
         })
         .catch(() => console.log('Could not download the spreadsheet.'));
     },
+    downloadTrial(trial) {
+      fetch(`${process.env.VUE_APP_API}/test/audio?answerAttemptID=${trial.answerAttemptID}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${this.$store.getters.token}`,
+        },
+      }).then(resp => resp.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `${trial.answerAttemptID}.wav`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        })
+        .catch(() => console.log('Could not download the spreadsheet.'));
+    },
   },
   mounted() {
     this.$store.dispatch('makeAuthenticatedCall', {
@@ -88,5 +110,11 @@ export default {
 </script>
 
 <style>
-
+.trial-item {
+  color: #9575CD !important;
+  font-weight: bold;
+}
+.trial-item:hover {
+  cursor: pointer;
+}
 </style>

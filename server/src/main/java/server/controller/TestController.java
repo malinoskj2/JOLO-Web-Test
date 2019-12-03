@@ -200,28 +200,25 @@ public class TestController {
             return ResponseEntity.badRequest().body("Could not locate the corresponding test submission");
         }
 
-        final List<Integer> trialIDs =
+        final List<AnswerAttempt> attempts =
                 this.answerAttemptRepository.findAllByTestSubmissionID(testSubmission.get().getTestSubmissionID())
                         .stream()
-                        .mapToInt(answer -> answer.getAnswerAttemptID())
-                        .boxed()
+                        .map(answer -> {
+                            answer.setAudioFilePath("");
+                            return answer;
+                        })
                         .collect(Collectors.toList());
 
-        return ResponseEntity.ok(trialIDs);
+        return ResponseEntity.ok(attempts);
     }
 
-    @RequestMapping(value = "/downloadaudio",
+    @RequestMapping(value = "/audio",
             method = RequestMethod.GET)
-    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID,
-                                            @RequestParam Integer testSubmissionID,
-                                            Authentication Auth) {
-        AppUser userDetails = (AppUser) Auth.getPrincipal();
+    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID, Authentication auth) {
+        final AppUser userDetails = (AppUser) auth.getPrincipal();
 
         final Optional<AnswerAttempt> answerAttempts =
-                this.answerAttemptRepository.findFirstByTestSubmissionIDAndAnswerAttemptID(
-                        testSubmissionID,
-                        answerAttemptID
-                );
+                this.answerAttemptRepository.findFirstByAnswerAttemptID(answerAttemptID);
 
         Path audioPath = Paths.get(answerAttempts.get().getAudioFilePath());
 
