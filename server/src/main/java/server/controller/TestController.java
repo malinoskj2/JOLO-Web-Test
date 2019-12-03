@@ -54,7 +54,7 @@ public class TestController {
 
     Logger logger = LoggerFactory.getLogger(TestController.class);
 
-    static HashMap<String, Integer> numbers = new HashMap<String, Integer>();
+    static HashMap<String, Integer> numbers = new HashMap<>();
 
     public TestController() {
         numbers.put("zero", 0);
@@ -68,6 +68,9 @@ public class TestController {
         numbers.put("seven", 7);
         numbers.put("eight", 8);
         numbers.put("nine", 9);
+        numbers.put("ten", 10);
+        numbers.put("eleven", 11);
+        numbers.put("twelve", 12);
     }
 
     @RequestMapping(value = "/result",
@@ -162,7 +165,7 @@ public class TestController {
                     request.getPatientID()
             );
 
-            List<Question> questions = new ArrayList<Question>();
+            List<Question> questions = new ArrayList<>();
             this.questionRepository.findAll().forEach(questions::add);
 
             return ResponseEntity.ok(new StartTestResponse(submission.getTestSubmissionID(), questions));

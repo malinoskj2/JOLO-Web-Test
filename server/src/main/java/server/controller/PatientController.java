@@ -78,10 +78,9 @@ public class PatientController {
             );
             logger.info("findFirstByPatientIDAndExamID found:" + submission.get().getTestSubmissionID() +
                     "\n" + attempts.size());
-                 workbook = spreadsheetService.convertToSpreadsheet(
-                    submission,
-                    attempts
-            );
+            workbook = spreadsheetService.convertToSpreadsheet(
+                    submission.get(),
+                    attempts);
         } else {
             logger.warn("submission unreachable");
             workbook = new HSSFWorkbook();
