@@ -207,18 +207,13 @@ public class TestController {
         return ResponseEntity.ok(trialIDs);
     }
 
-    @RequestMapping(value = "/downloadaudio",
+    @RequestMapping(value = "/audio",
             method = RequestMethod.GET)
-    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID,
-                                            @RequestParam Integer testSubmissionID,
-                                            Authentication Auth) {
-        AppUser userDetails = (AppUser) Auth.getPrincipal();
+    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID, Authentication auth) {
+        final AppUser userDetails = (AppUser) auth.getPrincipal();
 
         final Optional<AnswerAttempt> answerAttempts =
-                this.answerAttemptRepository.findFirstByTestSubmissionIDAndAnswerAttemptID(
-                        testSubmissionID,
-                        answerAttemptID
-                );
+                this.answerAttemptRepository.findFirstByAnswerAttemptID(answerAttemptID);
 
         Path audioPath = Paths.get(answerAttempts.get().getAudioFilePath());
 
