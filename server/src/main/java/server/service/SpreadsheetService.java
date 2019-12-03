@@ -101,7 +101,7 @@ public class SpreadsheetService {
 
         /* RAW DATA INPUT TO WORKBOOK */
         for (int questionNumber = 0; questionNumber < attempts.size(); questionNumber++) {
-            Optional<Question> questionOptional = questionRepository.findByQuestionID(questionNumber + 1);//attempt.getQuestionID());
+            Optional<Question> questionOptional = questionRepository.findByQuestionID(questionNumber+1 );//attempt.getQuestionID());
             if (questionOptional.isPresent()) {
                 Question question = questionOptional.get();
 
@@ -110,7 +110,14 @@ public class SpreadsheetService {
                         attempts.get(questionNumber).getGuessedAngle1() : -1;
                 int guess2 = (attempts.get(questionNumber).getGuessedAngle2() != null) ?
                         attempts.get(questionNumber).getGuessedAngle2() : -1;
-
+                double guess1time1 = (attempts.get(questionNumber).getGuess1time1() != null) ?
+                        attempts.get(questionNumber).getGuess1time1() : -1;
+                double guess2time1 = (attempts.get(questionNumber).getGuess2time1() != null) ?
+                        attempts.get(questionNumber).getGuess2time1() : -1;
+                double guess1time2 = (attempts.get(questionNumber).getGuess1time2() != null) ?
+                        attempts.get(questionNumber).getGuess1time2() : -1;
+                double guess2time2 = (attempts.get(questionNumber).getGuess2time2() != null) ?
+                        attempts.get(questionNumber).getGuess2time2() : -1;
                 Row row_question_results = sheet.createRow(questionNumber + 3);
 
                 Cell labelCell = row_question_results.createCell(0);
@@ -136,8 +143,8 @@ public class SpreadsheetService {
                 Cell guess1cell = row_question_results.createCell(3);
                 guess1cell.setCellValue(guess1);
                 guess1cell.setCellStyle(aqua);
-                row_question_results.createCell(4).setCellValue(attempts.get(questionNumber).getGuess1time1());
-                row_question_results.createCell(5).setCellValue(attempts.get(questionNumber).getGuess1time2());
+                row_question_results.createCell(4).setCellValue(guess1time1);
+                row_question_results.createCell(5).setCellValue(guess1time2);
 
                 Cell correct2 = row_question_results.createCell(6);
                 correct2.setCellValue(correctAngle2 == guess2);
@@ -150,8 +157,8 @@ public class SpreadsheetService {
                 Cell guess2cell = row_question_results.createCell(8);
                 guess2cell.setCellValue(guess2);
                 guess2cell.setCellStyle(aqua);
-                row_question_results.createCell(9).setCellValue(attempts.get(questionNumber).getGuess2time1());
-                row_question_results.createCell(10).setCellValue(attempts.get(questionNumber).getGuess2time2());
+                row_question_results.createCell(9).setCellValue(guess2time1);
+                row_question_results.createCell(10).setCellValue(guess2time2);
                 Cell correct3 = row_question_results.createCell(11);
                 correct3.setCellValue(correctAngle1 == 3 || correctAngle1 == 4 || correctAngle1 == 8 ||
                         correctAngle1 == 9 || correctAngle2 == 3 || correctAngle2 == 4 ||

@@ -99,41 +99,61 @@ public class TestController {
 
             logger.info("Audio Received Size: " + fsr.getFile().length());
 
-            TranscriptionResult[] results = this.voiceTranscriptionService.vts(fsr);
+            try {
+                TranscriptionResult[] results = this.voiceTranscriptionService.vts(fsr);
 
-            logger.info("Audio Transcribed Successfully");
-            logger.info("Transcription Result Count: " + results.length);
-            Arrays.stream(results).forEach(result -> logger.info(result.toString()));
+                logger.info("Audio Transcribed Successfully");
+                logger.info("Transcription Result Count: " + results.length);
+                Arrays.stream(results).forEach(result -> logger.info(result.toString()));
 
-            AnswerAttempt answer = new AnswerAttempt();
-            answer.setTestSubmissionID(testSubmissionID);
-            answer.setQuestionID(questionID);
-            if (results[0] == null) {
-                answer.setGuessedAngle1(-1);
-                answer.setGuess1time1(-1.0);
-                answer.setGuess1time2(-1.0);
-                logger.warn("result[0] is null, set relevant data to -1 ");
-            } else {
-                answer.setGuessedAngle1(toNumber(results[0].getText()));
-                answer.setGuess1time1(results[0].getTimeA());
-                answer.setGuess1time2(results[0].getTimeB());
+                AnswerAttempt answer = new AnswerAttempt();
+                answer.setTestSubmissionID(testSubmissionID);
+                answer.setQuestionID(questionID);
+                int answersAdded = 0;
+                Set number_strings = numbers.keySet();
+                for (TranscriptionResult result : results) {
+                    if (number_strings.contains(result.getText())) {
+                        switch (answersAdded) {
+                            case 0:
+                                answer.setGuessedAngle1(toNumber(result.getText()));
+                                answer.setGuess1time1(result.getTimeA());
+                                answer.setGuess1time2(result.getTimeB());
+                                answersAdded++;
+                                logger.info("set answer 1 to " + result.getText());
+                                break;
+                            case 1:
+                                answer.setGuessedAngle2(toNumber(result.getText()));
+                                answer.setGuess2time1(result.getTimeA());
+                                answer.setGuess2time2(result.getTimeB());
+                                answersAdded++;
+                                logger.info("set answer 2 to " + result.getText());
+                                break;
+                        }
+                    }
+                    if (answersAdded == 2) break;
+                }
+
+                if (answersAdded < 2) {
+                    answer.setGuessedAngle2(-1);
+                    answer.setGuess1time2(-1.0);
+                    answer.setGuess1time2(-1.0);
+                    logger.warn("second result not found, set relevant data to -1");
+                }
+                if (answersAdded < 1) {
+                    answer.setGuessedAngle2(-1);
+                    answer.setGuess2time1(-1.0);
+                    answer.setGuess2time2(-1.0);
+                    logger.warn("neither result found, set relevant data to -1 ");
+                }
+                answer.setAudioFilePath(fsr.getPath());
+
+                this.answerAttemptRepository.save(answer);
+            } catch (Exception e) {
+                logger.error(e.toString());
             }
-            if (results[1] == null) {
-                answer.setGuessedAngle2(-1);
-                answer.setGuess2time1(-1.0);
-                answer.setGuess2time2(-1.0);
-                logger.warn("result[1] is null, set relevant data to -1 ");
-            } else {
-                answer.setGuessedAngle2(toNumber(results[1].getText()));
-                answer.setGuess2time1(results[1].getTimeA());
-                answer.setGuess2time2(results[1].getTimeB());
-            }
-            answer.setAudioFilePath(fsr.getPath());
-
-            this.answerAttemptRepository.save(answer);
         }
-        logger.info("answer submitted");
-        return "Answer Submitted";
+        logger.info("answer submitted for questionID " + questionID + "test submission ID " + testSubmissionID);
+        return "answer submitted for questionID " + questionID + "test submission ID " + testSubmissionID;
     }
 
     public Integer toNumber(final String numberText) {
