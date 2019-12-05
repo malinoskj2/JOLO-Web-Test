@@ -32,7 +32,8 @@ export default {
         const trials = await resp.json();
         return {
           ID: patientID,
-          trials: trials.sort((a, b) => a.questionID - b.questionID),
+          trials: trials.sort((a, b) => a.questionID - b.questionID)
+            .map(trial => ({ patientID, ...trial })),
         };
       };
 
