@@ -56,6 +56,7 @@ export default {
     currentQuestion: state => state.test.questions[state.activeQuestion],
     currentTrialNumber: state => state.activeQuestion + 1,
     onLastQuestion: state => state.activeQuestion === state.test.questions.length - 1,
+    progress: state => (state.activeQuestion / state.test.questions.length) * 100,
   },
   actions: {
     async fetchTest(context, payload) {

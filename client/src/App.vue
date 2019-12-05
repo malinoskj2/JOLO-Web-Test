@@ -5,8 +5,7 @@
          :items="navConfig.navLinks"
          :isAuthenticated="isAuthenticated"
          :showProgress="inProgress"
-         :currentProgressValue="numQuestionsComplete"
-         :finishedProgressValue="numQuestions">
+         :progressValue="progress">
 
       <template v-slot:profile-menu>
         <profile-menu :auth-links="navConfig.authLinks"
@@ -22,7 +21,7 @@
 
 <script>
 
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
   mdiHome, mdiLightbulbOutline, mdiPackageDown,
@@ -65,6 +64,9 @@ export default {
     },
   },
   computed: {
+    ...mapState([
+      'activeQuestion',
+    ]),
     ...mapGetters([
       'email',
       'firstName',
@@ -73,6 +75,7 @@ export default {
       'inProgress',
       'numQuestionsComplete',
       'numQuestions',
+      'progress',
     ]),
   },
   components: {

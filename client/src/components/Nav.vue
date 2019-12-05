@@ -38,7 +38,7 @@
         absolute
         bottom
         color="primary"
-        :value="this.progress"
+        :value="this.progressValue"
       ></v-progress-linear>
 
     </v-app-bar>
@@ -117,11 +117,6 @@ export default {
       await this.$nextTick();
     },
   },
-  computed: {
-    progress() {
-      return (this.currentProgressValue / this.finishedProgressValue) * 100;
-    },
-  },
   props: {
     textA: {
       type: String,
@@ -144,11 +139,7 @@ export default {
       required: false,
       default: false,
     },
-    currentProgressValue: {
-      type: Number,
-      required: false,
-    },
-    finishedProgressValue: {
+    progressValue: {
       type: Number,
       required: false,
     },
