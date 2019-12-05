@@ -135,6 +135,7 @@ export default {
       }
       if (this.onLastQuestion) {
         this.$router.push('/results');
+        this.resetTest();
       } else {
         this.incrementActiveQuestion();
         this.recorder.start();
