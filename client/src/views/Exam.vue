@@ -33,8 +33,10 @@
           </v-icon>
         </div>
 
-        <v-card id="drawing-card" :style="drawingScale">
-          <p id="trial-count">Trial {{this.currentTrialNumber}} of {{this.numQuestions}}</p>
+        <v-card id="drawing-card">
+          <p id="trial-count" v-show="this.inProgress && this.numQuestions > 1">
+            Trial {{this.currentTrialNumber}} of {{this.numQuestions}}
+          </p>
           <DrawTest id="drawing-test"
                     :question="this.currentQuestion"
           :canvas-width="canvas.width"
