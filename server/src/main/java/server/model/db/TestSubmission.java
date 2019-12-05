@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.sql.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 
@@ -16,13 +18,14 @@ public class TestSubmission implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "testSubmissionID")
     private Integer testSubmissionID;
-    
+
     @Column(name = "examID")
     private Integer examID;
-    
+
     @Column(name = "patientID")
     private String patientID;
-    
+
+    @CreationTimestamp
     @Temporal(TemporalType.DATE)
     @Column(name = "date")
     private Date createdDate;
