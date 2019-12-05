@@ -13,7 +13,7 @@
                       :username="email"
                       :first-name="firstName"
                       :last-name="lastName"
-                      @sign-out="$store.commit('signOut')"/>
+                      @sign-out="signout"/>
       </template>
     </Nav>
     <router-view></router-view>
@@ -57,6 +57,12 @@ export default {
         ],
       },
     };
+  },
+  methods: {
+    signout() {
+      this.$store.commit('signOut');
+      this.$router.push('/');
+    },
   },
   computed: {
     ...mapGetters([
