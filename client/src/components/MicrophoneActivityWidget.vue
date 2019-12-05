@@ -6,7 +6,10 @@
             {{microphoneSvgPath}}
     </v-icon>
 
-    <p id="status-text" class="font-weight-bold">{{this.statusText}}</p>
+    <p id="status-text" class="font-weight-bold"
+       :class="{ textInactive: !isRecording }">
+      {{this.statusText}}
+    </p>
 
   </div>
 </template>
@@ -30,7 +33,7 @@ export default {
   },
   computed: {
     statusText() {
-      return this.isRecording ? 'recording' : 'complete';
+      return this.isRecording ? 'recording' : 'recording';
     },
   },
 };
@@ -42,6 +45,10 @@ export default {
     flex-direction: column;
   }
 
+  #activity-widget:hover {
+    cursor: pointer;
+  }
+
   #status-text {
     color: #9575CD;
     font-size: .85rem;
@@ -50,6 +57,10 @@ export default {
 
   .active{
     animation: active-mic 3.2s both infinite;
+  }
+
+  .textInactive {
+    color: #EEEEEE !important;
   }
 
   @keyframes active-mic {
