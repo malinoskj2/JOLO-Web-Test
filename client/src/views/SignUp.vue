@@ -16,12 +16,13 @@
              <v-card-title class="justify-center">Sign Up</v-card-title>
              </v-flex>
           <v-card-text>
-          <v-form ref="form" v-model="valid" @submit="submit()" id="signUp">
+          <v-form ref="form" v-model="valid" @submit="submit()" >
               <v-text-field
                 v-model="userData.fName"
                 label="First Name"
                 name="fName"
                 type="text"
+                @keyup.enter="submit"
                 :rules="firstNameRules"
                 required
                 />
@@ -30,6 +31,7 @@
                 label="Last Name"
                 name="lNamee"
                 type="text"
+                @keyup.enter="submit"
                 :rules="lastNameRules"
                 required
                 />
@@ -38,6 +40,7 @@
                 label="Email"
                 name="Email"
                 type="email"
+                @keyup.enter="submit"
                 :rules="emailRules"
                 :error="error"
                 :error-messages="errorMessages"
@@ -48,6 +51,7 @@
                 label="Password"
                 name="Password"
                 type="password"
+                 @keyup.enter="submit"
                 :rules="passwordRules"
                 required
                 />
@@ -56,6 +60,7 @@
                 label="Confirm Password"
                 name="retypePassword"
                 type="password"
+                @keyup.enter="submit"
                 :rules="passwordMatchRules"
                 required
                 />
@@ -69,7 +74,7 @@
                 class="justify-center"
                 color="primary"
                 form="signUp"
-                type="submit">Submit</v-btn>
+                @click="submit">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>

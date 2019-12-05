@@ -22,6 +22,7 @@
                 label="Email"
                 name="email"
                 type="email"
+                @keyup.enter="login"
                 required
                 />
                  <v-text-field
@@ -29,6 +30,7 @@
                 label="Password"
                 name="password"
                 type="password"
+                 @keyup.enter="login"
                 required
                 />
             </v-form>
@@ -38,7 +40,7 @@
                 <v-flex>
                 <v-btn class="justify-center" color="primary"
                       form="loginForm"
-                       type="submit">Submit</v-btn>
+                 @click="login">Submit</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>
