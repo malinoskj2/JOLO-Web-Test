@@ -150,7 +150,21 @@ public class TestController {
                 }
                 answer.setAudioFilePath(fsr.getPath());
 
-                this.answerAttemptRepository.save(answer);
+                Optional<AnswerAttempt> optPrevAttempt =
+                        this.answerAttemptRepository.findFirstByTestSubmissionIDAndQuestionID(
+                                testSubmissionID,
+                                questionID
+                        );
+
+                if (optPrevAttempt.isPresent()) {
+                    AnswerAttempt prevAttempt = optPrevAttempt.get();
+                    answer.setAnswerAttemptID(prevAttempt.getAnswerAttemptID());
+                    this.answerAttemptRepository.save(answer);
+                } else {
+                    this.answerAttemptRepository.save(answer);
+                }
+
+
             } catch (HttpServerErrorException e) {
                 logger.error(e.toString());
                 AnswerAttempt answer = new AnswerAttempt();
@@ -164,6 +178,21 @@ public class TestController {
                 answer.setGuess2time2(-1.0);
                 answer.setAudioFilePath(fsr.getPath());
                 this.answerAttemptRepository.save(answer);
+
+                Optional<AnswerAttempt> optPrevAttempt =
+                        this.answerAttemptRepository.findFirstByTestSubmissionIDAndQuestionID(
+                                testSubmissionID,
+                                questionID
+                        );
+
+                if (optPrevAttempt.isPresent()) {
+                    AnswerAttempt prevAttempt = optPrevAttempt.get();
+                    answer.setAnswerAttemptID(prevAttempt.getAnswerAttemptID());
+                    this.answerAttemptRepository.save(answer);
+                } else {
+                    this.answerAttemptRepository.save(answer);
+                }
+
             } catch (Exception e) {
                 logger.error(e.toString());
             }
