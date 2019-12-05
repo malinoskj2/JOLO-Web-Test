@@ -71,10 +71,10 @@
                 <v-flex>
                 <v-btn
                 :disabled="!valid"
-                class="justify-center"
+                class="justify-center text-none"
                 color="primary"
                 form="signUp"
-                @click="submit">Submit</v-btn>
+                @click="submit">Sign up</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>

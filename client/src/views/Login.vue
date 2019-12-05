@@ -38,9 +38,9 @@
           <v-card-actions >
                 <v-spacer />
                 <v-flex>
-                <v-btn class="justify-center" color="primary"
+                <v-btn class="justify-center text-none" color="primary"
                       form="loginForm"
-                 @click="login">Submit</v-btn>
+                 @click="login">Log in</v-btn>
                 </v-flex>
               </v-card-actions>
          </v-card>

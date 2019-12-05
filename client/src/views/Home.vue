@@ -6,7 +6,10 @@
       <div class="top-section">
         <h1 class="black-karla">{{topSection.primaryText}}</h1>
         <h2>{{topSection.secondaryText}}</h2>
-        <v-btn color="primary" type="submit" @click="$router.push('/signup')">
+        <v-btn color="primary"
+               type="submit"
+               class="text-none"
+               @click="$router.push('/signup')">
           Get Started
         </v-btn>
       </div>
