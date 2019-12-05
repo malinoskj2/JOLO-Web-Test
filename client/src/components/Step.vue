@@ -43,22 +43,18 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
     text-align: left;
   }
 
   #title {
-    font-family: 'Karla', sans-serif;
     font-size: 2rem;
     color: black;
-
     padding-bottom: .5rem;
   }
 
   #description {
     text-align: center;
     color: black;
-    font-family: 'Lato', sans-serif;
   }
 
 

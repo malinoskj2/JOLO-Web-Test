@@ -34,7 +34,6 @@ export default {
     padding-bottom: 1rem;
   }
   #title {
-    font-family: 'Karla', sans-serif;
     font-size: 1rem;
     color: black;
     padding-bottom: .5rem;
@@ -42,6 +41,5 @@ export default {
   #description {
     text-align: center;
     color: black;
-    font-family: 'Lato', sans-serif;
   }
 </style>

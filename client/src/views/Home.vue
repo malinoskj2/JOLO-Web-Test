@@ -148,7 +148,7 @@ export default {
   }
   .black-karla {
     color: black;
-    font-family: 'Karla', sans-serif;
+
   }
   .flex-column {
     display: flex;
@@ -178,7 +178,6 @@ export default {
     font-size: 3rem;
   }
   .section-secondary {
-    font-family: 'Arial', sans-serif;
     font-size: 1rem;
     text-align: center;
     max-width: 30%;
