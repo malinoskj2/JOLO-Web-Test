@@ -146,7 +146,10 @@ export default {
       if (this.recorder.state === 'recording') {
         this.stopRecording();
       }
+
       this.decrementActiveQuestion();
+      this.recorder.start();
+      this.isRecording = true;
     },
     ...mapMutations([
       'incrementActiveQuestion',
