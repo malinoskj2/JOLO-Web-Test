@@ -7,6 +7,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 import server.config.auth.AppUser;
 import server.model.TranscriptionResult;
@@ -100,7 +101,9 @@ public class TestController {
             logger.info("Audio Received Size: " + fsr.getFile().length());
 
             try {
+
                 TranscriptionResult[] results = this.voiceTranscriptionService.vts(fsr);
+                Arrays.stream(results).forEach(result -> System.out.println(result.getText()));
 
                 logger.info("Audio Transcribed Successfully");
                 logger.info("Transcription Result Count: " + results.length);
@@ -147,6 +150,19 @@ public class TestController {
                 }
                 answer.setAudioFilePath(fsr.getPath());
 
+                this.answerAttemptRepository.save(answer);
+            } catch (HttpServerErrorException e) {
+                logger.error(e.toString());
+                AnswerAttempt answer = new AnswerAttempt();
+                answer.setTestSubmissionID(testSubmissionID);
+                answer.setQuestionID(questionID);
+                answer.setGuessedAngle1(-1);
+                answer.setGuess1time1(-1.0);
+                answer.setGuess1time2(-1.0);
+                answer.setGuessedAngle2(-1);
+                answer.setGuess2time1(-1.0);
+                answer.setGuess2time2(-1.0);
+                answer.setAudioFilePath(fsr.getPath());
                 this.answerAttemptRepository.save(answer);
             } catch (Exception e) {
                 logger.error(e.toString());
