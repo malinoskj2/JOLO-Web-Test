@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y>
     <template v-slot:activator="{ on }">
-      <v-icon large v-on="on">{{dotsSvgPath}}</v-icon>
+      <v-icon size="38px" v-on="on">{{dotsSvgPath}}</v-icon>
     </template>
 
     <v-system-bar></v-system-bar>

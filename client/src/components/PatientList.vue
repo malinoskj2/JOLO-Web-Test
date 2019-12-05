@@ -16,10 +16,14 @@
           </v-icon>
       </template>
       <template v-slot:expanded-item="{ item }">
-          <tr v-for="(trial,index) in item.trials"
-              class="trial-item"
-              @click="downloadTrial(trial)"
-              :key="index">Trial {{trial.questionID}}</tr>
+        <div v-for="(trial,index) in item.trials"
+             :key="index" class="trial-item">
+          <div @click="downloadTrial(trial)" class="trial-item-text"
+              :key="index">Trial {{trial.questionID}}
+            <v-icon size="18px" class="trial-item-icon"> {{downloadSvgPath}}</v-icon>
+          </div>
+        </div>
+
       </template>
     </v-data-table>
   </v-container>
@@ -27,13 +31,14 @@
 </template>
 
 <script>
-import { mdiFileDownload } from '@mdi/js';
+import { mdiFileDownload, mdiDownload } from '@mdi/js';
 
 export default {
   name: 'GetResults',
   data() {
     return {
       fileDownloadSvgPath: mdiFileDownload,
+      downloadSvgPath: mdiDownload,
       headers: [
         {
           text: 'Patient ID',
@@ -111,10 +116,27 @@ export default {
 
 <style>
 .trial-item {
-  color: #9575CD !important;
-  font-weight: bold;
+  color: #757575 !important;
+  font-weight: 500;
+  font-size: 1rem;
+  padding-top: .20rem;
+  padding-left: .25rem;
 }
 .trial-item:hover {
+  color: #9575CD !important;
   cursor: pointer;
+  transform: scale(1.05) translateX(1rem);
+}
+
+.trial-item:hover > * > * {
+  color: #9575CD !important;
+}
+
+.trial-item-text {
+  border: none;
+}
+
+.trial-divider {
+  transform: scaleX(4);
 }
 </style>
