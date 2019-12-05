@@ -138,14 +138,14 @@ public class TestController {
 
                 if (answersAdded < 2) {
                     answer.setGuessedAngle2(-1);
-                    answer.setGuess1time2(-1.0);
-                    answer.setGuess1time2(-1.0);
+                    answer.setGuess2time1(-1.0);
+                    answer.setGuess2time2(-1.0);
                     logger.warn("second result not found, set relevant data to -1");
                 }
                 if (answersAdded < 1) {
-                    answer.setGuessedAngle2(-1);
-                    answer.setGuess2time1(-1.0);
-                    answer.setGuess2time2(-1.0);
+                    answer.setGuessedAngle1(-1);
+                    answer.setGuess1time1(-1.0);
+                    answer.setGuess1time2(-1.0);
                     logger.warn("neither result found, set relevant data to -1 ");
                 }
                 answer.setAudioFilePath(fsr.getPath());
