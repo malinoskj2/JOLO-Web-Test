@@ -186,12 +186,13 @@ export default {
 
 <style>
 #exam {
-  overflow-y:hidden;
   margin-top: 80px;
 }
 
 #drawing-card {
-  margin-top: -30px;
+  margin-top: 2px;
+  filter: drop-shadow(6px 4px 3px rgba(53, 42, 85, 0.68));
+  transform: scale(.95);
 }
 
 #trial-count {
