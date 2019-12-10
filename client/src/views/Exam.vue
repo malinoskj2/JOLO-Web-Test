@@ -134,8 +134,10 @@ export default {
         this.stopRecording();
       }
       if (this.onLastQuestion) {
-        this.$router.push('/results');
-        this.resetTest();
+        setTimeout(() => {
+          this.$router.push('/results');
+          this.resetTest();
+        }, 4000);
       } else {
         this.incrementActiveQuestion();
         this.recorder.start();
