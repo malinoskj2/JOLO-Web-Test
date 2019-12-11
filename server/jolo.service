@@ -1,0 +1,17 @@
+[Unit]
+Description=jolo-api
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+WorkingDirectory=/var/www/jolo_app_server
+User=www-data
+Group=www-data
+ExecStart=/usr/bin/java -jar -Dspring.config.location=/var/www/jolo_app_server/application-dev.properties -Dspring.profiles.active=dev server-0.0.1-SNAPSHOT.jar
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=jolo-api
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
