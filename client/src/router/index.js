@@ -1,8 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from '@/store/mod/user';
+// eslint-disable-next-line import/no-cycle
+import store from '../store';
 
 Vue.use(VueRouter);
+
 
 const routes = [
   {
