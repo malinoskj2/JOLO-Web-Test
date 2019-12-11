@@ -33,8 +33,8 @@
           </v-icon>
         </div>
 
-        <v-card id="drawing-card">
-          <p id="trial-count" v-show="this.inProgress && this.numQuestions > 1">
+        <v-card id="drawing-card"  :style="drawingScale">
+          <p id="trial-count">
             Trial {{this.currentTrialNumber}} of {{this.numQuestions}}
           </p>
           <DrawTest id="drawing-test"
@@ -169,6 +169,7 @@ export default {
 
       return {
         transform: `scale(${scaleAmount})`,
+        'transform-origin': 'top center',
       };
     },
     ...mapGetters([
