@@ -114,7 +114,11 @@ public class SpreadsheetService {
         r3c17.setCellStyle(yellow);
 
         /* RAW DATA INPUT TO WORKBOOK */
-        for (int questionNumber = 0; questionNumber < attempts.size(); questionNumber++) {
+        int questionNumber;
+        int aggregate_offset = 0;
+        Row aggrigateLabels = sheet.createRow(attempts.size()+5);
+        Row aggrigateData   = sheet.createRow(attempts.size()+6);
+        for (questionNumber = 0; questionNumber < attempts.size(); questionNumber++) {
             Optional<Question> questionOptional = questionRepository.findByQuestionID(questionNumber+1 );//attempt.getQuestionID());
             if (questionOptional.isPresent()) {
                 Question question = questionOptional.get();
@@ -136,6 +140,8 @@ public class SpreadsheetService {
                     question.getCorrectAngle1() : -1;
                 int correctAngle2 = (question.getCorrectAngle2() != null) ?
                     question.getCorrectAngle2() : -1;
+
+
 
                 Row row_question_results = sheet.createRow(questionNumber + 3);
 
@@ -161,6 +167,11 @@ public class SpreadsheetService {
                     correct1.setCellValue("CORRECT");
                 } else correct1.setCellStyle(coral);
 
+                aggrigateLabels.createCell(aggregate_offset).setCellValue("item number " );
+                aggrigateData.createCell(aggregate_offset).setCellValue(questionNumber+1);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("*response1");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(correctAngle1==guess1);
+
                 Cell guess1cell = row_question_results.createCell(4);
                 guess1cell.setCellValue(guess1);
                 guess1cell.setCellStyle(aqua);
@@ -169,6 +180,15 @@ public class SpreadsheetService {
                 row_question_results.createCell(6).setCellValue(guess1time2);
                 row_question_results.createCell(7).setCellValue(guess1time2 - guess1time1); //duration
                 row_question_results.createCell(8).setCellValue(guess2time1 - guess1time2); //intra response time
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("response1 start");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(guess1time1);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("response1 end");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(guess1time2);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("response1 duration");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(guess1time2 - guess1time1);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("intra-response time");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(guess2time1 - guess1time2);
+
 
                 Cell angle2Cell = row_question_results.createCell(9);
                 angle2Cell.setCellValue(correctAngle2);
@@ -180,6 +200,8 @@ public class SpreadsheetService {
                     correct2.setCellStyle(green);
                     correct2.setCellValue("CORRECT");
                 } else correct2.setCellStyle(coral);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("*response2");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(correctAngle2==guess2);
 
                 Cell guess2cell = row_question_results.createCell(11);
                 guess2cell.setCellValue(guess2);
@@ -187,38 +209,55 @@ public class SpreadsheetService {
 
                 row_question_results.createCell(12).setCellValue(guess2time1);
                 row_question_results.createCell(13).setCellValue(guess2time2);
-                row_question_results.createCell(13).setCellValue(guess2time2 - guess2time1); //duration
+                row_question_results.createCell(14).setCellValue(guess2time2 - guess2time1); //duration
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("response2 start");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(guess2time1);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("response2 end");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(guess2time2);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("response2 duration");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(guess2time2 - guess2time1);
 
-
+                boolean isOblique = correctAngle1 == 3 || correctAngle1 == 4 || correctAngle1 == 8 ||
+                        correctAngle1 == 9 ||
+                        correctAngle2 == 3 || correctAngle2 == 4 || correctAngle2 == 8 ||
+                        correctAngle2 == 9;
+                boolean isPerp = correctAngle1 == 1 || correctAngle1 == 6 || correctAngle1 == 11 ||
+                        correctAngle2 == 1 || correctAngle2 == 6 || correctAngle2 == 11;
+                boolean isPartial = correctAngle1 == 2 || correctAngle1 == 5 || correctAngle1 == 7 ||
+                        correctAngle1 == 10 ||
+                        correctAngle2 == 2 || correctAngle2 == 5 ||correctAngle2 == 7 ||
+                        correctAngle2 == 10;
                 Cell correctoblique = row_question_results.createCell(15); //oblique
-                correctoblique.setCellValue(correctAngle1 == 3 || correctAngle1 == 4 || correctAngle1 == 8 ||
-                                              correctAngle1 == 9 ||
-                                            correctAngle2 == 3 || correctAngle2 == 4 || correctAngle2 == 8 ||
-                                              correctAngle2 == 9);
+                correctoblique.setCellValue(isOblique);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("oblique");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(isOblique);
                 if (correctoblique.getBooleanCellValue()){
                     correctoblique.setCellStyle(green);
                     correctoblique.setCellValue("CORRECT");
                 } else correctoblique.setCellStyle(coral);
 
                 Cell correctperpendicular = row_question_results.createCell(16); //perpendicular
-                correctperpendicular.setCellValue(correctAngle1 == 1 || correctAngle1 == 6 || correctAngle1 == 11 ||
-                                                  correctAngle2 == 1 || correctAngle2 == 6 || correctAngle2 == 11 );
+                correctperpendicular.setCellValue(isPerp);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("perpendicular");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(isPerp);
                 if (correctperpendicular.getBooleanCellValue()){
                     correctperpendicular.setCellStyle(green);
                     correctperpendicular.setCellValue("CORRECT");
                 } else correctperpendicular.setCellStyle(coral);
 
                 Cell correctpartial = row_question_results.createCell(17); //partial oblique
-                correctpartial.setCellValue(correctAngle1 == 2 || correctAngle1 == 5 || correctAngle1 == 7 ||
-                                             correctAngle1 == 10 ||
-                                            correctAngle2 == 2 || correctAngle2 == 5 ||correctAngle2 == 7 ||
-                                             correctAngle2 == 10);
+                correctpartial.setCellValue(isPartial);
+                aggrigateLabels.createCell(++aggregate_offset).setCellValue("partial oblique");
+                aggrigateData.createCell  (aggregate_offset).setCellValue(isPartial);
                 if (correctpartial.getBooleanCellValue()) {
                     correctpartial.setCellStyle(green);
                     correctpartial.setCellValue("CORRECT");
                 } else correctpartial.setCellStyle(coral);
+                aggregate_offset++;
             }
         }
+
+
 
         /* DERRIVED DATA INPUT TO WORKBOOK */
         Sheet sheet_derived_data = wb.createSheet("derived_data");
