@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import server.model.db.AnswerAttempt;
 import server.model.db.Question;
@@ -16,8 +14,6 @@ import server.model.db.TestSubmission;
 import server.repository.QuestionRepository;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -66,38 +62,56 @@ public class SpreadsheetService {
 
         Row row3_resultLabels = sheet.createRow(2);
         Cell r3c1 = row3_resultLabels.createCell(1);
-        r3c1.setCellValue("correct 1");
+        r3c1.setCellValue("trial correct");
         r3c1.setCellStyle(yellow);
         Cell r3c2 = row3_resultLabels.createCell(2);
         r3c2.setCellValue("angle 1");
         r3c2.setCellStyle(yellow);
         Cell r3c3 = row3_resultLabels.createCell(3);
-        r3c3.setCellValue("guess 1");
+        r3c3.setCellValue("item 1 correct");
         r3c3.setCellStyle(yellow);
         Cell r3c4 = row3_resultLabels.createCell(4);
-        r3c4.setCellValue("time a1");
+        r3c4.setCellValue("response 1");
         r3c4.setCellStyle(yellow);
         Cell r3c5 = row3_resultLabels.createCell(5);
-        r3c5.setCellValue("time a2");
+        r3c5.setCellValue("time word 1 start");
         r3c5.setCellStyle(yellow);
         Cell r3c6 = row3_resultLabels.createCell(6);
-        r3c6.setCellValue("correct 2");
+        r3c6.setCellValue("time word 1 end");
         r3c6.setCellStyle(yellow);
         Cell r3c7 = row3_resultLabels.createCell(7);
-        r3c7.setCellValue("angle 2");
+        r3c7.setCellValue("duration");
         r3c7.setCellStyle(yellow);
         Cell r3c8 = row3_resultLabels.createCell(8);
-        r3c8.setCellValue("guess 2");
+        r3c8.setCellValue("intra-response time");
         r3c8.setCellStyle(yellow);
         Cell r3c9 = row3_resultLabels.createCell(9);
-        r3c9.setCellValue("time b1");
+        r3c9.setCellValue("angle 2");
         r3c9.setCellStyle(yellow);
-        Cell r3c10 = row3_resultLabels.createCell(10);
-        r3c10.setCellValue("time b2");
+        Cell r3c10= row3_resultLabels.createCell(10);
+        r3c10.setCellValue("item 2 correct");
         r3c10.setCellStyle(yellow);
         Cell r3c11 = row3_resultLabels.createCell(11);
-        r3c11.setCellValue("oblique angles");
+        r3c11.setCellValue("response 2");
         r3c11.setCellStyle(yellow);
+        Cell r3c12 = row3_resultLabels.createCell(12);
+        r3c12.setCellValue("time word 2 start");
+        r3c12.setCellStyle(yellow);
+        Cell r3c13 = row3_resultLabels.createCell(13);
+        r3c13.setCellValue("time word 2 end");
+        r3c13.setCellStyle(yellow);
+        Cell r3c14 = row3_resultLabels.createCell(14);
+        r3c14.setCellValue("duration");
+        r3c14.setCellStyle(yellow);
+        Cell r3c15 = row3_resultLabels.createCell(15);
+        r3c15.setCellValue("oblique angles");
+        r3c15.setCellStyle(yellow);
+        Cell r3c16 = row3_resultLabels.createCell(16);
+        r3c16.setCellValue("perpendicular angles");
+        r3c16.setCellStyle(yellow);
+        Cell r3c17 = row3_resultLabels.createCell(17);
+        r3c17.setCellValue("partial oblique angles");
+        r3c17.setCellStyle(yellow);
 
         /* RAW DATA INPUT TO WORKBOOK */
         for (int questionNumber = 0; questionNumber < attempts.size(); questionNumber++) {
@@ -107,65 +121,102 @@ public class SpreadsheetService {
 
                 //null checks
                 int guess1 = (attempts.get(questionNumber).getGuessedAngle1() != null) ?
-                        attempts.get(questionNumber).getGuessedAngle1() : -1;
+                     attempts.get(questionNumber).getGuessedAngle1() : -1;
                 int guess2 = (attempts.get(questionNumber).getGuessedAngle2() != null) ?
-                        attempts.get(questionNumber).getGuessedAngle2() : -1;
+                     attempts.get(questionNumber).getGuessedAngle2() : -1;
                 double guess1time1 = (attempts.get(questionNumber).getGuess1time1() != null) ?
-                        attempts.get(questionNumber).getGuess1time1() : -1;
+                     attempts.get(questionNumber).getGuess1time1()   : -1;
                 double guess2time1 = (attempts.get(questionNumber).getGuess2time1() != null) ?
-                        attempts.get(questionNumber).getGuess2time1() : -1;
+                    attempts.get(questionNumber).getGuess2time1()    : -1;
                 double guess1time2 = (attempts.get(questionNumber).getGuess1time2() != null) ?
-                        attempts.get(questionNumber).getGuess1time2() : -1;
+                    attempts.get(questionNumber).getGuess1time2()    : -1;
                 double guess2time2 = (attempts.get(questionNumber).getGuess2time2() != null) ?
-                        attempts.get(questionNumber).getGuess2time2() : -1;
+                    attempts.get(questionNumber).getGuess2time2()    : -1;
+                int correctAngle1 = (question.getCorrectAngle1() != null) ?
+                    question.getCorrectAngle1() : -1;
+                int correctAngle2 = (question.getCorrectAngle2() != null) ?
+                    question.getCorrectAngle2() : -1;
+
                 Row row_question_results = sheet.createRow(questionNumber + 3);
 
                 Cell labelCell = row_question_results.createCell(0);
                 labelCell.setCellValue("q" + (questionNumber + 1));
                 labelCell.setCellStyle(aqua);
 
-                int correctAngle1, correctAngle2;
-                if (question.getCorrectAngle1() == null)
-                    correctAngle1 = -1;
-                else correctAngle1 = question.getCorrectAngle1();
-                if (question.getCorrectAngle2() == null)
-                    correctAngle2 = -1;
-                else correctAngle2 = question.getCorrectAngle2();
+                Cell correcttrial = row_question_results.createCell(1);
+                correcttrial.setCellValue(correctAngle1 == guess1 && correctAngle2 == guess2);
+                if (correcttrial.getBooleanCellValue()) {
+                    correcttrial.setCellStyle(green);
+                    correcttrial.setCellValue("CORRECT");
+                } else correcttrial.setCellStyle(coral);
 
-                Cell correct1 = row_question_results.createCell(1);
-                correct1.setCellValue(correctAngle1 == guess1);
-                if (correct1.getBooleanCellValue())
-                    correct1.setCellStyle(green);
-                else correct1.setCellStyle(coral);
                 Cell angle1Cell = row_question_results.createCell(2);
                 angle1Cell.setCellValue(correctAngle1);
                 angle1Cell.setCellStyle(yellow);
-                Cell guess1cell = row_question_results.createCell(3);
+
+                Cell correct1 = row_question_results.createCell(3);
+                correct1.setCellValue(correctAngle1 == guess1);
+                if (correct1.getBooleanCellValue()) {
+                    correct1.setCellStyle(green);
+                    correct1.setCellValue("CORRECT");
+                } else correct1.setCellStyle(coral);
+
+                Cell guess1cell = row_question_results.createCell(4);
                 guess1cell.setCellValue(guess1);
                 guess1cell.setCellStyle(aqua);
-                row_question_results.createCell(4).setCellValue(guess1time1);
-                row_question_results.createCell(5).setCellValue(guess1time2);
 
-                Cell correct2 = row_question_results.createCell(6);
-                correct2.setCellValue(correctAngle2 == guess2);
-                if (correct2.getBooleanCellValue())
-                    correct2.setCellStyle(green);
-                else correct2.setCellStyle(coral);
-                Cell angle2Cell = row_question_results.createCell(7);
+                row_question_results.createCell(5).setCellValue(guess1time1);
+                row_question_results.createCell(6).setCellValue(guess1time2);
+                row_question_results.createCell(7).setCellValue(guess1time2 - guess1time1); //duration
+                row_question_results.createCell(8).setCellValue(guess2time1 - guess1time2); //intra response time
+
+                Cell angle2Cell = row_question_results.createCell(9);
                 angle2Cell.setCellValue(correctAngle2);
                 angle2Cell.setCellStyle(yellow);
-                Cell guess2cell = row_question_results.createCell(8);
+
+                Cell correct2 = row_question_results.createCell(10);
+                correct2.setCellValue(correctAngle1 == guess1);
+                if (correct2.getBooleanCellValue()) {
+                    correct2.setCellStyle(green);
+                    correct2.setCellValue("CORRECT");
+                } else correct2.setCellStyle(coral);
+
+                Cell guess2cell = row_question_results.createCell(11);
                 guess2cell.setCellValue(guess2);
                 guess2cell.setCellStyle(aqua);
-                row_question_results.createCell(9).setCellValue(guess2time1);
-                row_question_results.createCell(10).setCellValue(guess2time2);
-                Cell correct3 = row_question_results.createCell(11);
-                correct3.setCellValue(correctAngle1 == 3 || correctAngle1 == 4 || correctAngle1 == 8 ||
-                        correctAngle1 == 9 || correctAngle2 == 3 || correctAngle2 == 4 ||
-                        correctAngle2 == 8 || correctAngle2 == 9);
-                if (correct3.getBooleanCellValue())
-                    correct3.setCellStyle(green);
-                else correct3.setCellStyle(coral);
+
+                row_question_results.createCell(12).setCellValue(guess2time1);
+                row_question_results.createCell(13).setCellValue(guess2time2);
+                row_question_results.createCell(13).setCellValue(guess2time2 - guess2time1); //duration
+
+
+                Cell correctoblique = row_question_results.createCell(15); //oblique
+                correctoblique.setCellValue(correctAngle1 == 3 || correctAngle1 == 4 || correctAngle1 == 8 ||
+                                              correctAngle1 == 9 ||
+                                            correctAngle2 == 3 || correctAngle2 == 4 || correctAngle2 == 8 ||
+                                              correctAngle2 == 9);
+                if (correctoblique.getBooleanCellValue()){
+                    correctoblique.setCellStyle(green);
+                    correctoblique.setCellValue("CORRECT");
+                } else correctoblique.setCellStyle(coral);
+
+                Cell correctperpendicular = row_question_results.createCell(16); //perpendicular
+                correctperpendicular.setCellValue(correctAngle1 == 1 || correctAngle1 == 6 || correctAngle1 == 11 ||
+                                                  correctAngle2 == 1 || correctAngle2 == 6 || correctAngle2 == 11 );
+                if (correctperpendicular.getBooleanCellValue()){
+                    correctperpendicular.setCellStyle(green);
+                    correctperpendicular.setCellValue("CORRECT");
+                } else correctperpendicular.setCellStyle(coral);
+
+                Cell correctpartial = row_question_results.createCell(17); //partial oblique
+                correctpartial.setCellValue(correctAngle1 == 2 || correctAngle1 == 5 || correctAngle1 == 7 ||
+                                             correctAngle1 == 10 ||
+                                            correctAngle2 == 2 || correctAngle2 == 5 ||correctAngle2 == 7 ||
+                                             correctAngle2 == 10);
+                if (correctpartial.getBooleanCellValue()) {
+                    correctpartial.setCellStyle(green);
+                    correctpartial.setCellValue("CORRECT");
+                } else correctpartial.setCellStyle(coral);
             }
         }
 
