@@ -88,15 +88,17 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/existsEmail",
             method = RequestMethod.POST,
-            produces = "application/json")
+            produces = "application/json") //allows Spring Functionality
     public Boolean existsEmail(@RequestBody SignupRequest examinerRequest, Authentication auth)
+            //takes Signup info and user info to check if an email has already been registered to a doctor
     {
-        AppUser userDetails = (AppUser) auth.getPrincipal();
+        AppUser userDetails = (AppUser) auth.getPrincipal();//gets user details
 
         final Optional<Examiner> examinerEmails =
                 this.examinerRepository.findByEmail(userDetails.getUsername());
+        //makes list of emails that match email given by user
 
         return examinerEmails.isPresent();
-
+        //returns message if email is previously used, otherwise allows registration
     }
 }

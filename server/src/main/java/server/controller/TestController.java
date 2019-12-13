@@ -159,28 +159,32 @@ public class TestController {
     }
 
     public TestSubmission createTestSubmission(final Integer examID,
-                                               final Integer patientID) {
+                                               final Integer patientID)
+     {
 
-        final TestSubmission submission = new TestSubmission();
+        final TestSubmission submission = new TestSubmission(); //
         submission.setExamID(examID);
         submission.setPatientID(patientID);
 
         return this.testSubmissionRepository.save(submission);
     }
 
-    @RequestMapping(value = "/downloadaudio",
+    @RequestMapping(value = "/downloadaudio", //allows Spring functionality
             method = RequestMethod.GET,
             produces = "application/json")
-    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID, @RequestParam Integer testSubmissionID, Authentication Auth)
+    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID,
+                                            @RequestParam Integer testSubmissionID, Authentication Auth)
+    //process takes ids for a specific test and an authenticaion in order to find the path for an audio file
     {
-        AppUser userDetails = (AppUser) Auth.getPrincipal();
+        AppUser userDetails = (AppUser) Auth.getPrincipal(); //gets userdetails
 
         final Optional<AnswerAttempt> answerAttempts =
                 this.answerAttemptRepository.findByIDs(testSubmissionID, answerAttemptID);
+        //makes list of answered questions that fit a specific test and answer
 
-        Path audioPath = Paths.get(answerAttempts.get().getAudioFilePath());
+        Path audioPath = Paths.get(answerAttempts.get().getAudioFilePath()); //creates audio path
 
-        return fileStorageService.getFile(audioPath);
+        return fileStorageService.getFile(audioPath); //gets file from audio path
 
     }
 }
