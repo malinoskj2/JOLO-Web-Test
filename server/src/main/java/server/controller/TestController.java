@@ -277,17 +277,19 @@ public class TestController {
         return ResponseEntity.ok(attempts);
     }
 
-    @RequestMapping(value = "/audio",
+    @RequestMapping(value = "/audio", //allows Spring functionality
             method = RequestMethod.GET)
-    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID, Authentication auth) {
+    public FileSystemResource downloadAudio(@RequestParam Integer answerAttemptID, Authentication auth)
+    //process takes ids for a specific test and an authenticaion in order to find the path for an audio file
+    {
         final AppUser userDetails = (AppUser) auth.getPrincipal();
 
         final Optional<AnswerAttempt> answerAttempts =
                 this.answerAttemptRepository.findFirstByAnswerAttemptID(answerAttemptID);
+        //makes list of answered questions that fit a specific test and answer
 
-        Path audioPath = Paths.get(answerAttempts.get().getAudioFilePath());
+        Path audioPath = Paths.get(answerAttempts.get().getAudioFilePath()); //creates audio path
 
-        return fileStorageService.getFile(audioPath);
+        return fileStorageService.getFile(audioPath); //gets file from audio path
     }
 }
-

@@ -1,32 +1,24 @@
 package server.controller;
 
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import server.config.auth.AppUser;
-import server.config.auth.TokenProvider;
-import server.model.db.Examiner;
-import server.model.request.AuthenticationRequest;
-import server.model.request.SignupRequest;
-import server.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import server.config.auth.AppUser;
+import server.config.auth.TokenProvider;
+import server.model.db.Examiner;
+import server.model.request.AuthenticationRequest;
+import server.model.request.SignupRequest;
 import server.model.response.JwtResponse;
 import server.repository.ExaminerRepository;
+import server.service.JwtUserDetailsService;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -100,9 +92,14 @@ public class AuthenticationController {
     @RequestMapping(value = "/existsEmail",
             method = RequestMethod.POST,
             produces = "application/json")
-    public Boolean existsEmail(@RequestBody SignupRequest examinerRequest) {
+    public Boolean existsEmail(@RequestBody SignupRequest examinerRequest)
+    //takes Signup info and user info to check if an email has already been registered to a doctor
+    {
         final Optional<Examiner> examinerEmails =
                 this.examinerRepository.findByEmail(examinerRequest.getEmail());
+        //makes list of emails that match email given by user
+
         return examinerEmails.isPresent();
+        //returns message if email is previously used, otherwise allows registration
     }
 }
