@@ -22,18 +22,14 @@ public class SpreadsheetService {
 
     @Autowired
     private QuestionRepository questionRepository;
-    @Autowired
-    private Environment env;
-    private Logger logger = LoggerFactory.getLogger(SpreadsheetService.class);
 
-    public SpreadsheetService() {
-    }
+    private Logger logger = LoggerFactory.getLogger(SpreadsheetService.class);
 
     public HSSFWorkbook convertToSpreadsheet(TestSubmission submission,
                                              List<AnswerAttempt> attempts) {
         /** Displays information about a single text, as well as requested derived data **/
         HSSFWorkbook wb = new HSSFWorkbook();
-        File f = new File(System.getProperty("user.dir") + "/spreadsheet" + submission.getPatientID() + ".xls");
+
         /* STYLE SETTINGS */
         CellStyle aqua = wb.createCellStyle();
         CellStyle coral = wb.createCellStyle();

@@ -33,9 +33,6 @@ import java.util.stream.Collectors;
 public class TestController {
 
     @Autowired
-    private ExaminerRepository examinerRepository;
-
-    @Autowired
     private TestSubmissionRepository testSubmissionRepository;
 
     @Autowired

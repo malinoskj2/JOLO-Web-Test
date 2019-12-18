@@ -11,8 +11,6 @@ public interface TestSubmissionRepository extends CrudRepository<TestSubmission,
     findByExamIDAndTestSubmissionID(final Integer examID, final Integer testSubmissionID);
     public Optional<TestSubmission>
     findFirstByPatientIDAndExamID(final String patientID, final Integer examID);
-    public Optional<TestSubmission>
-    findByExamIDAndAndTestSubmissionID(final Integer examID, final Integer testSubmissionID);
     public Optional<List<TestSubmission>>
     findAllByExamIDAndPatientID(final Integer examID, final String patientID);
 }
