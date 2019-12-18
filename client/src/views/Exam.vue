@@ -157,7 +157,6 @@ export default {
       'incrementActiveQuestion',
       'decrementActiveQuestion',
       'resetTest',
-      'setQuestionAnswered',
     ]),
   },
   computed: {
@@ -173,7 +172,6 @@ export default {
       };
     },
     ...mapGetters([
-      'test',
       'inProgress',
       'currentQuestion',
       'hasPreviousQuestion',
