@@ -329,7 +329,7 @@ public class SpreadsheetService {
         Cell r1c13 = row1_labels_derived.createCell(13);
         r1c13.setCellValue("Perpendicular items");
         r1c13.setCellStyle(aqua);
-        row2_data_derived.createCell(13).setCellFormula("COUNTIF(raw_data!Q4:raw_data:Q17,\"CORRECT\")");
+        row2_data_derived.createCell(13).setCellFormula("COUNTIF(raw_data!Q4:raw_data!Q17,\"CORRECT\")");
         Cell r1c14 = row1_labels_derived.createCell(14);
         r1c14.setCellValue("Perpendicular items correct");
         r1c14.setCellStyle(aqua);
@@ -343,7 +343,7 @@ public class SpreadsheetService {
         Cell r1c16 = row1_labels_derived.createCell(16);
         r1c16.setCellValue("partial oblique items");
         r1c16.setCellStyle(aqua);
-        row2_data_derived.createCell(16).setCellFormula("SUMIF(raw_data!R4:R17,\"CORRECT\"," +
+        row2_data_derived.createCell(16).setCellFormula("SUMIF(raw_data!R4:raw_data!R17,\"CORRECT\"," +
                 "raw_data!N4:raw_data!N17)");
         Cell r1c17 = row1_labels_derived.createCell(17);
         r1c17.setCellValue("partial oblique items correct");
@@ -358,7 +358,7 @@ public class SpreadsheetService {
         Cell r1c19 = row1_labels_derived.createCell(19);
         r1c19.setCellValue("Sum time of partial oblique ");
         r1c19.setCellStyle(aqua);
-        row2_data_derived.createCell(19).setCellFormula("SUMIF(raw_data!R4:R17,\"CORRECT\"," +
+        row2_data_derived.createCell(19).setCellFormula("SUMIF(raw_data!R4:raw_data!R17,\"CORRECT\"," +
                 "raw_data!N4:raw_data!N17)");
         Cell r1c22 = row1_labels_derived.createCell(20);
         r1c22.setCellValue("Average time partial oblique trial");
