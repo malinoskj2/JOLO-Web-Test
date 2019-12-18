@@ -1,5 +1,4 @@
 # *JOLO Web Test*
-[![Website todo](https://img.shields.io/website-up-down-green-red/http/todo)](http://todo)
 [![Build Status](https://travis-ci.com/malinoskj2/JOLO-Web-Test.svg?branch=master)](https://travis-ci.com/malinoskj2/JOLO-Web-Test)
 
 The general purpose of this application is to create a web-based application which will provide researchers/doctors an interface built around a JOLO-like test called Angle Matching Web Test. Patients/Users will use the web application to take the test, and the application will collect data on both accuracy and time. This data will be available to the researchers/doctors for analysis online or the data can also be exported. 
