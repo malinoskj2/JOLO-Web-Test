@@ -5,14 +5,12 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import server.model.db.AnswerAttempt;
 import server.model.db.Question;
 import server.model.db.TestSubmission;
 import server.repository.QuestionRepository;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -268,7 +266,7 @@ public class SpreadsheetService {
 
         /* derived data formulas */
         Cell r1c0 = row1_labels_derived.createCell(0);
-        r1c0.setCellValue("total trials (0-30)");
+        r1c0.setCellValue("total trials");
         r1c0.setCellStyle(aqua);
         row2_data_derived.createCell(0).setCellFormula("COUNTA(raw_data!A4:raw_data!A17)");
         //counting correct trials
@@ -281,7 +279,7 @@ public class SpreadsheetService {
         r1c2.setCellStyle(aqua);
         row2_data_derived.createCell(2).setCellFormula("B2/A2");
         Cell r1c3 = row1_labels_derived.createCell(3);
-        r1c3.setCellValue("total items (0-60)");
+        r1c3.setCellValue("total items");
         r1c3.setCellStyle(aqua);
         row2_data_derived.createCell(3).setCellFormula("2*A2");
         Cell r1c4 = row1_labels_derived.createCell(4);
@@ -310,8 +308,7 @@ public class SpreadsheetService {
         r1c9.setCellValue("Oblique items correct");
         r1c9.setCellStyle(aqua);
         row2_data_derived.createCell(9).setCellFormula("COUNTIFS(raw_data!P4:raw_data!P17,\"CORRECT\"," +
-                                                                "raw_data!D4:raw_data!D17,\"CORRECT\") + " +
-                                                                "COUNTIFS(raw_data!P4:raw_data!P17,\"CORRECT\"," +
+                                                                "raw_data!D4:raw_data!D17,\"CORRECT\", " +
                                                                 "raw_data!K4:raw_data!K17,\"CORRECT\")");
         Cell r1c10 = row1_labels_derived.createCell(10);
         r1c10.setCellValue("oblique correct item ratio");
@@ -320,7 +317,7 @@ public class SpreadsheetService {
         Cell r1c11 = row1_labels_derived.createCell(11);
         r1c11.setCellValue("Sum time of oblique ");
         r1c11.setCellStyle(aqua);
-        row2_data_derived.createCell(11).setCellFormula("SUMIF(raw_data!P4:P17,\"CORRECT\"," +
+        row2_data_derived.createCell(11).setCellFormula("SUMIF(raw_data!P4:raw_data!P17,\"CORRECT\"," +
                                                                     "raw_data!N4:raw_data!N17)");
         Cell r1c12 = row1_labels_derived.createCell(12);
         r1c12.setCellValue("Average time oblique trial");
@@ -359,7 +356,7 @@ public class SpreadsheetService {
         r1c19.setCellValue("Sum time of partial oblique ");
         r1c19.setCellStyle(aqua);
         row2_data_derived.createCell(19).setCellFormula("SUMIF(raw_data!R4:raw_data!R17,\"CORRECT\"," +
-                "raw_data!N4:raw_data!N17)");
+                                                                  "raw_data!N4:raw_data!N17)");
         Cell r1c22 = row1_labels_derived.createCell(20);
         r1c22.setCellValue("Average time partial oblique trial");
         r1c22.setCellStyle(aqua);
