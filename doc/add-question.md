@@ -2,6 +2,7 @@
 When a new TestSubmission is created, all corresponding Questions are retrieved from the database. Each Question has 2 sets of coordinates and the corresponding correct angle number. These coordinates are used by the client to draw the 2 lines corresponding with each Question.
 
 Each Question is in the database is composed of the following columns.
+
 | Column         | Function                                      |
 |----------------|-----------------------------------------------|
 | questionid     | auto_increment ID of the question             |
