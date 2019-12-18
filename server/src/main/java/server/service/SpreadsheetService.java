@@ -266,112 +266,109 @@ public class SpreadsheetService {
         /* DERRIVED DATA INPUT TO WORKBOOK */
         Sheet sheet_derived_data = wb.createSheet("derived_data");
         Row row1_labels_derived = sheet_derived_data.createRow(0);
-        Cell r1c0 = row1_labels_derived.createCell(0);
-        r1c0.setCellValue("total trials (0-30)");
-        r1c0.setCellStyle(aqua);
-        Cell r1c1 = row1_labels_derived.createCell(1);
-        r1c1.setCellValue("Correct trials");
-        r1c1.setCellStyle(aqua);
-        Cell r1c2 = row1_labels_derived.createCell(2);
-        r1c2.setCellValue("correct trial ratio");
-        r1c2.setCellStyle(aqua);
-        Cell r1c3 = row1_labels_derived.createCell(3);
-        r1c3.setCellValue("total items (0-60)");
-        r1c3.setCellStyle(aqua);
-        Cell r1c4 = row1_labels_derived.createCell(4);
-        r1c4.setCellValue("correct items");
-        r1c4.setCellStyle(aqua);
-        Cell r1c5 = row1_labels_derived.createCell(5);
-        r1c5.setCellValue("correct items ratio");
-        r1c5.setCellStyle(aqua);
-        Cell r1c6 = row1_labels_derived.createCell(6);
-        r1c6.setCellValue("Sum time of trials");
-        r1c6.setCellStyle(aqua);
-        Cell r1c7 = row1_labels_derived.createCell(7);
-        r1c7.setCellValue("average time of trial");
-        r1c7.setCellStyle(aqua);
-        Cell r1c8 = row1_labels_derived.createCell(8);
-        r1c8.setCellValue("Oblique items");
-        r1c8.setCellStyle(aqua);
-        Cell r1c9 = row1_labels_derived.createCell(9);
-        r1c9.setCellValue("Oblique items correct");
-        r1c9.setCellStyle(aqua);
-        Cell r1c10 = row1_labels_derived.createCell(10);
-        r1c10.setCellValue("oblique correct item ratio");
-        r1c10.setCellStyle(aqua);
-        Cell r1c11 = row1_labels_derived.createCell(11);
-        r1c11.setCellValue("Sum time of oblique ");
-        r1c11.setCellStyle(aqua);
-        Cell r1c12 = row1_labels_derived.createCell(12);
-        r1c12.setCellValue("Average time oblique trial");
-        r1c12.setCellStyle(aqua);
-        Cell r1c13 = row1_labels_derived.createCell(13);
-        r1c13.setCellValue("Perpendicular items");
-        r1c13.setCellStyle(aqua);
-        Cell r1c14 = row1_labels_derived.createCell(14);
-        r1c14.setCellValue("Perpendicular items correct");
-        r1c14.setCellStyle(aqua);
-        Cell r1c15 = row1_labels_derived.createCell(15);
-        r1c15.setCellValue("Perpendicular items correct ratio");
-        r1c15.setCellStyle(aqua);
-        Cell r1c18 = row1_labels_derived.createCell(16);
-        r1c18.setCellValue("partial oblique items");
-        r1c18.setCellStyle(aqua);
-        Cell r1c19 = row1_labels_derived.createCell(17);
-        r1c19.setCellValue("partial oblique items correct");
-        r1c19.setCellStyle(aqua);
-        Cell r1c20 = row1_labels_derived.createCell(18);
-        r1c20.setCellValue("partial oblique ratio");
-        r1c20.setCellStyle(aqua);
-        Cell r1c21 = row1_labels_derived.createCell(19);
-        r1c21.setCellValue("Sum time of partial oblique ");
-        r1c21.setCellStyle(aqua);
-        Cell r1c22 = row1_labels_derived.createCell(20);
-        r1c22.setCellValue("Average time partial oblique trial");
-        r1c22.setCellStyle(aqua);
+
 
         Row row2_data_derived = sheet_derived_data.createRow(1);
 
         /* derived data formulas */
+        Cell r1c0 = row1_labels_derived.createCell(0);
+        r1c0.setCellValue("total trials (0-30)");
+        r1c0.setCellStyle(aqua);
         row2_data_derived.createCell(0).setCellFormula("COUNTA(raw_data!A4:raw_data!A17)");
         //counting correct trials
+        Cell r1c1 = row1_labels_derived.createCell(1);
+        r1c1.setCellValue("Correct trials");
+        r1c1.setCellStyle(aqua);
         row2_data_derived.createCell(1).setCellFormula("COUNTIFS(raw_data!B4:raw_data!B17,\"CORRECT\")");
+        Cell r1c2 = row1_labels_derived.createCell(2);
+        r1c2.setCellValue("correct trial ratio");
+        r1c2.setCellStyle(aqua);
         row2_data_derived.createCell(2).setCellFormula("B2/A2");
+        Cell r1c3 = row1_labels_derived.createCell(3);
+        r1c3.setCellValue("total items (0-60)");
+        r1c3.setCellStyle(aqua);
         row2_data_derived.createCell(3).setCellFormula("2*A2");
-        //summing correct items
+        Cell r1c4 = row1_labels_derived.createCell(4);
+        r1c4.setCellValue("correct items");
+        r1c4.setCellStyle(aqua);
         row2_data_derived.createCell(4).setCellFormula("SUM(" +
                 "COUNTIF(raw_data!D4:raw_data!D17,\"CORRECT\")," +
                 "COUNTIF(raw_data!K4:raw_data!K17, \"CORRECT\"))");
+        Cell r1c5 = row1_labels_derived.createCell(5);
+        r1c5.setCellValue("correct items ratio");
+        r1c5.setCellStyle(aqua);
         row2_data_derived.createCell(5).setCellFormula("E2/D2");
-                                                                        //SUM time
+        Cell r1c6 = row1_labels_derived.createCell(6);
+        r1c6.setCellValue("Sum time of trials");
+        r1c6.setCellStyle(aqua);
         row2_data_derived.createCell(6).setCellFormula("SUM(raw_data!N4:raw_data!N17)");
-                                                                        //average time
+        Cell r1c7 = row1_labels_derived.createCell(7);
+        r1c7.setCellValue("average time of trial");
+        r1c7.setCellStyle(aqua);
         row2_data_derived.createCell(7).setCellFormula("G2/A2");
-        //row2_data_derived.createCell(7).setCellFormula("COUNTIF(raw_data!L4:raw_data!L17, \"TRUE\")");
-                                                            //counting correct oblique trials
+        Cell r1c8 = row1_labels_derived.createCell(8);
+        r1c8.setCellValue("Oblique items");
+        r1c8.setCellStyle(aqua);
         row2_data_derived.createCell(8).setCellFormula("COUNTIF(raw_data!P4:raw_data!P17,\"CORRECT\")");
+        Cell r1c9 = row1_labels_derived.createCell(9);
+        r1c9.setCellValue("Oblique items correct");
+        r1c9.setCellStyle(aqua);
         row2_data_derived.createCell(9).setCellFormula("COUNTIFS(raw_data!P4:raw_data!P17,\"CORRECT\"," +
-                "raw_data!B4:raw_data!B17,\"CORRECT\")");
+                                                                "raw_data!D4:raw_data!D17,\"CORRECT\") + " +
+                                                                "COUNTIFS(raw_data!P4:raw_data!P17,\"CORRECT\"," +
+                                                                "raw_data!K4:raw_data!K17,\"CORRECT\")");
+        Cell r1c10 = row1_labels_derived.createCell(10);
+        r1c10.setCellValue("oblique correct item ratio");
+        r1c10.setCellStyle(aqua);
         row2_data_derived.createCell(10).setCellFormula("J2/I2");
+        Cell r1c11 = row1_labels_derived.createCell(11);
+        r1c11.setCellValue("Sum time of oblique ");
+        r1c11.setCellStyle(aqua);
         row2_data_derived.createCell(11).setCellFormula("SUMIF(raw_data!P4:P17,\"CORRECT\"," +
-                                    "raw_data!N4:raw_data!N17)");
+                                                                    "raw_data!N4:raw_data!N17)");
+        Cell r1c12 = row1_labels_derived.createCell(12);
+        r1c12.setCellValue("Average time oblique trial");
+        r1c12.setCellStyle(aqua);
         row2_data_derived.createCell(12).setCellFormula("L2/J2");
-        //if PERPENDICULAR, sum time
-        row2_data_derived.createCell(8).setCellFormula("COUNTIF(raw_data!P4:raw_data!P17,\"CORRECT\")");
-        row2_data_derived.createCell(9).setCellFormula("COUNTIFS(raw_data!P4:raw_data!P17,\"CORRECT\"," +
-                "raw_data!B4:raw_data!B17,\"CORRECT\")");
-        row2_data_derived.createCell(10).setCellFormula("J2/I2");
-        row2_data_derived.createCell(11).setCellFormula("SUMIF(raw_data!P4:P17,\"CORRECT\"," +
+        Cell r1c13 = row1_labels_derived.createCell(13);
+        r1c13.setCellValue("Perpendicular items");
+        r1c13.setCellStyle(aqua);
+        row2_data_derived.createCell(13).setCellFormula("COUNTIF(raw_data!Q4:raw_data:Q17,\"CORRECT\")");
+        Cell r1c14 = row1_labels_derived.createCell(14);
+        r1c14.setCellValue("Perpendicular items correct");
+        r1c14.setCellStyle(aqua);
+        row2_data_derived.createCell(14).setCellFormula("COUNTIFS(raw_data!Q4:raw_data!Q17,\"CORRECT\"," +
+                                                                "raw_data!D4:raw_data!D17,\"CORRECT\","+
+                                                                "raw_data!K4:raw_data!K17,\"CORRECT\")");
+        Cell r1c15 = row1_labels_derived.createCell(15);
+        r1c15.setCellValue("Perpendicular items correct ratio");
+        r1c15.setCellStyle(aqua);
+        row2_data_derived.createCell(15).setCellFormula("O2/N2");
+        Cell r1c16 = row1_labels_derived.createCell(16);
+        r1c16.setCellValue("partial oblique items");
+        r1c16.setCellStyle(aqua);
+        row2_data_derived.createCell(16).setCellFormula("SUMIF(raw_data!R4:R17,\"CORRECT\"," +
                 "raw_data!N4:raw_data!N17)");
-        row2_data_derived.createCell(12).setCellFormula("L2/J2");
-        //if partial oblique, sum time
-        row2_data_derived.createCell(8).setCellFormula("COUNTIF(raw_data!P4:raw_data!P17,\"CORRECT\")");
-        row2_data_derived.createCell(9).setCellFormula("COUNTIFS(raw_data!P4:raw_data!P17,\"CORRECT\"," +
-                "raw_data!B4:raw_data!B17,\"CORRECT\")");
-        row2_data_derived.createCell(10).setCellFormula("J2/I2");
-        row2_data_derived.createCell(11).setCellFormula("SUMIF(raw_data!P4:P17,\"CORRECT\"," +
+        Cell r1c17 = row1_labels_derived.createCell(17);
+        r1c17.setCellValue("partial oblique items correct");
+        r1c17.setCellStyle(aqua);
+        row2_data_derived.createCell(17).setCellFormula("COUNTIFS(raw_data!R4:raw_data!R17,\"CORRECT\"," +
+                                                                    "raw_data!D4:raw_data!D17,\"CORRECT\","+
+                                                                    "raw_data!K4:raw_data!K17,\"CORRECT\")");
+        Cell r1c18 = row1_labels_derived.createCell(18);
+        r1c18.setCellValue("partial oblique ratio");
+        r1c18.setCellStyle(aqua);
+        row2_data_derived.createCell(18).setCellFormula("R2/Q2");
+        Cell r1c19 = row1_labels_derived.createCell(19);
+        r1c19.setCellValue("Sum time of partial oblique ");
+        r1c19.setCellStyle(aqua);
+        row2_data_derived.createCell(19).setCellFormula("SUMIF(raw_data!R4:R17,\"CORRECT\"," +
                 "raw_data!N4:raw_data!N17)");
-        row2_data_derived.createCell(12).setCellFormula("L2/J2");
+        Cell r1c22 = row1_labels_derived.createCell(20);
+        r1c22.setCellValue("Average time partial oblique trial");
+        r1c22.setCellStyle(aqua);
+        row2_data_derived.createCell(20).setCellFormula("U2/Q2");
+
 
         HSSFFormulaEvaluator evaluator = new HSSFFormulaEvaluator(wb);
         Iterator<Cell> cellIterator = row2_data_derived.cellIterator();
