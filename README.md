@@ -23,7 +23,3 @@ The general purpose of this application is to create a web-based application whi
 - [Alexander Little](https://github.com/LurkerBro)
 - [Jacob Dominguez](https://github.com/JakeDominguez)
 - [Jesse Malinosky](https://github.com/malinoskj2)
-
-## License
-TBD
-
